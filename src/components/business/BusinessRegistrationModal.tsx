@@ -8,6 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/types";
+
+type BusinessType = Database["public"]["Enums"]["business_type"];
 
 interface BusinessRegistrationModalProps {
   open: boolean;
@@ -20,7 +23,7 @@ const BusinessRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: Bu
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    business_type: "",
+    business_type: "" as BusinessType,
     description: "",
     address: "",
     phone: "",
@@ -30,12 +33,12 @@ const BusinessRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: Bu
   });
 
   const businessTypes = [
-    { value: "barbershop", label: "Barbershop" },
-    { value: "hair_salon", label: "Hair Salon" },
-    { value: "makeup_artist", label: "Makeup Artist" },
-    { value: "nail_salon", label: "Nail Salon" },
-    { value: "spa", label: "Spa" },
-    { value: "beauty_clinic", label: "Beauty Clinic" }
+    { value: "barbershop" as BusinessType, label: "Barbershop" },
+    { value: "hair_salon" as BusinessType, label: "Hair Salon" },
+    { value: "makeup_artist" as BusinessType, label: "Makeup Artist" },
+    { value: "nail_salon" as BusinessType, label: "Nail Salon" },
+    { value: "spa" as BusinessType, label: "Spa" },
+    { value: "beauty_clinic" as BusinessType, label: "Beauty Clinic" }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,10 +54,10 @@ const BusinessRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: Bu
 
       const { error } = await supabase
         .from('businesses')
-        .insert([{
+        .insert({
           ...formData,
           owner_id: user.id
-        }]);
+        });
 
       if (error) throw error;
 
@@ -66,7 +69,7 @@ const BusinessRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: Bu
       // Reset form
       setFormData({
         name: "",
-        business_type: "",
+        business_type: "" as BusinessType,
         description: "",
         address: "",
         phone: "",
@@ -90,6 +93,10 @@ const BusinessRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: Bu
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleBusinessTypeChange = (value: BusinessType) => {
+    setFormData(prev => ({ ...prev, business_type: value }));
   };
 
   return (
@@ -118,7 +125,7 @@ const BusinessRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: Bu
             
             <div className="space-y-2">
               <Label htmlFor="business_type">Business Type *</Label>
-              <Select value={formData.business_type} onValueChange={(value) => handleInputChange("business_type", value)}>
+              <Select value={formData.business_type} onValueChange={handleBusinessTypeChange}>
                 <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                   <SelectValue placeholder="Select business type" />
                 </SelectTrigger>
