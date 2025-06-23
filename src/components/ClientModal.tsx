@@ -6,14 +6,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ClientModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onClientAdded?: () => void;
 }
 
-const ClientModal = ({ open, onOpenChange }: ClientModalProps) => {
+const ClientModal = ({ open, onOpenChange, onClientAdded }: ClientModalProps) => {
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -21,18 +24,63 @@ const ClientModal = ({ open, onOpenChange }: ClientModalProps) => {
     notes: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("New client data:", formData);
-    
-    toast({
-      title: "Client Added",
-      description: `${formData.name} has been added to your client list.`,
-    });
-    
-    // Reset form
-    setFormData({ name: "", phone: "", email: "", notes: "" });
-    onOpenChange(false);
+    setLoading(true);
+
+    try {
+      // Check if customer already exists
+      let customerId = null;
+      const { data: existingCustomer } = await supabase
+        .from('customers')
+        .select('id')
+        .eq('phone', formData.phone)
+        .maybeSingle();
+
+      if (existingCustomer) {
+        customerId = existingCustomer.id;
+        // Update existing customer
+        await supabase
+          .from('customers')
+          .update({
+            name: formData.name,
+            email: formData.email || null
+          })
+          .eq('id', customerId);
+      } else {
+        // Create new customer
+        const { data: newCustomer, error } = await supabase
+          .from('customers')
+          .insert({
+            name: formData.name,
+            phone: formData.phone,
+            email: formData.email || null
+          })
+          .select('id')
+          .single();
+
+        if (error) throw error;
+        customerId = newCustomer.id;
+      }
+
+      toast({
+        title: "Client Added",
+        description: `${formData.name} has been added to your client list.`,
+      });
+      
+      // Reset form
+      setFormData({ name: "", phone: "", email: "", notes: "" });
+      onOpenChange(false);
+      onClientAdded?.();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -110,9 +158,10 @@ const ClientModal = ({ open, onOpenChange }: ClientModalProps) => {
             </Button>
             <Button
               type="submit"
+              disabled={loading}
               className="bg-amber-500 hover:bg-amber-600 text-black"
             >
-              Add Client
+              {loading ? "Adding..." : "Add Client"}
             </Button>
           </DialogFooter>
         </form>

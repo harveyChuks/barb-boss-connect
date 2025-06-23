@@ -255,6 +255,41 @@ export type Database = {
           },
         ]
       }
+      work_pictures: {
+        Row: {
+          business_id: string
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string
+          service_type: string | null
+        }
+        Insert: {
+          business_id: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url: string
+          service_type?: string | null
+        }
+        Update: {
+          business_id?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string
+          service_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_pictures_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

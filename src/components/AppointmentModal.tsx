@@ -1,35 +1,37 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AppointmentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onAppointmentCreated?: () => void;
 }
 
-const AppointmentModal = ({ open, onOpenChange }: AppointmentModalProps) => {
+const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: AppointmentModalProps) => {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [services, setServices] = useState<any[]>([]);
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [userBusiness, setUserBusiness] = useState<any>(null);
   const [formData, setFormData] = useState({
-    clientName: "",
+    customerId: "",
+    customerName: "",
+    customerPhone: "",
+    customerEmail: "",
     date: "",
     time: "",
-    service: "",
-    duration: ""
+    serviceId: "",
+    notes: ""
   });
-
-  // Mock services
-  const services = [
-    { name: "Classic Haircut", duration: "30 min", price: "$25" },
-    { name: "Haircut & Beard", duration: "45 min", price: "$35" },
-    { name: "Beard Trim", duration: "20 min", price: "$15" },
-    { name: "Hot Towel Shave", duration: "40 min", price: "$30" },
-    { name: "Full Service", duration: "60 min", price: "$50" }
-  ];
 
   const timeSlots = [
     "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
@@ -37,18 +39,176 @@ const AppointmentModal = ({ open, onOpenChange }: AppointmentModalProps) => {
     "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM", "5:30 PM"
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (open && user) {
+      fetchBusinessData();
+    }
+  }, [open, user]);
+
+  const fetchBusinessData = async () => {
+    try {
+      // Get user's business
+      const { data: business } = await supabase
+        .from('businesses')
+        .select('*')
+        .eq('owner_id', user?.id)
+        .single();
+      
+      setUserBusiness(business);
+
+      if (business) {
+        // Get services
+        const { data: servicesData } = await supabase
+          .from('services')
+          .select('*')
+          .eq('business_id', business.id)
+          .eq('is_active', true);
+        
+        setServices(servicesData || []);
+
+        // Get recent customers who had appointments with this business
+        const { data: customersData } = await supabase
+          .from('customers')
+          .select(`
+            id,
+            name,
+            phone,
+            email,
+            appointments!inner(business_id)
+          `)
+          .eq('appointments.business_id', business.id)
+          .limit(50);
+        
+        setCustomers(customersData || []);
+      }
+    } catch (error) {
+      console.error('Error fetching business data:', error);
+    }
+  };
+
+  const convertTimeToPostgresFormat = (timeString: string) => {
+    // Convert "2:00 PM" to "14:00:00"
+    const [time, period] = timeString.split(' ');
+    let [hours, minutes] = time.split(':');
+    
+    if (period === 'PM' && hours !== '12') {
+      hours = String(parseInt(hours) + 12);
+    } else if (period === 'AM' && hours === '12') {
+      hours = '00';
+    }
+    
+    return `${hours.padStart(2, '0')}:${minutes}:00`;
+  };
+
+  const calculateEndTime = (startTime: string, durationMinutes: number) => {
+    const [hours, minutes] = startTime.split(':').map(Number);
+    const totalMinutes = hours * 60 + minutes + durationMinutes;
+    const endHours = Math.floor(totalMinutes / 60);
+    const endMinutes = totalMinutes % 60;
+    
+    return `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}:00`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("New appointment data:", formData);
     
-    toast({
-      title: "Appointment Scheduled",
-      description: `Appointment for ${formData.clientName} on ${formData.date} at ${formData.time}`,
-    });
-    
-    // Reset form
-    setFormData({ clientName: "", date: "", time: "", service: "", duration: "" });
-    onOpenChange(false);
+    if (!userBusiness) {
+      toast({
+        title: "Error",
+        description: "Business not found",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      let customerId = formData.customerId;
+      let customerName = formData.customerName;
+      let customerPhone = formData.customerPhone;
+      let customerEmail = formData.customerEmail;
+
+      // If customer is selected from dropdown, get their details
+      if (customerId) {
+        const selectedCustomer = customers.find(c => c.id === customerId);
+        if (selectedCustomer) {
+          customerName = selectedCustomer.name;
+          customerPhone = selectedCustomer.phone;
+          customerEmail = selectedCustomer.email;
+        }
+      } else if (customerName && customerPhone) {
+        // Create new customer
+        const { data: newCustomer, error: customerError } = await supabase
+          .from('customers')
+          .insert({
+            name: customerName,
+            phone: customerPhone,
+            email: customerEmail || null
+          })
+          .select('id')
+          .single();
+
+        if (customerError) throw customerError;
+        customerId = newCustomer.id;
+      } else {
+        throw new Error("Please select a customer or enter customer details");
+      }
+
+      const selectedService = services.find(s => s.id === formData.serviceId);
+      if (!selectedService) {
+        throw new Error("Please select a service");
+      }
+
+      const startTime = convertTimeToPostgresFormat(formData.time);
+      const endTime = calculateEndTime(startTime, selectedService.duration_minutes);
+
+      const { error } = await supabase
+        .from('appointments')
+        .insert({
+          business_id: userBusiness.id,
+          service_id: formData.serviceId,
+          customer_id: customerId,
+          customer_name: customerName,
+          customer_phone: customerPhone,
+          customer_email: customerEmail,
+          appointment_date: formData.date,
+          start_time: startTime,
+          end_time: endTime,
+          notes: formData.notes || null,
+          status: 'pending'
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Appointment Scheduled",
+        description: `Appointment for ${customerName} on ${formData.date} at ${formData.time}`,
+      });
+      
+      // Reset form
+      setFormData({
+        customerId: "",
+        customerName: "",
+        customerPhone: "",
+        customerEmail: "",
+        date: "",
+        time: "",
+        serviceId: "",
+        notes: ""
+      });
+      
+      onOpenChange(false);
+      onAppointmentCreated?.();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -57,7 +217,7 @@ const AppointmentModal = ({ open, onOpenChange }: AppointmentModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-800 border-slate-700 text-white">
+      <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-2xl">
         <DialogHeader>
           <DialogTitle>Schedule New Appointment</DialogTitle>
           <DialogDescription className="text-slate-400">
@@ -67,16 +227,62 @@ const AppointmentModal = ({ open, onOpenChange }: AppointmentModalProps) => {
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="clientName">Client Name</Label>
-            <Input
-              id="clientName"
-              value={formData.clientName}
-              onChange={(e) => handleInputChange("clientName", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
-              placeholder="John Smith"
-              required
-            />
+            <Label htmlFor="customer">Customer</Label>
+            <Select value={formData.customerId} onValueChange={(value) => handleInputChange("customerId", value)}>
+              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                <SelectValue placeholder="Select existing customer or enter new below" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-700 border-slate-600">
+                {customers.map((customer) => (
+                  <SelectItem key={customer.id} value={customer.id} className="text-white hover:bg-slate-600">
+                    {customer.name} - {customer.phone}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+
+          {!formData.customerId && (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="customerName">Customer Name</Label>
+                  <Input
+                    id="customerName"
+                    value={formData.customerName}
+                    onChange={(e) => handleInputChange("customerName", e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
+                    placeholder="John Smith"
+                    required={!formData.customerId}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="customerPhone">Phone</Label>
+                  <Input
+                    id="customerPhone"
+                    value={formData.customerPhone}
+                    onChange={(e) => handleInputChange("customerPhone", e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
+                    placeholder="(555) 123-4567"
+                    required={!formData.customerId}
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="customerEmail">Customer Email (Optional)</Label>
+                <Input
+                  id="customerEmail"
+                  type="email"
+                  value={formData.customerEmail}
+                  onChange={(e) => handleInputChange("customerEmail", e.target.value)}
+                  className="bg-slate-700 border-slate-600 text-white"
+                  placeholder="john@example.com"
+                />
+              </div>
+            </>
+          )}
           
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -110,21 +316,34 @@ const AppointmentModal = ({ open, onOpenChange }: AppointmentModalProps) => {
           
           <div className="space-y-2">
             <Label htmlFor="service">Service</Label>
-            <Select value={formData.service} onValueChange={(value) => handleInputChange("service", value)}>
+            <Select value={formData.serviceId} onValueChange={(value) => handleInputChange("serviceId", value)}>
               <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                 <SelectValue placeholder="Select service" />
               </SelectTrigger>
               <SelectContent className="bg-slate-700 border-slate-600">
                 {services.map((service) => (
-                  <SelectItem key={service.name} value={service.name} className="text-white hover:bg-slate-600">
+                  <SelectItem key={service.id} value={service.id} className="text-white hover:bg-slate-600">
                     <div className="flex justify-between items-center w-full">
                       <span>{service.name}</span>
-                      <span className="text-sm text-slate-400">{service.duration} - {service.price}</span>
+                      <span className="text-sm text-slate-400">
+                        {service.duration_minutes}min - ${service.price}
+                      </span>
                     </div>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notes (Optional)</Label>
+            <Input
+              id="notes"
+              value={formData.notes}
+              onChange={(e) => handleInputChange("notes", e.target.value)}
+              className="bg-slate-700 border-slate-600 text-white"
+              placeholder="Special requests or notes"
+            />
           </div>
           
           <DialogFooter>
@@ -138,9 +357,10 @@ const AppointmentModal = ({ open, onOpenChange }: AppointmentModalProps) => {
             </Button>
             <Button
               type="submit"
+              disabled={loading || !formData.date || !formData.time || !formData.serviceId}
               className="bg-amber-500 hover:bg-amber-600 text-black"
             >
-              Schedule Appointment
+              {loading ? "Scheduling..." : "Schedule Appointment"}
             </Button>
           </DialogFooter>
         </form>
