@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building } from "lucide-react";
+import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,43 +11,27 @@ import BusinessRegistrationModal from "@/components/business/BusinessRegistratio
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const { user, loading: authLoading, signOut, isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [showClientModal, setShowClientModal] = useState(false);
   const [showAppointmentModal, setShowAppointmentModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showBusinessModal, setShowBusinessModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [businesses, setBusinesses] = useState([]);
   const [userBusiness, setUserBusiness] = useState(null);
+  const [todayAppointments, setTodayAppointments] = useState([]);
+  const [recentClients, setRecentClients] = useState([]);
+  const [stats, setStats] = useState({
+    todayAppointments: 0,
+    totalClients: 0,
+    weeklyAppointments: 0,
+    todayRevenue: 0
+  });
   const [loading, setLoading] = useState(false);
-
-  // Mock data for demonstration - will be replaced with real data later
-  const todayAppointments = [
-    { id: 1, client: "John Smith", time: "10:00 AM", service: "Haircut & Beard" },
-    { id: 2, client: "Mike Johnson", time: "11:30 AM", service: "Classic Cut" },
-    { id: 3, client: "David Wilson", time: "2:00 PM", service: "Beard Trim" },
-  ];
-
-  const recentClients = [
-    { id: 1, name: "John Smith", lastVisit: "Today", phone: "(555) 123-4567" },
-    { id: 2, name: "Mike Johnson", lastVisit: "2 days ago", phone: "(555) 234-5678" },
-    { id: 3, name: "David Wilson", lastVisit: "1 week ago", phone: "(555) 345-6789" },
-    { id: 4, name: "Alex Brown", lastVisit: "2 weeks ago", phone: "(555) 456-7890" },
-  ];
-
-  const stats = [
-    { title: "Today's Appointments", value: "8", icon: Calendar, color: "text-blue-600" },
-    { title: "Total Clients", value: "156", icon: Users, color: "text-green-600" },
-    { title: "This Week", value: "42", icon: Scissors, color: "text-purple-600" },
-    { title: "Revenue Today", value: "$480", icon: Clock, color: "text-orange-600" },
-  ];
-
-  const filteredClients = recentClients.filter(client =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const fetchUserBusiness = async () => {
     if (!user) return;
@@ -73,11 +56,83 @@ const Index = () => {
     }
   };
 
+  const fetchDashboardData = async () => {
+    if (!userBusiness) return;
+
+    setLoading(true);
+    try {
+      // Fetch today's appointments
+      const today = new Date().toISOString().split('T')[0];
+      const { data: appointments } = await supabase
+        .from('appointments')
+        .select(`
+          *,
+          services (
+            name
+          )
+        `)
+        .eq('business_id', userBusiness.id)
+        .eq('appointment_date', today);
+
+      setTodayAppointments(appointments || []);
+
+      // Fetch recent clients
+      const { data: clients } = await supabase
+        .from('customers')
+        .select('*')
+        .limit(4);
+
+      setRecentClients(clients || []);
+
+      // Calculate stats
+      const totalClients = await supabase
+        .from('customers')
+        .select('*', { count: 'exact', head: true });
+
+      // Calculate weekly appointments (last 7 days)
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const weeklyAppointments = await supabase
+        .from('appointments')
+        .select('*', { count: 'exact', head: true })
+        .eq('business_id', userBusiness.id)
+        .gte('appointment_date', sevenDaysAgo);
+
+      // Calculate today's revenue (mock data for now)
+      const todayRevenue = 480;
+
+      setStats({
+        todayAppointments: appointments?.length || 0,
+        totalClients: totalClients.count || 0,
+        weeklyAppointments: weeklyAppointments.count || 0,
+        todayRevenue: todayRevenue || 0
+      });
+    } catch (error: any) {
+      console.error('Error fetching dashboard data:', error);
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchUserBusiness();
     }
   }, [isAuthenticated, user]);
+
+  useEffect(() => {
+    if (userBusiness) {
+      fetchDashboardData();
+    }
+  }, [userBusiness]);
+
+  const filteredClients = recentClients.filter(client =>
+    client.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleSignOut = async () => {
     await signOut();
@@ -126,6 +181,14 @@ const Index = () => {
                 <>
                   {userBusiness ? (
                     <>
+                      <Button 
+                        onClick={() => navigate('/dashboard')}
+                        variant="outline" 
+                        className="border-slate-600 text-white hover:bg-slate-800"
+                      >
+                        <BarChart3 className="w-4 h-4 mr-2" />
+                        Dashboard
+                      </Button>
                       <Button 
                         onClick={() => setShowAppointmentModal(true)}
                         className="bg-amber-500 hover:bg-amber-600 text-black"
@@ -208,21 +271,94 @@ const Index = () => {
           </div>
         ) : (
           <>
-            {/* Stats Grid */}
+            {/* Quick Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {stats.map((stat, index) => (
-                <Card key={index} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-slate-400 text-sm font-medium">{stat.title}</p>
-                        <p className="text-3xl font-bold text-white mt-2">{stat.value}</p>
-                      </div>
-                      <stat.icon className={`w-8 h-8 ${stat.color}`} />
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-slate-400 text-sm font-medium">Today's Appointments</p>
+                      <p className="text-3xl font-bold text-white mt-2">{stats.todayAppointments}</p>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    <Calendar className="w-8 h-8 text-blue-600" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-slate-400 text-sm font-medium">Total Clients</p>
+                      <p className="text-3xl font-bold text-white mt-2">{stats.totalClients}</p>
+                    </div>
+                    <Users className="w-8 h-8 text-green-600" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-slate-400 text-sm font-medium">This Week</p>
+                      <p className="text-3xl font-bold text-white mt-2">{stats.weeklyAppointments}</p>
+                    </div>
+                    <Scissors className="w-8 h-8 text-purple-600" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-slate-400 text-sm font-medium">Revenue Today</p>
+                      <p className="text-3xl font-bold text-white mt-2">${stats.todayRevenue}</p>
+                    </div>
+                    <Clock className="w-8 h-8 text-orange-600" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="mb-8">
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="text-white">Quick Actions</CardTitle>
+                  <CardDescription className="text-slate-400">
+                    Access your most used features or visit the full dashboard
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Button 
+                      onClick={() => navigate('/dashboard')}
+                      className="bg-amber-500 hover:bg-amber-600 text-black h-16 text-lg"
+                    >
+                      <BarChart3 className="w-5 h-5 mr-2" />
+                      Full Dashboard
+                    </Button>
+                    <Button 
+                      onClick={() => setShowAppointmentModal(true)}
+                      variant="outline"
+                      className="border-slate-600 text-white hover:bg-slate-700 h-16 text-lg"
+                    >
+                      <Plus className="w-5 h-5 mr-2" />
+                      Book Appointment
+                    </Button>
+                    <Button 
+                      onClick={() => setShowClientModal(true)}
+                      variant="outline"
+                      className="border-slate-600 text-white hover:bg-slate-700 h-16 text-lg"
+                    >
+                      <Plus className="w-5 h-5 mr-2" />
+                      Add Client
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -238,22 +374,44 @@ const Index = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {todayAppointments.map((appointment) => (
-                      <div
-                        key={appointment.id}
-                        className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors"
-                      >
-                        <div>
-                          <p className="font-medium text-white">{appointment.client}</p>
-                          <p className="text-sm text-slate-400">{appointment.service}</p>
+                  {todayAppointments.length > 0 ? (
+                    <div className="space-y-4">
+                      {todayAppointments.slice(0, 3).map((appointment) => (
+                        <div
+                          key={appointment.id}
+                          className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors"
+                        >
+                          <div>
+                            <p className="font-medium text-white">{appointment.customer_name}</p>
+                            <p className="text-sm text-slate-400">{appointment.services?.name || 'Service'}</p>
+                          </div>
+                          <Badge variant="outline" className="border-amber-400 text-amber-400">
+                            {appointment.start_time}
+                          </Badge>
                         </div>
-                        <Badge variant="outline" className="border-amber-400 text-amber-400">
-                          {appointment.time}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                      {todayAppointments.length > 3 && (
+                        <Button
+                          onClick={() => navigate('/dashboard')}
+                          variant="outline"
+                          className="w-full border-slate-600 text-white hover:bg-slate-700"
+                        >
+                          View All ({todayAppointments.length})
+                        </Button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Calendar className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                      <p className="text-slate-400">No appointments for today</p>
+                      <Button
+                        onClick={() => setShowAppointmentModal(true)}
+                        className="mt-4 bg-amber-500 hover:bg-amber-600 text-black"
+                      >
+                        Schedule First Appointment
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -265,7 +423,7 @@ const Index = () => {
                     Recent Clients
                   </CardTitle>
                   <CardDescription className="text-slate-400">
-                    Manage your client base
+                    Your client database
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -279,22 +437,46 @@ const Index = () => {
                         className="pl-10 bg-slate-700/50 border-slate-600 text-white placeholder-slate-400"
                       />
                     </div>
-                    <div className="space-y-3">
-                      {filteredClients.map((client) => (
-                        <div
-                          key={client.id}
-                          className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors cursor-pointer"
-                        >
-                          <div>
-                            <p className="font-medium text-white">{client.name}</p>
-                            <p className="text-sm text-slate-400">{client.phone}</p>
+                    {filteredClients.length > 0 ? (
+                      <div className="space-y-3">
+                        {filteredClients.slice(0, 4).map((client) => (
+                          <div
+                            key={client.id}
+                            className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors cursor-pointer"
+                          >
+                            <div>
+                              <p className="font-medium text-white">{client.name}</p>
+                              <p className="text-sm text-slate-400">{client.phone}</p>
+                            </div>
+                            <Badge variant="secondary" className="bg-slate-600 text-slate-300">
+                              Recent
+                            </Badge>
                           </div>
-                          <Badge variant="secondary" className="bg-slate-600 text-slate-300">
-                            {client.lastVisit}
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                        <Button
+                          onClick={() => navigate('/dashboard')}
+                          variant="outline"
+                          className="w-full border-slate-600 text-white hover:bg-slate-700"
+                        >
+                          View All Clients
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <Users className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                        <p className="text-slate-400">
+                          {searchTerm ? "No clients match your search" : "No clients yet"}
+                        </p>
+                        {!searchTerm && (
+                          <Button
+                            onClick={() => setShowClientModal(true)}
+                            className="mt-4 bg-amber-500 hover:bg-amber-600 text-black"
+                          >
+                            Add First Client
+                          </Button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -304,8 +486,21 @@ const Index = () => {
       </main>
 
       {/* Modals */}
-      <ClientModal open={showClientModal} onOpenChange={setShowClientModal} />
-      <AppointmentModal open={showAppointmentModal} onOpenChange={setShowAppointmentModal} />
+      <ClientModal 
+        open={showClientModal} 
+        onOpenChange={setShowClientModal}
+        onClientAdded={() => {
+          fetchUserBusiness();
+          fetchDashboardData();
+        }}
+      />
+      <AppointmentModal 
+        open={showAppointmentModal} 
+        onOpenChange={setShowAppointmentModal}
+        onAppointmentCreated={() => {
+          fetchDashboardData();
+        }}
+      />
       <AuthModal 
         open={showAuthModal} 
         onOpenChange={setShowAuthModal}
