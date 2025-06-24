@@ -11,6 +11,9 @@ import { Camera, Save } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Database } from "@/integrations/supabase/types";
+
+type BusinessType = Database["public"]["Enums"]["business_type"];
 
 const ProfileManagement = () => {
   const { user } = useAuth();
@@ -20,7 +23,7 @@ const ProfileManagement = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    business_type: "",
+    business_type: "" as BusinessType,
     phone: "",
     email: "",
     address: "",
@@ -52,7 +55,7 @@ const ProfileManagement = () => {
         setFormData({
           name: data.name || "",
           description: data.description || "",
-          business_type: data.business_type || "",
+          business_type: data.business_type || "barbershop",
           phone: data.phone || "",
           email: data.email || "",
           address: data.address || "",
@@ -70,14 +73,30 @@ const ProfileManagement = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleBusinessTypeChange = (value: BusinessType) => {
+    setFormData(prev => ({ ...prev, business_type: value }));
+  };
+
   const handleSave = async () => {
     if (!business) return;
 
     setLoading(true);
     try {
+      const updateData = {
+        name: formData.name,
+        description: formData.description,
+        business_type: formData.business_type,
+        phone: formData.phone,
+        email: formData.email,
+        address: formData.address,
+        website: formData.website,
+        instagram: formData.instagram,
+        logo_url: formData.logo_url
+      };
+
       const { error } = await supabase
         .from('businesses')
-        .update(formData)
+        .update(updateData)
         .eq('id', business.id);
 
       if (error) throw error;
@@ -156,7 +175,7 @@ const ProfileManagement = () => {
 
           <div className="space-y-2">
             <Label htmlFor="business_type">Business Type</Label>
-            <Select value={formData.business_type} onValueChange={(value) => handleInputChange("business_type", value)}>
+            <Select value={formData.business_type} onValueChange={handleBusinessTypeChange}>
               <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                 <SelectValue />
               </SelectTrigger>

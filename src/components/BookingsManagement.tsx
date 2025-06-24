@@ -9,6 +9,9 @@ import { Calendar, Clock, User, Phone, Mail, Search, Filter } from "lucide-react
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Database } from "@/integrations/supabase/types";
+
+type AppointmentStatus = Database["public"]["Enums"]["appointment_status"];
 
 interface Appointment {
   id: string;
@@ -18,7 +21,7 @@ interface Appointment {
   appointment_date: string;
   start_time: string;
   end_time: string;
-  status: string;
+  status: AppointmentStatus;
   notes: string;
   services: {
     name: string;
@@ -101,7 +104,6 @@ const BookingsManagement = () => {
     // Date filter
     if (dateFilter !== "all") {
       const today = new Date();
-      const appointmentDate = new Date(appointment.appointment_date);
 
       switch (dateFilter) {
         case "today":
@@ -128,7 +130,7 @@ const BookingsManagement = () => {
     setFilteredAppointments(filtered);
   };
 
-  const updateAppointmentStatus = async (appointmentId: string, newStatus: string) => {
+  const updateAppointmentStatus = async (appointmentId: string, newStatus: AppointmentStatus) => {
     try {
       const { error } = await supabase
         .from('appointments')
@@ -312,7 +314,7 @@ const BookingsManagement = () => {
                 <div className="flex flex-col space-y-2">
                   <Select
                     value={appointment.status}
-                    onValueChange={(value) => updateAppointmentStatus(appointment.id, value)}
+                    onValueChange={(value: AppointmentStatus) => updateAppointmentStatus(appointment.id, value)}
                   >
                     <SelectTrigger className="bg-slate-700 border-slate-600 text-white min-w-[120px]">
                       <SelectValue />
