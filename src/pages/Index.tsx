@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import ClientModal from "@/components/ClientModal";
 import AppointmentModal from "@/components/AppointmentModal";
 import AuthModal from "@/components/auth/AuthModal";
-import BusinessRegistrationModal from "@/components/business/BusinessRegistrationModal";
+import MultiStepRegistrationModal from "@/components/business/MultiStepRegistrationModal";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -259,14 +259,14 @@ const Index = () => {
             <Building className="w-20 h-20 text-amber-400 mx-auto mb-6" />
             <h2 className="text-3xl font-bold text-white mb-4">Set Up Your Business</h2>
             <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
-              Register your business to start accepting bookings and managing your appointments.
+              Complete your business registration with our step-by-step process to start accepting bookings.
             </p>
             <Button 
               onClick={() => setShowBusinessModal(true)}
               className="bg-amber-500 hover:bg-amber-600 text-black text-lg px-8 py-3"
             >
               <Building className="w-5 h-5 mr-2" />
-              Register Your Business
+              Complete Registration
             </Button>
           </div>
         ) : (
@@ -506,7 +506,7 @@ const Index = () => {
         onOpenChange={setShowAuthModal}
         onAuthSuccess={handleAuthSuccess}
       />
-      <BusinessRegistrationModal 
+      <MultiStepRegistrationModal 
         open={showBusinessModal} 
         onOpenChange={setShowBusinessModal}
         onBusinessCreated={handleBusinessCreated}
