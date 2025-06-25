@@ -40,6 +40,7 @@ const ProfileManagement = () => {
     if (!user) return;
 
     try {
+      console.log('Fetching business profile for user:', user.id);
       const { data, error } = await supabase
         .from('businesses')
         .select('*')
@@ -47,10 +48,12 @@ const ProfileManagement = () => {
         .single();
 
       if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching business:', error);
         throw error;
       }
 
       if (data) {
+        console.log('Business data fetched:', data);
         setBusiness(data);
         setFormData({
           name: data.name || "",
@@ -63,6 +66,8 @@ const ProfileManagement = () => {
           instagram: data.instagram || "",
           logo_url: data.logo_url || ""
         });
+      } else {
+        console.log('No business found for user');
       }
     } catch (error) {
       console.error('Error fetching business profile:', error);
@@ -148,17 +153,22 @@ const ProfileManagement = () => {
           <Avatar className="w-20 h-20">
             <AvatarImage src={formData.logo_url} alt={formData.name} />
             <AvatarFallback className="bg-slate-700 text-white text-lg">
-              {formData.name.charAt(0)}
+              {formData.name ? formData.name.charAt(0).toUpperCase() : 'B'}
             </AvatarFallback>
           </Avatar>
-          <Button
-            variant="outline"
-            onClick={handleImageUpload}
-            className="border-slate-600 text-white hover:bg-slate-700"
-          >
-            <Camera className="w-4 h-4 mr-2" />
-            Change Photo
-          </Button>
+          <div className="flex flex-col space-y-2">
+            <Button
+              variant="outline"
+              onClick={handleImageUpload}
+              className="border-slate-600 text-white hover:bg-slate-700"
+            >
+              <Camera className="w-4 h-4 mr-2" />
+              Change Photo
+            </Button>
+            {formData.name && (
+              <p className="text-slate-300 font-medium">{formData.name}</p>
+            )}
+          </div>
         </div>
 
         {/* Basic Information */}
@@ -170,6 +180,7 @@ const ProfileManagement = () => {
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
               className="bg-slate-700 border-slate-600 text-white"
+              placeholder="Enter your business name"
             />
           </div>
 
@@ -177,7 +188,7 @@ const ProfileManagement = () => {
             <Label htmlFor="business_type">Business Type</Label>
             <Select value={formData.business_type} onValueChange={handleBusinessTypeChange}>
               <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue />
+                <SelectValue placeholder="Select business type" />
               </SelectTrigger>
               <SelectContent className="bg-slate-700 border-slate-600">
                 <SelectItem value="barbershop">Barbershop</SelectItem>
@@ -197,6 +208,7 @@ const ProfileManagement = () => {
               value={formData.phone}
               onChange={(e) => handleInputChange("phone", e.target.value)}
               className="bg-slate-700 border-slate-600 text-white"
+              placeholder="Business phone number"
             />
           </div>
 
@@ -208,6 +220,7 @@ const ProfileManagement = () => {
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
               className="bg-slate-700 border-slate-600 text-white"
+              placeholder="Business email address"
             />
           </div>
         </div>
@@ -220,6 +233,7 @@ const ProfileManagement = () => {
             onChange={(e) => handleInputChange("description", e.target.value)}
             className="bg-slate-700 border-slate-600 text-white"
             rows={3}
+            placeholder="Describe your business services and specialties"
           />
         </div>
 
@@ -230,6 +244,7 @@ const ProfileManagement = () => {
             value={formData.address}
             onChange={(e) => handleInputChange("address", e.target.value)}
             className="bg-slate-700 border-slate-600 text-white"
+            placeholder="Business address"
           />
         </div>
 
