@@ -1,7 +1,8 @@
-
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart3, User, Scissors, Calendar, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { BarChart3, User, Scissors, Calendar, Settings, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import StatisticsOverview from "@/components/StatisticsOverview";
 import ProfileManagement from "@/components/ProfileManagement";
 import ServicesManagement from "@/components/ServicesManagement";
@@ -10,13 +11,24 @@ import SettingsSection from "@/components/SettingsSection";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Business Dashboard</h1>
-          <p className="text-slate-400">Manage your business operations and track performance</p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">Business Dashboard</h1>
+            <p className="text-slate-400">Manage your business operations and track performance</p>
+          </div>
+          <Button
+            onClick={() => navigate('/')}
+            variant="outline"
+            className="border-slate-600 text-white hover:bg-slate-800"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Home
+          </Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
