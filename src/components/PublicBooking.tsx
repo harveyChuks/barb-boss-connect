@@ -1,0 +1,463 @@
+
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { format, addDays, isAfter, isBefore, startOfDay } from "date-fns";
+
+interface Business {
+  id: string;
+  name: string;
+  description: string | null;
+  business_type: string;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  website: string | null;
+  instagram: string | null;
+  logo_url: string | null;
+}
+
+interface Service {
+  id: string;
+  name: string;
+  description: string | null;
+  duration_minutes: number;
+  price: number | null;
+}
+
+interface Staff {
+  id: string;
+  name: string;
+  bio: string | null;
+  avatar_url: string | null;
+  specialties: string[] | null;
+}
+
+interface PublicBookingProps {
+  businessLink: string;
+}
+
+const PublicBooking = ({ businessLink }: PublicBookingProps) => {
+  const { toast } = useToast();
+  const [business, setBusiness] = useState<Business | null>(null);
+  const [services, setServices] = useState<Service[]>([]);
+  const [staff, setStaff] = useState<Staff[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [selectedTime, setSelectedTime] = useState("");
+  const [formData, setFormData] = useState({
+    customer_name: "",
+    customer_phone: "",
+    customer_email: "",
+    service_id: "",
+    staff_id: "",
+    notes: ""
+  });
+
+  const timeSlots = [
+    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
+  ];
+
+  useEffect(() => {
+    fetchBusinessData();
+  }, [businessLink]);
+
+  const fetchBusinessData = async () => {
+    try {
+      // Get business by booking link
+      const { data: businessData, error: businessError } = await supabase
+        .from('businesses')
+        .select('*')
+        .eq('booking_link', businessLink)
+        .eq('is_active', true)
+        .single();
+
+      if (businessError) throw businessError;
+      setBusiness(businessData);
+
+      // Get services
+      const { data: servicesData, error: servicesError } = await supabase
+        .from('services')
+        .select('*')
+        .eq('business_id', businessData.id)
+        .eq('is_active', true)
+        .order('name');
+
+      if (servicesError) throw servicesError;
+      setServices(servicesData || []);
+
+      // Get staff
+      const { data: staffData, error: staffError } = await supabase
+        .from('staff')
+        .select('*')
+        .eq('business_id', businessData.id)
+        .eq('is_active', true)
+        .order('name');
+
+      if (staffError) throw staffError;
+      setStaff(staffData || []);
+    } catch (error) {
+      console.error('Error fetching business data:', error);
+      toast({
+        title: "Business Not Found",
+        description: "The business you're looking for doesn't exist or is no longer active.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async () => {
+    if (!business || !selectedDate || !selectedTime) return;
+
+    const selectedService = services.find(s => s.id === formData.service_id);
+    if (!selectedService) return;
+
+    setSubmitting(true);
+    try {
+      // Calculate end time
+      const startTime = selectedTime;
+      const endTime = new Date(`2000-01-01T${selectedTime}:00`);
+      endTime.setMinutes(endTime.getMinutes() + selectedService.duration_minutes);
+      const endTimeString = endTime.toTimeString().slice(0, 5);
+
+      const appointmentData = {
+        business_id: business.id,
+        service_id: formData.service_id,
+        staff_id: formData.staff_id || null,
+        customer_name: formData.customer_name,
+        customer_phone: formData.customer_phone,
+        customer_email: formData.customer_email || null,
+        appointment_date: format(selectedDate, 'yyyy-MM-dd'),
+        start_time: startTime,
+        end_time: endTimeString,
+        notes: formData.notes || null,
+        status: 'pending'
+      };
+
+      const { error } = await supabase
+        .from('appointments')
+        .insert([appointmentData]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Booking Confirmed!",
+        description: "Your appointment has been booked successfully. We'll contact you soon to confirm.",
+      });
+
+      // Reset form
+      setFormData({
+        customer_name: "",
+        customer_phone: "",
+        customer_email: "",
+        service_id: "",
+        staff_id: "",
+        notes: ""
+      });
+      setSelectedDate(undefined);
+      setSelectedTime("");
+    } catch (error: any) {
+      toast({
+        title: "Booking Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!business) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <Card className="bg-slate-800/50 border-slate-700 max-w-md">
+          <CardContent className="p-8 text-center">
+            <h2 className="text-xl font-bold text-white mb-4">Business Not Found</h2>
+            <p className="text-slate-400">The business you're looking for doesn't exist or is no longer accepting bookings.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Business Header */}
+        <Card className="bg-slate-800/50 border-slate-700 mb-8">
+          <CardContent className="p-8">
+            <div className="flex items-center space-x-6">
+              <Avatar className="w-24 h-24">
+                <AvatarImage src={business.logo_url || ""} alt={business.name} />
+                <AvatarFallback className="bg-slate-700 text-white text-2xl">
+                  {business.name.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold text-white mb-2">{business.name}</h1>
+                <Badge className="mb-3 capitalize">{business.business_type.replace('_', ' ')}</Badge>
+                {business.description && (
+                  <p className="text-slate-300 mb-4">{business.description}</p>
+                )}
+                <div className="flex flex-wrap gap-4 text-slate-400">
+                  {business.phone && (
+                    <div className="flex items-center">
+                      <Phone className="w-4 h-4 mr-2" />
+                      {business.phone}
+                    </div>
+                  )}
+                  {business.email && (
+                    <div className="flex items-center">
+                      <Mail className="w-4 h-4 mr-2" />
+                      {business.email}
+                    </div>
+                  )}
+                  {business.address && (
+                    <div className="flex items-center">
+                      <MapPin className="w-4 h-4 mr-2" />
+                      {business.address}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Services & Staff */}
+          <div className="space-y-6">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Our Services</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {services.map((service) => (
+                  <div
+                    key={service.id}
+                    className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+                      formData.service_id === service.id
+                        ? 'border-amber-500 bg-amber-500/10'
+                        : 'border-slate-600 hover:border-slate-500'
+                    }`}
+                    onClick={() => handleInputChange('service_id', service.id)}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold text-white">{service.name}</h3>
+                      <div className="text-right">
+                        {service.price && (
+                          <div className="text-amber-400 font-semibold">${service.price}</div>
+                        )}
+                        <div className="text-slate-400 text-sm flex items-center">
+                          <Clock className="w-3 h-3 mr-1" />
+                          {service.duration_minutes} min
+                        </div>
+                      </div>
+                    </div>
+                    {service.description && (
+                      <p className="text-slate-400 text-sm">{service.description}</p>
+                    )}
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {staff.length > 0 && (
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="text-white">Choose Your Stylist (Optional)</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div
+                    className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                      formData.staff_id === ""
+                        ? 'border-amber-500 bg-amber-500/10'
+                        : 'border-slate-600 hover:border-slate-500'
+                    }`}
+                    onClick={() => handleInputChange('staff_id', '')}
+                  >
+                    <div className="text-white font-medium">Any Available Stylist</div>
+                  </div>
+                  {staff.map((member) => (
+                    <div
+                      key={member.id}
+                      className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                        formData.staff_id === member.id
+                          ? 'border-amber-500 bg-amber-500/10'
+                          : 'border-slate-600 hover:border-slate-500'
+                      }`}
+                      onClick={() => handleInputChange('staff_id', member.id)}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <Avatar className="w-10 h-10">
+                          <AvatarImage src={member.avatar_url || ""} alt={member.name} />
+                          <AvatarFallback className="bg-slate-700 text-white">
+                            {member.name.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="text-white font-medium">{member.name}</div>
+                          {member.specialties && member.specialties.length > 0 && (
+                            <div className="text-slate-400 text-sm">
+                              {member.specialties.slice(0, 2).join(', ')}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Booking Form */}
+          <div className="space-y-6">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <CalendarIcon className="w-5 h-5 mr-2" />
+                  Select Date & Time
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  disabled={(date) => 
+                    isBefore(date, startOfDay(new Date())) || 
+                    isAfter(date, addDays(new Date(), 30))
+                  }
+                  className="rounded-md border border-slate-700"
+                />
+                
+                {selectedDate && (
+                  <div>
+                    <Label className="text-white mb-2 block">Available Times</Label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {timeSlots.map((time) => (
+                        <Button
+                          key={time}
+                          variant={selectedTime === time ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setSelectedTime(time)}
+                          className={
+                            selectedTime === time
+                              ? "bg-amber-500 hover:bg-amber-600 text-black"
+                              : "border-slate-600 text-white hover:bg-slate-700"
+                          }
+                        >
+                          {time}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Your Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="customer_name" className="text-white">Full Name *</Label>
+                  <Input
+                    id="customer_name"
+                    value={formData.customer_name}
+                    onChange={(e) => handleInputChange("customer_name", e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
+                    placeholder="Your full name"
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="customer_phone" className="text-white">Phone Number *</Label>
+                  <Input
+                    id="customer_phone"
+                    value={formData.customer_phone}
+                    onChange={(e) => handleInputChange("customer_phone", e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
+                    placeholder="Your phone number"
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="customer_email" className="text-white">Email (Optional)</Label>
+                  <Input
+                    id="customer_email"
+                    type="email"
+                    value={formData.customer_email}
+                    onChange={(e) => handleInputChange("customer_email", e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="notes" className="text-white">Special Requests (Optional)</Label>
+                  <Textarea
+                    id="notes"
+                    value={formData.notes}
+                    onChange={(e) => handleInputChange("notes", e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
+                    placeholder="Any special requests or notes..."
+                    rows={3}
+                  />
+                </div>
+                
+                <Button
+                  onClick={handleSubmit}
+                  disabled={
+                    submitting || 
+                    !formData.customer_name || 
+                    !formData.customer_phone || 
+                    !formData.service_id || 
+                    !selectedDate || 
+                    !selectedTime
+                  }
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-black font-semibold"
+                >
+                  {submitting ? "Booking..." : "Book Appointment"}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PublicBooking;

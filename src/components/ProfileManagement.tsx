@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Database } from "@/integrations/supabase/types";
+import { uploadImage } from "@/utils/imageUpload";
 
 type BusinessType = Database["public"]["Enums"]["business_type"];
 
@@ -19,7 +19,9 @@ const ProfileManagement = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [business, setBusiness] = useState(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -82,6 +84,43 @@ const ProfileManagement = () => {
     setFormData(prev => ({ ...prev, business_type: value }));
   };
 
+  const handleImageUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !business || !user) return;
+
+    setUploadingImage(true);
+    try {
+      const logoUrl = await uploadImage(file, 'business-logos', `${user.id}/${business.id}`);
+      
+      setFormData(prev => ({ ...prev, logo_url: logoUrl }));
+      
+      // Update the database immediately
+      const { error } = await supabase
+        .from('businesses')
+        .update({ logo_url: logoUrl })
+        .eq('id', business.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Logo Updated",
+        description: "Your business logo has been uploaded successfully.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Upload Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleSave = async () => {
     if (!business) return;
 
@@ -121,14 +160,6 @@ const ProfileManagement = () => {
     }
   };
 
-  const handleImageUpload = () => {
-    // Placeholder for image upload functionality
-    toast({
-      title: "Coming Soon",
-      description: "Photo upload functionality will be available soon.",
-    });
-  };
-
   if (!business) {
     return (
       <Card className="bg-slate-800/50 border-slate-700">
@@ -160,11 +191,19 @@ const ProfileManagement = () => {
             <Button
               variant="outline"
               onClick={handleImageUpload}
+              disabled={uploadingImage}
               className="border-slate-600 text-white hover:bg-slate-700"
             >
               <Camera className="w-4 h-4 mr-2" />
-              Change Photo
+              {uploadingImage ? "Uploading..." : "Change Photo"}
             </Button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              className="hidden"
+            />
             {formData.name && (
               <p className="text-slate-300 font-medium">{formData.name}</p>
             )}
