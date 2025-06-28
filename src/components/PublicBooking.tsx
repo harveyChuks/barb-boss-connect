@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -150,12 +149,12 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         start_time: startTime,
         end_time: endTimeString,
         notes: formData.notes || null,
-        status: 'pending'
+        status: 'pending' as const
       };
 
       const { error } = await supabase
         .from('appointments')
-        .insert([appointmentData]);
+        .insert(appointmentData);
 
       if (error) throw error;
 

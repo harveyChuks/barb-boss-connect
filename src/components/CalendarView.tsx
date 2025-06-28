@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -64,7 +63,7 @@ const CalendarView = () => {
         .from('appointments')
         .select(`
           *,
-          services!inner(name, duration_minutes),
+          service:services!inner(name, duration_minutes),
           staff(name)
         `)
         .eq('business_id', businessData.id)
