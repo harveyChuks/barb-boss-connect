@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Camera, Save } from "lucide-react";
+import { Camera, Save, Copy, ExternalLink, Check } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -21,6 +21,7 @@ const ProfileManagement = () => {
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [business, setBusiness] = useState(null);
+  const [copiedLink, setCopiedLink] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -121,6 +122,33 @@ const ProfileManagement = () => {
     }
   };
 
+  const copyBookingLink = async () => {
+    if (!business?.booking_link) return;
+    
+    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    try {
+      await navigator.clipboard.writeText(bookingUrl);
+      setCopiedLink(true);
+      toast({
+        title: "Booking Link Copied",
+        description: "Your booking link has been copied to clipboard.",
+      });
+      setTimeout(() => setCopiedLink(false), 2000);
+    } catch (error) {
+      toast({
+        title: "Copy Failed",
+        description: "Failed to copy booking link. Please copy it manually.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const openBookingPage = () => {
+    if (!business?.booking_link) return;
+    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    window.open(bookingUrl, '_blank');
+  };
+
   const handleSave = async () => {
     if (!business) return;
 
@@ -170,157 +198,211 @@ const ProfileManagement = () => {
     );
   }
 
+  const bookingUrl = business.booking_link ? `${window.location.origin}/book/${business.booking_link}` : '';
+
   return (
-    <Card className="bg-slate-800/50 border-slate-700">
-      <CardHeader>
-        <CardTitle className="text-white">Business Profile</CardTitle>
-        <CardDescription className="text-slate-400">
-          Manage your business information and settings
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Profile Photo Section */}
-        <div className="flex items-center space-x-4">
-          <Avatar className="w-20 h-20">
-            <AvatarImage src={formData.logo_url} alt={formData.name} />
-            <AvatarFallback className="bg-slate-700 text-white text-lg">
-              {formData.name ? formData.name.charAt(0).toUpperCase() : 'B'}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col space-y-2">
-            <Button
-              variant="outline"
-              onClick={handleImageUpload}
-              disabled={uploadingImage}
-              className="border-slate-600 text-white hover:bg-slate-700"
-            >
-              <Camera className="w-4 h-4 mr-2" />
-              {uploadingImage ? "Uploading..." : "Change Photo"}
-            </Button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept="image/*"
-              className="hidden"
-            />
-            {formData.name && (
-              <p className="text-slate-300 font-medium">{formData.name}</p>
-            )}
-          </div>
-        </div>
+    <div className="space-y-6">
+      {/* Booking Link Section */}
+      {business.booking_link && (
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardHeader>
+            <CardTitle className="text-white">Your Booking Link</CardTitle>
+            <CardDescription className="text-slate-400">
+              Share this link with clients so they can book appointments online
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <Input
+                  value={bookingUrl}
+                  readOnly
+                  className="bg-slate-700 border-slate-600 text-white font-mono text-sm"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={copyBookingLink}
+                  variant="outline"
+                  className="border-slate-600 text-white hover:bg-slate-700"
+                >
+                  {copiedLink ? (
+                    <>
+                      <Check className="w-4 h-4 mr-2" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy Link
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={openBookingPage}
+                  className="bg-amber-500 hover:bg-amber-600 text-black"
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Preview
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
-        {/* Basic Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Business Profile Section */}
+      <Card className="bg-slate-800/50 border-slate-700">
+        <CardHeader>
+          <CardTitle className="text-white">Business Profile</CardTitle>
+          <CardDescription className="text-slate-400">
+            Manage your business information and settings
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Profile Photo Section */}
+          <div className="flex items-center space-x-4">
+            <Avatar className="w-20 h-20">
+              <AvatarImage src={formData.logo_url} alt={formData.name} />
+              <AvatarFallback className="bg-slate-700 text-white text-lg">
+                {formData.name ? formData.name.charAt(0).toUpperCase() : 'B'}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col space-y-2">
+              <Button
+                variant="outline"
+                onClick={handleImageUpload}
+                disabled={uploadingImage}
+                className="border-slate-600 text-white hover:bg-slate-700"
+              >
+                <Camera className="w-4 h-4 mr-2" />
+                {uploadingImage ? "Uploading..." : "Change Photo"}
+              </Button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*"
+                className="hidden"
+              />
+              {formData.name && (
+                <p className="text-slate-300 font-medium">{formData.name}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Basic Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Business Name</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+                className="bg-slate-700 border-slate-600 text-white"
+                placeholder="Enter your business name"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="business_type">Business Type</Label>
+              <Select value={formData.business_type} onValueChange={handleBusinessTypeChange}>
+                <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                  <SelectValue placeholder="Select business type" />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-700 border-slate-600">
+                  <SelectItem value="barbershop">Barbershop</SelectItem>
+                  <SelectItem value="hair_salon">Hair Salon</SelectItem>
+                  <SelectItem value="makeup_artist">Makeup Artist</SelectItem>
+                  <SelectItem value="nail_salon">Nail Salon</SelectItem>
+                  <SelectItem value="spa">Spa</SelectItem>
+                  <SelectItem value="beauty_clinic">Beauty Clinic</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone</Label>
+              <Input
+                id="phone"
+                value={formData.phone}
+                onChange={(e) => handleInputChange("phone", e.target.value)}
+                className="bg-slate-700 border-slate-600 text-white"
+                placeholder="Business phone number"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                className="bg-slate-700 border-slate-600 text-white"
+                placeholder="Business email address"
+              />
+            </div>
+          </div>
+
           <div className="space-y-2">
-            <Label htmlFor="name">Business Name</Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => handleInputChange("description", e.target.value)}
               className="bg-slate-700 border-slate-600 text-white"
-              placeholder="Enter your business name"
+              rows={3}
+              placeholder="Describe your business services and specialties"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="business_type">Business Type</Label>
-            <Select value={formData.business_type} onValueChange={handleBusinessTypeChange}>
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue placeholder="Select business type" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                <SelectItem value="barbershop">Barbershop</SelectItem>
-                <SelectItem value="hair_salon">Hair Salon</SelectItem>
-                <SelectItem value="makeup_artist">Makeup Artist</SelectItem>
-                <SelectItem value="nail_salon">Nail Salon</SelectItem>
-                <SelectItem value="spa">Spa</SelectItem>
-                <SelectItem value="beauty_clinic">Beauty Clinic</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone</Label>
+            <Label htmlFor="address">Address</Label>
             <Input
-              id="phone"
-              value={formData.phone}
-              onChange={(e) => handleInputChange("phone", e.target.value)}
+              id="address"
+              value={formData.address}
+              onChange={(e) => handleInputChange("address", e.target.value)}
               className="bg-slate-700 border-slate-600 text-white"
-              placeholder="Business phone number"
+              placeholder="Business address"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
-              placeholder="Business email address"
-            />
-          </div>
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="website">Website</Label>
+              <Input
+                id="website"
+                value={formData.website}
+                onChange={(e) => handleInputChange("website", e.target.value)}
+                className="bg-slate-700 border-slate-600 text-white"
+                placeholder="https://yourwebsite.com"
+              />
+            </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) => handleInputChange("description", e.target.value)}
-            className="bg-slate-700 border-slate-600 text-white"
-            rows={3}
-            placeholder="Describe your business services and specialties"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="address">Address</Label>
-          <Input
-            id="address"
-            value={formData.address}
-            onChange={(e) => handleInputChange("address", e.target.value)}
-            className="bg-slate-700 border-slate-600 text-white"
-            placeholder="Business address"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="website">Website</Label>
-            <Input
-              id="website"
-              value={formData.website}
-              onChange={(e) => handleInputChange("website", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
-              placeholder="https://yourwebsite.com"
-            />
+            <div className="space-y-2">
+              <Label htmlFor="instagram">Instagram</Label>
+              <Input
+                id="instagram"
+                value={formData.instagram}
+                onChange={(e) => handleInputChange("instagram", e.target.value)}
+                className="bg-slate-700 border-slate-600 text-white"
+                placeholder="@yourbusiness"
+              />
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="instagram">Instagram</Label>
-            <Input
-              id="instagram"
-              value={formData.instagram}
-              onChange={(e) => handleInputChange("instagram", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
-              placeholder="@yourbusiness"
-            />
-          </div>
-        </div>
-
-        <Button
-          onClick={handleSave}
-          disabled={loading}
-          className="bg-amber-500 hover:bg-amber-600 text-black"
-        >
-          <Save className="w-4 h-4 mr-2" />
-          {loading ? "Saving..." : "Save Changes"}
-        </Button>
-      </CardContent>
-    </Card>
+          <Button
+            onClick={handleSave}
+            disabled={loading}
+            className="bg-amber-500 hover:bg-amber-600 text-black"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            {loading ? "Saving..." : "Save Changes"}
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
