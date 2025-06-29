@@ -1,159 +1,125 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CalendarDays, Clock, X } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar, Clock, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { format } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
 
-interface AppointmentModificationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  appointment: {
-    id: string;
-    customer_name: string;
-    appointment_date: string;
-    start_time: string;
-    end_time: string;
-    status: string;
-    can_reschedule: boolean;
-    can_cancel: boolean;
-  };
-  onSuccess: () => void;
+interface Appointment {
+  id: string;
+  customer_name: string;
+  appointment_date: string;
+  start_time: string;
+  end_time: string;
+  status: string;
+  can_reschedule: boolean;
+  can_cancel: boolean;
 }
 
-const AppointmentModificationModal = ({ 
-  isOpen, 
-  onClose, 
-  appointment, 
-  onSuccess 
+interface AppointmentModificationModalProps {
+  appointment: Appointment | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onUpdate: () => void;
+}
+
+const AppointmentModificationModal = ({
+  appointment,
+  isOpen,
+  onClose,
+  onUpdate,
 }: AppointmentModificationModalProps) => {
   const { toast } = useToast();
-  const [modificationType, setModificationType] = useState<'reschedule' | 'cancel'>('reschedule');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date(appointment.appointment_date));
-  const [selectedTime, setSelectedTime] = useState(appointment.start_time);
+  const [action, setAction] = useState<'reschedule' | 'cancel' | ''>('');
+  const [newDate, setNewDate] = useState('');
+  const [newStartTime, setNewStartTime] = useState('');
+  const [newEndTime, setNewEndTime] = useState('');
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const timeSlots = Array.from({ length: 48 }, (_, i) => {
-    const hour = Math.floor(i / 2);
-    const minute = i % 2 === 0 ? '00' : '30';
-    return `${hour.toString().padStart(2, '0')}:${minute}`;
-  });
+  useEffect(() => {
+    if (appointment && isOpen) {
+      setNewDate(appointment.appointment_date);
+      setNewStartTime(appointment.start_time);
+      setNewEndTime(appointment.end_time);
+      setReason('');
+      setAction('');
+    }
+  }, [appointment, isOpen]);
 
-  const handleSubmit = async () => {
+  const handleReschedule = async () => {
+    if (!appointment) return;
+
     setLoading(true);
     try {
-      if (modificationType === 'cancel') {
-        // Cancel appointment
-        const { error: updateError } = await supabase
-          .from('appointments')
-          .update({
-            status: 'cancelled',
-            cancellation_reason: reason,
-            cancelled_at: new Date().toISOString()
-          })
-          .eq('id', appointment.id);
+      // Get business_id from the full appointment data
+      const { data: fullAppointment, error: fetchError } = await supabase
+        .from('appointments')
+        .select('business_id')
+        .eq('id', appointment.id)
+        .single();
 
-        if (updateError) throw updateError;
+      if (fetchError) throw fetchError;
 
-        // Log modification
-        const { error: logError } = await supabase
-          .from('appointment_modifications')
-          .insert({
-            appointment_id: appointment.id,
-            modification_type: 'cancel',
-            old_status: appointment.status,
-            new_status: 'cancelled',
-            reason,
-            modified_by: 'customer'
-          });
+      // Check for conflicts
+      const hasConflict = await supabase.rpc('check_appointment_conflict', {
+        p_business_id: fullAppointment.business_id,
+        p_appointment_date: newDate,
+        p_start_time: newStartTime,
+        p_end_time: newEndTime,
+        p_exclude_appointment_id: appointment.id
+      });
 
-        if (logError) throw logError;
-
+      if (hasConflict.data) {
         toast({
-          title: "Appointment Cancelled",
-          description: "Your appointment has been cancelled successfully.",
+          title: "Conflict Detected",
+          description: "The selected time slot conflicts with another appointment.",
+          variant: "destructive",
         });
-      } else {
-        // Reschedule appointment
-        if (!selectedDate) {
-          toast({
-            title: "Error",
-            description: "Please select a date",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        const newDate = format(selectedDate, 'yyyy-MM-dd');
-        const newEndTime = `${(parseInt(selectedTime.split(':')[0]) + 1).toString().padStart(2, '0')}:${selectedTime.split(':')[1]}`;
-
-        // Check for conflicts
-        const { data: conflictCheck } = await supabase
-          .rpc('check_appointment_conflict', {
-            p_business_id: appointment.business_id,
-            p_appointment_date: newDate,
-            p_start_time: selectedTime,
-            p_end_time: newEndTime,
-            p_exclude_appointment_id: appointment.id
-          });
-
-        if (conflictCheck) {
-          toast({
-            title: "Time Slot Unavailable",
-            description: "This time slot is already booked. Please choose another time.",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        // Update appointment
-        const { error: updateError } = await supabase
-          .from('appointments')
-          .update({
-            appointment_date: newDate,
-            start_time: selectedTime,
-            end_time: newEndTime
-          })
-          .eq('id', appointment.id);
-
-        if (updateError) throw updateError;
-
-        // Log modification
-        const { error: logError } = await supabase
-          .from('appointment_modifications')
-          .insert({
-            appointment_id: appointment.id,
-            modification_type: 'reschedule',
-            old_date: appointment.appointment_date,
-            old_start_time: appointment.start_time,
-            old_end_time: appointment.end_time,
-            new_date: newDate,
-            new_start_time: selectedTime,
-            new_end_time: newEndTime,
-            reason,
-            modified_by: 'customer'
-          });
-
-        if (logError) throw logError;
-
-        toast({
-          title: "Appointment Rescheduled",
-          description: "Your appointment has been rescheduled successfully.",
-        });
+        return;
       }
 
-      onSuccess();
+      // Record the modification
+      await supabase.from('appointment_modifications').insert({
+        appointment_id: appointment.id,
+        modification_type: 'reschedule',
+        old_date: appointment.appointment_date,
+        old_start_time: appointment.start_time,
+        old_end_time: appointment.end_time,
+        new_date: newDate,
+        new_start_time: newStartTime,
+        new_end_time: newEndTime,
+        reason,
+        modified_by: 'customer'
+      });
+
+      // Update the appointment
+      const { error: updateError } = await supabase
+        .from('appointments')
+        .update({
+          appointment_date: newDate,
+          start_time: newStartTime,
+          end_time: newEndTime,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', appointment.id);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "Success",
+        description: "Appointment rescheduled successfully",
+      });
+
+      onUpdate();
       onClose();
     } catch (error: any) {
-      console.error('Error modifying appointment:', error);
+      console.error('Error rescheduling appointment:', error);
       toast({
         title: "Error",
         description: error.message,
@@ -164,97 +130,191 @@ const AppointmentModificationModal = ({
     }
   };
 
+  const handleCancel = async () => {
+    if (!appointment) return;
+
+    setLoading(true);
+    try {
+      // Record the modification
+      await supabase.from('appointment_modifications').insert({
+        appointment_id: appointment.id,
+        modification_type: 'cancel',
+        old_status: appointment.status,
+        new_status: 'cancelled',
+        reason,
+        modified_by: 'customer'
+      });
+
+      // Update the appointment
+      const { error: updateError } = await supabase
+        .from('appointments')
+        .update({
+          status: 'cancelled',
+          cancellation_reason: reason,
+          cancelled_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', appointment.id);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "Success",
+        description: "Appointment cancelled successfully",
+      });
+
+      onUpdate();
+      onClose();
+    } catch (error: any) {
+      console.error('Error cancelling appointment:', error);
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!appointment) return null;
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-white flex items-center gap-2">
-            <CalendarDays className="w-5 h-5" />
+          <DialogTitle className="flex items-center gap-2">
+            <Calendar className="w-5 h-5" />
             Modify Appointment
           </DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-4">
           <div className="text-sm text-slate-300">
             <p><strong>Customer:</strong> {appointment.customer_name}</p>
-            <p><strong>Current Date:</strong> {format(new Date(appointment.appointment_date), 'PPP')}</p>
-            <p><strong>Current Time:</strong> {appointment.start_time}</p>
+            <p><strong>Current Date:</strong> {appointment.appointment_date}</p>
+            <p><strong>Current Time:</strong> {appointment.start_time} - {appointment.end_time}</p>
           </div>
 
-          <div className="space-y-2">
-            <Label className="text-white">Action</Label>
-            <Select value={modificationType} onValueChange={(value: 'reschedule' | 'cancel') => setModificationType(value)}>
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                {appointment.can_reschedule && (
-                  <SelectItem value="reschedule" className="text-white">Reschedule</SelectItem>
-                )}
-                {appointment.can_cancel && (
-                  <SelectItem value="cancel" className="text-white">Cancel</SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {modificationType === 'reschedule' && (
-            <>
-              <div className="space-y-2">
-                <Label className="text-white">New Date</Label>
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  disabled={(date) => date < new Date()}
-                  className="rounded-md border border-slate-600 bg-slate-700"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-white">New Time</Label>
-                <Select value={selectedTime} onValueChange={setSelectedTime}>
-                  <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-700 border-slate-600">
-                    {timeSlots.map(time => (
-                      <SelectItem key={time} value={time} className="text-white">
-                        {time}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </>
+          {!action && (
+            <div className="space-y-3">
+              {appointment.can_reschedule && (
+                <Button
+                  onClick={() => setAction('reschedule')}
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-black"
+                >
+                  <Clock className="w-4 h-4 mr-2" />
+                  Reschedule Appointment
+                </Button>
+              )}
+              {appointment.can_cancel && (
+                <Button
+                  onClick={() => setAction('cancel')}
+                  variant="destructive"
+                  className="w-full"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Cancel Appointment
+                </Button>
+              )}
+            </div>
           )}
 
-          <div className="space-y-2">
-            <Label className="text-white">Reason (Optional)</Label>
-            <Textarea
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              placeholder="Please provide a reason for this change..."
-              className="bg-slate-700 border-slate-600 text-white"
-            />
-          </div>
+          {action === 'reschedule' && (
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="new-date">New Date</Label>
+                <Input
+                  id="new-date"
+                  type="date"
+                  value={newDate}
+                  onChange={(e) => setNewDate(e.target.value)}
+                  className="bg-slate-700 border-slate-600"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <Label htmlFor="new-start-time">Start Time</Label>
+                  <Input
+                    id="new-start-time"
+                    type="time"
+                    value={newStartTime}
+                    onChange={(e) => setNewStartTime(e.target.value)}
+                    className="bg-slate-700 border-slate-600"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="new-end-time">End Time</Label>
+                  <Input
+                    id="new-end-time"
+                    type="time"
+                    value={newEndTime}
+                    onChange={(e) => setNewEndTime(e.target.value)}
+                    className="bg-slate-700 border-slate-600"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="reason">Reason (Optional)</Label>
+                <Textarea
+                  id="reason"
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  placeholder="Reason for rescheduling..."
+                  className="bg-slate-700 border-slate-600"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleReschedule}
+                  disabled={loading}
+                  className="flex-1 bg-amber-500 hover:bg-amber-600 text-black"
+                >
+                  {loading ? 'Rescheduling...' : 'Confirm Reschedule'}
+                </Button>
+                <Button
+                  onClick={() => setAction('')}
+                  variant="outline"
+                  className="border-slate-600"
+                >
+                  Back
+                </Button>
+              </div>
+            </div>
+          )}
 
-          <div className="flex justify-end space-x-2">
-            <Button
-              onClick={onClose}
-              variant="outline"
-              className="border-slate-600 text-white hover:bg-slate-700"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSubmit}
-              disabled={loading}
-              className="bg-amber-500 hover:bg-amber-600 text-black"
-            >
-              {loading ? 'Processing...' : modificationType === 'cancel' ? 'Cancel Appointment' : 'Reschedule'}
-            </Button>
-          </div>
+          {action === 'cancel' && (
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="cancel-reason">Reason for Cancellation</Label>
+                <Textarea
+                  id="cancel-reason"
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  placeholder="Please provide a reason for cancellation..."
+                  className="bg-slate-700 border-slate-600"
+                  required
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleCancel}
+                  disabled={loading || !reason.trim()}
+                  variant="destructive"
+                  className="flex-1"
+                >
+                  {loading ? 'Cancelling...' : 'Confirm Cancellation'}
+                </Button>
+                <Button
+                  onClick={() => setAction('')}
+                  variant="outline"
+                  className="border-slate-600"
+                >
+                  Back
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

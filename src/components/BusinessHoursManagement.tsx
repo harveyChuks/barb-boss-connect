@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -43,6 +42,16 @@ const BusinessHoursManagement = () => {
     return `${hour.toString().padStart(2, '0')}:${minute}`;
   });
 
+  // Default working hours: Monday-Saturday 8am-9pm, Sunday closed
+  const getDefaultHours = () => {
+    return daysOfWeek.map(day => ({
+      day_of_week: day.value,
+      start_time: '08:00',
+      end_time: '21:00',
+      is_closed: day.value === 0 // Sunday closed by default
+    }));
+  };
+
   useEffect(() => {
     fetchBusinessAndHours();
   }, [user]);
@@ -69,20 +78,47 @@ const BusinessHoursManagement = () => {
         .eq('business_id', businessData.id)
         .order('day_of_week');
 
-      if (hoursError) throw hoursError;
+      if (hoursError && hoursError.code !== 'PGRST116') {
+        throw hoursError;
+      }
 
-      // Initialize with default hours or existing hours
-      const initialHours = daysOfWeek.map(day => {
-        const existingHour = hoursData?.find(h => h.day_of_week === day.value);
-        return existingHour || {
-          day_of_week: day.value,
-          start_time: '09:00',
-          end_time: '17:00',
-          is_closed: day.value === 0 || day.value === 6 // Closed on weekends by default
-        };
-      });
+      // If no hours exist, use defaults and save them
+      if (!hoursData || hoursData.length === 0) {
+        const defaultHours = getDefaultHours();
+        setBusinessHours(defaultHours);
+        
+        // Save default hours to database
+        const hoursToInsert = defaultHours.map(hour => ({
+          business_id: businessData.id,
+          day_of_week: hour.day_of_week,
+          start_time: hour.start_time,
+          end_time: hour.end_time,
+          is_closed: hour.is_closed
+        }));
 
-      setBusinessHours(initialHours);
+        const { error: insertError } = await supabase
+          .from('business_hours')
+          .insert(hoursToInsert);
+
+        if (!insertError) {
+          toast({
+            title: "Default Hours Set",
+            description: "Default working hours (Mon-Sat 8am-9pm) have been applied",
+          });
+        }
+      } else {
+        // Map existing hours to match all days
+        const initialHours = daysOfWeek.map(day => {
+          const existingHour = hoursData.find(h => h.day_of_week === day.value);
+          return existingHour || {
+            day_of_week: day.value,
+            start_time: '08:00',
+            end_time: '21:00',
+            is_closed: day.value === 0
+          };
+        });
+        setBusinessHours(initialHours);
+      }
     } catch (error) {
       console.error('Error fetching business hours:', error);
       toast({
@@ -90,6 +126,9 @@ const BusinessHoursManagement = () => {
         description: "Failed to load business hours",
         variant: "destructive",
       });
+      
+      // Fallback to default hours if there's an error
+      setBusinessHours(getDefaultHours());
     } finally {
       setLoading(false);
     }
@@ -147,6 +186,14 @@ const BusinessHoursManagement = () => {
     }
   };
 
+  const resetToDefaults = () => {
+    setBusinessHours(getDefaultHours());
+    toast({
+      title: "Reset to Defaults",
+      description: "Hours reset to Monday-Saturday 8am-9pm, Sunday closed",
+    });
+  };
+
   if (loading) {
     return (
       <Card className="bg-slate-800/50 border-slate-700">
@@ -170,17 +217,31 @@ const BusinessHoursManagement = () => {
               Set your operating hours for each day of the week
             </CardDescription>
           </div>
-          <Button
-            onClick={saveBusinessHours}
-            disabled={saving}
-            className="bg-amber-500 hover:bg-amber-600 text-black"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            {saving ? 'Saving...' : 'Save Hours'}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={resetToDefaults}
+              variant="outline"
+              size="sm"
+              className="border-slate-600 text-slate-300 hover:bg-slate-700"
+            >
+              Reset to Defaults
+            </Button>
+            <Button
+              onClick={saveBusinessHours}
+              disabled={saving}
+              className="bg-amber-500 hover:bg-amber-600 text-black"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {saving ? 'Saving...' : 'Save Hours'}
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="text-sm text-slate-400 mb-4">
+          Default hours: Monday-Saturday 8:00 AM - 9:00 PM, Sunday closed
+        </div>
+        
         {businessHours.map((hour, index) => (
           <div key={hour.day_of_week} className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg">
             <div className="flex items-center space-x-4">
