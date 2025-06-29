@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, Clock, User, Calendar as CalendarIcon, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, User, Calendar as CalendarIcon, Plus, RefreshCw } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -38,10 +37,41 @@ const CalendarView = () => {
   const [business, setBusiness] = useState(null);
   const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('week');
   const [showNewAppointmentModal, setShowNewAppointmentModal] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchBusinessAndAppointments();
-  }, [user, selectedDate]);
+  }, [user, selectedDate, viewMode]);
+
+  // Set up real-time subscription for appointments
+  useEffect(() => {
+    if (!business) return;
+
+    console.log('Setting up real-time subscription for appointments');
+    
+    const channel = supabase
+      .channel('appointments-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'appointments',
+          filter: `business_id=eq.${business.id}`
+        },
+        (payload) => {
+          console.log('Real-time appointment change:', payload);
+          // Refresh appointments when changes occur
+          fetchBusinessAndAppointments();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      console.log('Cleaning up real-time subscription');
+      supabase.removeChannel(channel);
+    };
+  }, [business]);
 
   const fetchBusinessAndAppointments = async () => {
     if (!user) return;
@@ -58,9 +88,23 @@ const CalendarView = () => {
       if (businessError) throw businessError;
       setBusiness(businessData);
 
-      // Get appointments for selected date
-      const startDate = startOfDay(selectedDate);
-      const endDate = endOfDay(selectedDate);
+      // Determine date range based on view mode
+      let startDate, endDate;
+      if (viewMode === 'week') {
+        startDate = startOfWeek(selectedDate);
+        endDate = endOfWeek(selectedDate);
+      } else if (viewMode === 'day') {
+        startDate = startOfDay(selectedDate);
+        endDate = endOfDay(selectedDate);
+      } else {
+        // Month view - get whole month
+        const firstDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+        const lastDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
+        startDate = startOfDay(firstDay);
+        endDate = endOfDay(lastDay);
+      }
+
+      console.log(`Fetching appointments from ${format(startDate, 'yyyy-MM-dd')} to ${format(endDate, 'yyyy-MM-dd')}`);
 
       const { data: appointmentsData, error: appointmentsError } = await supabase
         .from('appointments')
@@ -72,10 +116,12 @@ const CalendarView = () => {
         .eq('business_id', businessData.id)
         .gte('appointment_date', format(startDate, 'yyyy-MM-dd'))
         .lte('appointment_date', format(endDate, 'yyyy-MM-dd'))
+        .order('appointment_date', { ascending: true })
         .order('start_time', { ascending: true });
 
       if (appointmentsError) throw appointmentsError;
 
+      console.log(`Fetched ${appointmentsData?.length || 0} appointments`);
       setAppointments(appointmentsData || []);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -87,6 +133,17 @@ const CalendarView = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchBusinessAndAppointments();
+    setRefreshing(false);
+    
+    toast({
+      title: "Refreshed",
+      description: "Calendar data has been updated",
+    });
   };
 
   const getStatusColor = (status: string) => {
@@ -166,6 +223,16 @@ const CalendarView = () => {
             ))}
           </div>
           <Button 
+            onClick={handleRefresh}
+            disabled={refreshing}
+            variant="outline"
+            size="sm"
+            className="border-slate-600 text-white hover:bg-slate-700"
+          >
+            <RefreshCw className={`w-4 h-4 mr-1 ${refreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          <Button 
             onClick={() => setShowNewAppointmentModal(true)}
             className="bg-amber-500 hover:bg-amber-600 text-black text-sm sm:text-base"
           >
@@ -218,6 +285,7 @@ const CalendarView = () => {
                   </CardTitle>
                   <CardDescription className="text-slate-400 text-sm">
                     {appointments.length} appointment{appointments.length !== 1 ? 's' : ''}
+                    {refreshing && <span className="ml-2 text-amber-400">Updating...</span>}
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">

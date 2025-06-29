@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -47,14 +48,12 @@ const PublicBooking = () => {
 
   useEffect(() => {
     fetchBusiness();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [businessLink]);
 
   useEffect(() => {
     if (business) {
       fetchServices();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [business]);
 
   const fetchBusiness = async () => {
@@ -62,7 +61,7 @@ const PublicBooking = () => {
       const { data: businessData, error } = await supabase
         .from('businesses')
         .select('*')
-        .eq('link', businessLink)
+        .eq('booking_link', businessLink)
         .single();
 
       if (error) throw error;
@@ -114,7 +113,9 @@ const PublicBooking = () => {
 
     try {
       const appointmentDate = selectedDate.toISOString().split('T')[0];
-      const [hours, minutes] = selectedTime.split(':');
+      const [hours, minutes] = selectedTime.includes('AM') || selectedTime.includes('PM') 
+        ? convertTo24Hour(selectedTime).split(':')
+        : selectedTime.split(':');
       const startTime = `${hours}:${minutes}:00`;
 
       // Calculate end time
@@ -167,6 +168,18 @@ const PublicBooking = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const convertTo24Hour = (time12h: string) => {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') {
+      hours = '00';
+    }
+    if (modifier === 'PM') {
+      hours = (parseInt(hours, 10) + 12).toString();
+    }
+    return `${hours.padStart(2, '0')}:${minutes}`;
   };
 
   const handlePaymentSuccess = () => {
@@ -236,19 +249,20 @@ const PublicBooking = () => {
                   <TimeSlotPicker onDateSelect={setSelectedDate} />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="time" className="text-slate-300">
-                    Select Time
-                  </Label>
-                  {selectedDate && (
+                {selectedDate && selectedService && (
+                  <div className="space-y-2">
+                    <Label htmlFor="time" className="text-slate-300">
+                      Select Time
+                    </Label>
                     <TimeSlotPicker
-                      onTimeSelect={setSelectedTime}
-                      selectedDate={selectedDate}
                       businessId={business.id}
+                      selectedDate={selectedDate}
                       selectedService={selectedService}
+                      selectedTime={selectedTime}
+                      onTimeSelect={setSelectedTime}
                     />
-                  )}
-                </div>
+                  </div>
+                )}
 
                 <div className="space-y-2">
                   <Label htmlFor="name" className="text-slate-300">
