@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon } from "lucide-react";
+import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format, addDays, isAfter, isBefore, startOfDay } from "date-fns";
@@ -42,6 +42,14 @@ interface Staff {
   specialties: string[] | null;
 }
 
+interface WorkPicture {
+  id: string;
+  image_url: string;
+  description: string | null;
+  service_type: string | null;
+  created_at: string;
+}
+
 interface PublicBookingProps {
   businessLink: string;
 }
@@ -51,6 +59,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   const [business, setBusiness] = useState<Business | null>(null);
   const [services, setServices] = useState<Service[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
+  const [workPictures, setWorkPictures] = useState<WorkPicture[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -68,6 +77,38 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
     "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
     "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
+  ];
+
+  // Mock pictures for demonstration
+  const mockPictures = [
+    {
+      id: 'mock-1',
+      image_url: 'https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=400&h=400&fit=crop',
+      description: 'Modern fade haircut with clean lines',
+      service_type: 'Haircut',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'mock-2', 
+      image_url: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=400&fit=crop',
+      description: 'Classic beard trim and styling',
+      service_type: 'Beard Styling',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'mock-3',
+      image_url: 'https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=400&h=400&fit=crop',
+      description: 'Professional business cut',
+      service_type: 'Haircut',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'mock-4',
+      image_url: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400&h=400&fit=crop',
+      description: 'Creative hair color and styling',
+      service_type: 'Hair Color',
+      created_at: new Date().toISOString()
+    }
   ];
 
   useEffect(() => {
@@ -108,6 +149,22 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
       if (staffError) throw staffError;
       setStaff(staffData || []);
+
+      // Get work pictures
+      const { data: workPicturesData, error: workPicturesError } = await supabase
+        .from('work_pictures')
+        .select('*')
+        .eq('business_id', businessData.id)
+        .order('created_at', { ascending: false });
+
+      if (workPicturesError) {
+        console.error('Error fetching work pictures:', workPicturesError);
+        // Use mock data if error or no pictures
+        setWorkPictures(mockPictures);
+      } else {
+        // Use real pictures or mock data if none exist
+        setWorkPictures(workPicturesData?.length > 0 ? workPicturesData : mockPictures);
+      }
     } catch (error) {
       console.error('Error fetching business data:', error);
       toast({
@@ -115,6 +172,8 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         description: "The business you're looking for doesn't exist or is no longer active.",
         variant: "destructive",
       });
+      // Show mock pictures even on error
+      setWorkPictures(mockPictures);
     } finally {
       setLoading(false);
     }
@@ -208,7 +267,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Business Header */}
         <Card className="bg-slate-800/50 border-slate-700 mb-8">
           <CardContent className="p-8">
@@ -249,6 +308,48 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Work Portfolio Section */}
+        {workPictures.length > 0 && (
+          <Card className="bg-slate-800/50 border-slate-700 mb-8">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <Images className="w-5 h-5 mr-2" />
+                Our Work Portfolio
+              </CardTitle>
+              <CardDescription className="text-slate-400">
+                See examples of our previous work and craftsmanship
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {workPictures.slice(0, 8).map((picture) => (
+                  <div key={picture.id} className="relative group">
+                    <div className="aspect-square overflow-hidden rounded-lg">
+                      <img
+                        src={picture.image_url}
+                        alt={picture.description || "Work sample"}
+                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-end">
+                      <div className="p-3 text-white">
+                        {picture.service_type && (
+                          <Badge variant="secondary" className="mb-1 text-xs">
+                            {picture.service_type}
+                          </Badge>
+                        )}
+                        {picture.description && (
+                          <p className="text-sm font-medium">{picture.description}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Services & Staff */}
