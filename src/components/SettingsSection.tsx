@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Shield, Bell, CreditCard, Users, Calendar } from "lucide-react";
+import BusinessHoursManagement from "./BusinessHoursManagement";
 
 const SettingsSection = () => {
   const settingsCategories = [
@@ -43,18 +44,6 @@ const SettingsSection = () => {
       ]
     },
     {
-      title: "Business Hours",
-      description: "Set your operating hours and availability",
-      icon: Calendar,
-      status: "Coming Soon",
-      items: [
-        "Weekly schedule",
-        "Holiday calendar",
-        "Break times",
-        "Time zone settings"
-      ]
-    },
-    {
       title: "Staff Management",
       description: "Manage team members and permissions",
       icon: Users,
@@ -86,6 +75,9 @@ const SettingsSection = () => {
         <h2 className="text-2xl font-bold text-white">Settings</h2>
         <p className="text-slate-400">Manage your account and business preferences</p>
       </div>
+
+      {/* Business Hours Management - Active Feature */}
+      <BusinessHoursManagement />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {settingsCategories.map((category, index) => (
@@ -132,9 +124,9 @@ const SettingsSection = () => {
       <Card className="bg-slate-800/50 border-slate-700">
         <CardContent className="p-6 text-center">
           <Settings className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">Settings Coming Soon</h3>
+          <h3 className="text-xl font-semibold text-white mb-2">More Settings Coming Soon</h3>
           <p className="text-slate-400 mb-4 max-w-2xl mx-auto">
-            We're working on bringing you comprehensive settings to customize your BarbS experience. 
+            We're working on bringing you more comprehensive settings to customize your BarbS experience. 
             These features will be available in upcoming updates.
           </p>
           <div className="flex flex-wrap justify-center gap-2">
