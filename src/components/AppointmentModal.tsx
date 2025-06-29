@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -36,7 +35,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
   });
 
   const selectedService = services.find(s => s.id === formData.serviceId);
-  const { checkConflict } = useTimeSlots(
+  const { checkConflict, refetch: refetchTimeSlots } = useTimeSlots(
     userBusiness?.id || "",
     formData.date,
     selectedService?.duration_minutes || 60
@@ -124,6 +123,15 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
       return;
     }
 
+    if (!formData.time) {
+      toast({
+        title: "Error",
+        description: "Please select a time slot",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -165,12 +173,28 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
       const startTime = convertTimeToPostgresFormat(formData.time);
       const endTime = calculateEndTime(startTime, selectedService.duration_minutes);
 
-      // Check for conflicts before booking
+      console.log('Attempting to book appointment:', {
+        date: formData.date,
+        startTime,
+        endTime,
+        businessId: userBusiness.id,
+        serviceId: formData.serviceId
+      });
+
+      // CRITICAL: Check for conflicts before booking
       const hasConflict = await checkConflict(formData.date, startTime, endTime);
       if (hasConflict) {
-        throw new Error("This time slot is no longer available. Please select a different time.");
+        toast({
+          title: "Time Slot Unavailable",
+          description: "This time slot is no longer available. Please select a different time.",
+          variant: "destructive",
+        });
+        // Refresh time slots to show updated availability
+        refetchTimeSlots();
+        return;
       }
 
+      // Proceed with booking only if no conflicts
       const { error } = await supabase
         .from('appointments')
         .insert({
@@ -187,7 +211,12 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
           status: 'pending'
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
+
+      console.log('Appointment successfully created');
 
       toast({
         title: "Appointment Scheduled",
@@ -209,9 +238,10 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
       onOpenChange(false);
       onAppointmentCreated?.();
     } catch (error: any) {
+      console.error('Error creating appointment:', error);
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || "Failed to schedule appointment",
         variant: "destructive",
       });
     } finally {
@@ -325,7 +355,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
             />
           </div>
 
-          {/* Time Slot Picker */}
+          {/* Time Slot Picker - This now prevents double bookings */}
           {formData.date && formData.serviceId && userBusiness && (
             <div className="space-y-2">
               <Label>Available Time Slots</Label>

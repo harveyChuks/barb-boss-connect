@@ -18,6 +18,8 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
 
     setLoading(true);
     try {
+      console.log('Fetching time slots for:', { businessId, date, durationMinutes, staffId });
+      
       const { data, error } = await supabase.rpc('get_available_time_slots', {
         p_business_id: businessId,
         p_date: date,
@@ -25,7 +27,12 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
         p_staff_id: staffId || null
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching time slots:', error);
+        throw error;
+      }
+      
+      console.log('Time slots fetched:', data);
       setTimeSlots(data || []);
     } catch (error: any) {
       console.error('Error fetching time slots:', error);
@@ -34,6 +41,7 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
         description: "Failed to load available time slots",
         variant: "destructive",
       });
+      setTimeSlots([]);
     } finally {
       setLoading(false);
     }
@@ -50,6 +58,8 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
     excludeAppointmentId?: string
   ): Promise<boolean> => {
     try {
+      console.log('Checking conflict for:', { businessId, appointmentDate, startTime, endTime, staffId, excludeAppointmentId });
+      
       const { data, error } = await supabase.rpc('check_appointment_conflict', {
         p_business_id: businessId,
         p_appointment_date: appointmentDate,
@@ -59,11 +69,17 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
         p_exclude_appointment_id: excludeAppointmentId || null
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error checking appointment conflict:', error);
+        throw error;
+      }
+      
+      console.log('Conflict check result:', data);
       return data || false;
     } catch (error) {
       console.error('Error checking appointment conflict:', error);
-      return true; // Return true to prevent booking if there's an error
+      // Return true to prevent booking if there's an error checking conflicts
+      return true;
     }
   };
 
