@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -138,14 +139,14 @@ const CalendarView = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white">Calendar</h2>
-          <p className="text-slate-400">Manage your appointments</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-white">Calendar</h2>
+          <p className="text-slate-400 text-sm sm:text-base">Manage your appointments</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
           <div className="flex rounded-lg bg-slate-800 p-1">
             {['day', 'week', 'month'].map((mode) => (
               <Button
@@ -153,25 +154,25 @@ const CalendarView = () => {
                 variant={viewMode === mode ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode(mode as any)}
-                className={viewMode === mode 
+                className={`flex-1 sm:flex-none ${viewMode === mode 
                   ? "bg-amber-500 hover:bg-amber-600 text-black" 
                   : "text-white hover:bg-slate-700"
-                }
+                }`}
               >
                 {mode.charAt(0).toUpperCase() + mode.slice(1)}
               </Button>
             ))}
           </div>
-          <Button className="bg-amber-500 hover:bg-amber-600 text-black">
+          <Button className="bg-amber-500 hover:bg-amber-600 text-black text-sm sm:text-base">
             <Plus className="w-4 h-4 mr-2" />
             New Appointment
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-6">
         {/* Mini Calendar */}
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-slate-800/50 border-slate-700 xl:block hidden">
           <CardHeader className="pb-3">
             <CardTitle className="text-white text-lg">Calendar</CardTitle>
           </CardHeader>
@@ -202,15 +203,15 @@ const CalendarView = () => {
         {/* Main Calendar View */}
         <div className="xl:col-span-3">
           <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader>
-              <div className="flex items-center justify-between">
+            <CardHeader className="pb-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <CardTitle className="text-white text-xl">
+                  <CardTitle className="text-white text-lg sm:text-xl">
                     {viewMode === 'day' && format(selectedDate, 'EEEE, MMMM d, yyyy')}
                     {viewMode === 'week' && `Week of ${format(startOfWeek(selectedDate), 'MMM d')} - ${format(endOfWeek(selectedDate), 'MMM d, yyyy')}`}
                     {viewMode === 'month' && format(selectedDate, 'MMMM yyyy')}
                   </CardTitle>
-                  <CardDescription className="text-slate-400">
+                  <CardDescription className="text-slate-400 text-sm">
                     {appointments.length} appointment{appointments.length !== 1 ? 's' : ''}
                   </CardDescription>
                 </div>
@@ -227,7 +228,7 @@ const CalendarView = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setSelectedDate(new Date())}
-                    className="border-slate-600 text-white hover:bg-slate-700 px-4"
+                    className="border-slate-600 text-white hover:bg-slate-700 px-2 sm:px-4 text-sm"
                   >
                     Today
                   </Button>
@@ -251,51 +252,51 @@ const CalendarView = () => {
                 <>
                   {/* Week View */}
                   {viewMode === 'week' && (
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {getWeekDays().map((day) => {
                         const dayAppointments = getAppointmentsForDate(day);
                         const isToday = format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
                         
                         return (
-                          <div key={day.toISOString()} className={`border-l-4 pl-4 py-2 ${isToday ? 'border-amber-500 bg-amber-500/5' : 'border-slate-600'}`}>
-                            <div className="flex items-center justify-between mb-2">
-                              <h3 className={`font-semibold ${isToday ? 'text-amber-400' : 'text-white'}`}>
+                          <div key={day.toISOString()} className={`border-l-4 pl-3 sm:pl-4 py-2 ${isToday ? 'border-amber-500 bg-amber-500/5' : 'border-slate-600'}`}>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                              <h3 className={`font-semibold text-sm sm:text-base ${isToday ? 'text-amber-400' : 'text-white'}`}>
                                 {format(day, 'EEEE, MMM d')}
-                                {isToday && <Badge className="ml-2 bg-amber-500 text-black">Today</Badge>}
+                                {isToday && <Badge className="ml-2 bg-amber-500 text-black text-xs">Today</Badge>}
                               </h3>
-                              <span className="text-slate-400 text-sm">
+                              <span className="text-slate-400 text-xs sm:text-sm">
                                 {dayAppointments.length} appointment{dayAppointments.length !== 1 ? 's' : ''}
                               </span>
                             </div>
                             
                             {dayAppointments.length === 0 ? (
-                              <p className="text-slate-500 text-sm italic">No appointments scheduled</p>
+                              <p className="text-slate-500 text-xs sm:text-sm italic">No appointments scheduled</p>
                             ) : (
                               <div className="grid gap-2">
                                 {dayAppointments.map((appointment) => (
                                   <div
                                     key={appointment.id}
-                                    className="bg-slate-700/50 border border-slate-600 rounded-lg p-3 hover:bg-slate-700/70 transition-colors cursor-pointer"
+                                    className="bg-slate-700/50 border border-slate-600 rounded-lg p-2 sm:p-3 hover:bg-slate-700/70 transition-colors cursor-pointer"
                                   >
                                     <div className="flex items-start justify-between">
-                                      <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-1">
-                                          <Badge className={`${getStatusColor(appointment.status)} text-white text-xs`}>
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-1">
+                                          <Badge className={`${getStatusColor(appointment.status)} text-white text-xs w-fit`}>
                                             {appointment.status}
                                           </Badge>
-                                          <div className="flex items-center text-slate-300 text-sm">
+                                          <div className="flex items-center text-slate-300 text-xs sm:text-sm">
                                             <Clock className="w-3 h-3 mr-1" />
                                             {formatTime(appointment.start_time)} - {formatTime(appointment.end_time)}
                                           </div>
                                         </div>
-                                        <div className="flex items-center text-white font-medium mb-1">
-                                          <User className="w-4 h-4 mr-2" />
-                                          {appointment.customer_name}
+                                        <div className="flex items-center text-white font-medium mb-1 text-sm sm:text-base">
+                                          <User className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                                          <span className="truncate">{appointment.customer_name}</span>
                                         </div>
-                                        <div className="text-slate-300 text-sm">
-                                          {appointment.service?.name}
+                                        <div className="text-slate-300 text-xs sm:text-sm">
+                                          <span className="truncate">{appointment.service?.name}</span>
                                           {appointment.staff && (
-                                            <span className="text-slate-400 ml-2">
+                                            <span className="text-slate-400 ml-2 hidden sm:inline">
                                               • {appointment.staff.name}
                                             </span>
                                           )}
@@ -316,32 +317,32 @@ const CalendarView = () => {
                   {viewMode === 'day' && (
                     <div className="space-y-3">
                       {appointments.length === 0 ? (
-                        <div className="text-center py-12">
-                          <CalendarIcon className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-                          <h3 className="text-xl font-semibold text-white mb-2">No Appointments</h3>
-                          <p className="text-slate-400">No appointments scheduled for this date.</p>
+                        <div className="text-center py-8 sm:py-12">
+                          <CalendarIcon className="w-12 h-12 sm:w-16 sm:h-16 text-slate-500 mx-auto mb-4" />
+                          <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">No Appointments</h3>
+                          <p className="text-slate-400 text-sm sm:text-base">No appointments scheduled for this date.</p>
                         </div>
                       ) : (
                         appointments.map((appointment) => (
                           <Card key={appointment.id} className="bg-slate-700/50 border-slate-600 hover:bg-slate-700/70 transition-colors cursor-pointer">
-                            <CardContent className="p-4">
+                            <CardContent className="p-3 sm:p-4">
                               <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-2">
-                                    <Badge className={`${getStatusColor(appointment.status)} text-white`}>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                                    <Badge className={`${getStatusColor(appointment.status)} text-white text-xs w-fit`}>
                                       {appointment.status}
                                     </Badge>
-                                    <div className="flex items-center text-slate-300">
+                                    <div className="flex items-center text-slate-300 text-sm">
                                       <Clock className="w-4 h-4 mr-1" />
                                       {formatTime(appointment.start_time)} - {formatTime(appointment.end_time)}
                                     </div>
                                   </div>
-                                  <div className="flex items-center text-white font-semibold mb-2">
-                                    <User className="w-5 h-5 mr-2" />
-                                    {appointment.customer_name}
+                                  <div className="flex items-center text-white font-semibold mb-2 text-sm sm:text-base">
+                                    <User className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
+                                    <span className="truncate">{appointment.customer_name}</span>
                                   </div>
-                                  <div className="text-slate-300 mb-1">
-                                    Service: {appointment.service?.name}
+                                  <div className="text-slate-300 mb-1 text-sm">
+                                    Service: <span className="truncate">{appointment.service?.name}</span>
                                     {appointment.service?.duration_minutes && (
                                       <span className="text-slate-400 ml-2">
                                         ({appointment.service.duration_minutes} min)
@@ -369,10 +370,10 @@ const CalendarView = () => {
 
                   {/* Month View */}
                   {viewMode === 'month' && (
-                    <div className="text-center py-12">
-                      <CalendarIcon className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-                      <h3 className="text-xl font-semibold text-white mb-2">Month View</h3>
-                      <p className="text-slate-400">Month view coming soon. Use day or week view for now.</p>
+                    <div className="text-center py-8 sm:py-12">
+                      <CalendarIcon className="w-12 h-12 sm:w-16 sm:h-16 text-slate-500 mx-auto mb-4" />
+                      <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">Month View</h3>
+                      <p className="text-slate-400 text-sm sm:text-base">Month view coming soon. Use day or week view for now.</p>
                     </div>
                   )}
                 </>
