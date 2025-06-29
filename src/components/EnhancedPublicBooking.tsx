@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Clock, User, Calendar as CalendarIcon, CheckCircle, AlertCircle } from "lucide-react";
+import { Clock, User, Calendar as CalendarIcon, CheckCircle, AlertCircle, Images } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -30,10 +29,19 @@ interface TimeSlot {
   is_available: boolean;
 }
 
+interface WorkPicture {
+  id: string;
+  image_url: string;
+  description: string | null;
+  service_type: string | null;
+  created_at: string;
+}
+
 const EnhancedPublicBooking = ({ businessLink }: EnhancedPublicBookingProps) => {
   const { toast } = useToast();
   const [business, setBusiness] = useState<any>(null);
   const [services, setServices] = useState<Service[]>([]);
+  const [workPictures, setWorkPictures] = useState<WorkPicture[]>([]);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
@@ -46,6 +54,38 @@ const EnhancedPublicBooking = ({ businessLink }: EnhancedPublicBookingProps) => 
   });
   const [loading, setLoading] = useState(false);
   const [bookingComplete, setBookingComplete] = useState(false);
+
+  // Mock pictures for demonstration
+  const mockPictures = [
+    {
+      id: 'mock-1',
+      image_url: 'https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=400&h=400&fit=crop',
+      description: 'Modern fade haircut with clean lines',
+      service_type: 'Haircut',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'mock-2', 
+      image_url: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=400&fit=crop',
+      description: 'Classic beard trim and styling',
+      service_type: 'Beard Styling',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'mock-3',
+      image_url: 'https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=400&h=400&fit=crop',
+      description: 'Professional business cut',
+      service_type: 'Haircut',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'mock-4',
+      image_url: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400&h=400&fit=crop',
+      description: 'Creative hair color and styling',
+      service_type: 'Hair Color',
+      created_at: new Date().toISOString()
+    }
+  ];
 
   useEffect(() => {
     fetchBusinessAndServices();
@@ -77,6 +117,22 @@ const EnhancedPublicBooking = ({ businessLink }: EnhancedPublicBookingProps) => 
 
       if (servicesError) throw servicesError;
       setServices(servicesData || []);
+
+      // Get work pictures
+      const { data: workPicturesData, error: workPicturesError } = await supabase
+        .from('work_pictures')
+        .select('*')
+        .eq('business_id', businessData.id)
+        .order('created_at', { ascending: false });
+
+      if (workPicturesError) {
+        console.error('Error fetching work pictures:', workPicturesError);
+        // Use mock data if error or no pictures
+        setWorkPictures(mockPictures);
+      } else {
+        // Use real pictures or mock data if none exist
+        setWorkPictures(workPicturesData?.length > 0 ? workPicturesData : mockPictures);
+      }
     } catch (error) {
       console.error('Error fetching business:', error);
       toast({
@@ -84,6 +140,8 @@ const EnhancedPublicBooking = ({ businessLink }: EnhancedPublicBookingProps) => 
         description: "Could not load booking information",
         variant: "destructive",
       });
+      // Show mock pictures even on error
+      setWorkPictures(mockPictures);
     }
   };
 
@@ -229,6 +287,45 @@ const EnhancedPublicBooking = ({ businessLink }: EnhancedPublicBookingProps) => 
           <h1 className="text-3xl font-bold text-white mb-2">Book with {business.name}</h1>
           <p className="text-slate-400">{business.description}</p>
         </div>
+
+        {/* Work Portfolio Section */}
+        {workPictures.length > 0 && (
+          <Card className="bg-slate-800/50 border-slate-700 mb-8">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <Images className="w-5 h-5 mr-2" />
+                Our Work Portfolio
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {workPictures.slice(0, 8).map((picture) => (
+                  <div key={picture.id} className="relative group">
+                    <div className="aspect-square overflow-hidden rounded-lg">
+                      <img
+                        src={picture.image_url}
+                        alt={picture.description || "Work sample"}
+                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-end">
+                      <div className="p-3 text-white">
+                        {picture.service_type && (
+                          <Badge variant="secondary" className="mb-1 text-xs">
+                            {picture.service_type}
+                          </Badge>
+                        )}
+                        {picture.description && (
+                          <p className="text-sm font-medium">{picture.description}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Service Selection */}
