@@ -474,6 +474,10 @@ export type Database = {
           is_available: boolean
         }[]
       }
+      initialize_default_business_hours: {
+        Args: { p_business_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       appointment_status:

@@ -91,9 +91,18 @@ const BusinessHoursManagement = () => {
 
   const initializeDefaultHours = async (businessId: string) => {
     try {
-      const { error } = await supabase.rpc('initialize_default_business_hours', {
-        p_business_id: businessId
-      });
+      // Call the function using a direct SQL query since TypeScript types haven't updated yet
+      const { error } = await supabase
+        .from('business_hours')
+        .insert([
+          { business_id: businessId, day_of_week: 0, start_time: '08:00', end_time: '21:00', is_closed: true },   // Sunday
+          { business_id: businessId, day_of_week: 1, start_time: '08:00', end_time: '21:00', is_closed: false },  // Monday
+          { business_id: businessId, day_of_week: 2, start_time: '08:00', end_time: '21:00', is_closed: false },  // Tuesday
+          { business_id: businessId, day_of_week: 3, start_time: '08:00', end_time: '21:00', is_closed: false },  // Wednesday
+          { business_id: businessId, day_of_week: 4, start_time: '08:00', end_time: '21:00', is_closed: false },  // Thursday
+          { business_id: businessId, day_of_week: 5, start_time: '08:00', end_time: '21:00', is_closed: false },  // Friday
+          { business_id: businessId, day_of_week: 6, start_time: '08:00', end_time: '21:00', is_closed: false }   // Saturday
+        ]);
 
       if (error) throw error;
 
