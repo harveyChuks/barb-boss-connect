@@ -471,7 +471,7 @@ const CalendarView = () => {
             setSelectedAppointment(null);
           }}
           appointment={selectedAppointment}
-          onSuccess={fetchBusinessAndAppointments}
+          onUpdate={fetchBusinessAndAppointments}
         />
       )}
     </div>
