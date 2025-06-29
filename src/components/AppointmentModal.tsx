@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import TimeSlotPicker from "./TimeSlotPicker";
+import { useTimeSlots } from "@/hooks/useTimeSlots";
 
 interface AppointmentModalProps {
   open: boolean;
@@ -33,11 +35,12 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
     notes: ""
   });
 
-  const timeSlots = [
-    "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-    "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM",
-    "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM", "5:30 PM"
-  ];
+  const selectedService = services.find(s => s.id === formData.serviceId);
+  const { checkConflict } = useTimeSlots(
+    userBusiness?.id || "",
+    formData.date,
+    selectedService?.duration_minutes || 60
+  );
 
   useEffect(() => {
     if (open && user) {
@@ -155,13 +158,18 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
         throw new Error("Please select a customer or enter customer details");
       }
 
-      const selectedService = services.find(s => s.id === formData.serviceId);
       if (!selectedService) {
         throw new Error("Please select a service");
       }
 
       const startTime = convertTimeToPostgresFormat(formData.time);
       const endTime = calculateEndTime(startTime, selectedService.duration_minutes);
+
+      // Check for conflicts before booking
+      const hasConflict = await checkConflict(formData.date, startTime, endTime);
+      if (hasConflict) {
+        throw new Error("This time slot is no longer available. Please select a different time.");
+      }
 
       const { error } = await supabase
         .from('appointments')
@@ -217,7 +225,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-2xl">
+      <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Schedule New Appointment</DialogTitle>
           <DialogDescription className="text-slate-400">
@@ -284,36 +292,6 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
             </>
           )}
           
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                type="date"
-                value={formData.date}
-                onChange={(e) => handleInputChange("date", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="time">Time</Label>
-              <Select value={formData.time} onValueChange={(value) => handleInputChange("time", value)}>
-                <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                  <SelectValue placeholder="Select time" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-700 border-slate-600">
-                  {timeSlots.map((time) => (
-                    <SelectItem key={time} value={time} className="text-white hover:bg-slate-600">
-                      {time}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          
           <div className="space-y-2">
             <Label htmlFor="service">Service</Label>
             <Select value={formData.serviceId} onValueChange={(value) => handleInputChange("serviceId", value)}>
@@ -334,6 +312,32 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
               </SelectContent>
             </Select>
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="date">Date</Label>
+            <Input
+              id="date"
+              type="date"
+              value={formData.date}
+              onChange={(e) => handleInputChange("date", e.target.value)}
+              className="bg-slate-700 border-slate-600 text-white"
+              required
+            />
+          </div>
+
+          {/* Time Slot Picker */}
+          {formData.date && formData.serviceId && userBusiness && (
+            <div className="space-y-2">
+              <Label>Available Time Slots</Label>
+              <TimeSlotPicker
+                businessId={userBusiness.id}
+                date={formData.date}
+                durationMinutes={selectedService?.duration_minutes || 60}
+                selectedTime={formData.time}
+                onTimeSelect={(time) => handleInputChange("time", time)}
+              />
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="notes">Notes (Optional)</Label>

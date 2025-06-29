@@ -4,18 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, Clock, User, Calendar as CalendarIcon, Plus, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, User, Calendar as CalendarIcon, Plus } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format, startOfDay, endOfDay, addDays, subDays, startOfWeek, endOfWeek, eachDayOfInterval } from "date-fns";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import AppointmentModal from "./AppointmentModal";
 
 interface Appointment {
   id: string;
@@ -43,7 +37,7 @@ const CalendarView = () => {
   const [loading, setLoading] = useState(false);
   const [business, setBusiness] = useState(null);
   const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('week');
-  const [showNewAppointmentDialog, setShowNewAppointmentDialog] = useState(false);
+  const [showNewAppointmentModal, setShowNewAppointmentModal] = useState(false);
 
   useEffect(() => {
     fetchBusinessAndAppointments();
@@ -171,28 +165,13 @@ const CalendarView = () => {
               </Button>
             ))}
           </div>
-          <Dialog open={showNewAppointmentDialog} onOpenChange={setShowNewAppointmentDialog}>
-            <DialogTrigger asChild>
-              <Button className="bg-amber-500 hover:bg-amber-600 text-black text-sm sm:text-base">
-                <Plus className="w-4 h-4 mr-2" />
-                New Appointment
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-slate-800 border-slate-700 text-white">
-              <DialogHeader>
-                <DialogTitle className="text-white">New Appointment</DialogTitle>
-              </DialogHeader>
-              <div className="p-4">
-                <p className="text-slate-400 mb-4">Appointment form coming soon...</p>
-                <Button 
-                  onClick={() => setShowNewAppointmentDialog(false)}
-                  className="bg-amber-500 hover:bg-amber-600 text-black"
-                >
-                  Close
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <Button 
+            onClick={() => setShowNewAppointmentModal(true)}
+            className="bg-amber-500 hover:bg-amber-600 text-black text-sm sm:text-base"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Appointment
+          </Button>
         </div>
       </div>
 
@@ -408,6 +387,13 @@ const CalendarView = () => {
           </Card>
         </div>
       </div>
+
+      {/* Appointment Modal */}
+      <AppointmentModal
+        open={showNewAppointmentModal}
+        onOpenChange={setShowNewAppointmentModal}
+        onAppointmentCreated={fetchBusinessAndAppointments}
+      />
     </div>
   );
 };
