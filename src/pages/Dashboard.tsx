@@ -30,17 +30,17 @@ const Dashboard = () => {
               onClick={() => navigate('/')}
               variant="outline"
               size="sm"
-              className="border-slate-600 text-white hover:bg-slate-800 self-start sm:self-auto w-fit h-8 px-2 sm:h-9 sm:px-3"
+              className="border-slate-600 text-white hover:bg-slate-800 self-start sm:self-auto w-fit h-7 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
             >
               <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              <span className="text-xs sm:text-sm">Home</span>
+              <span>Home</span>
             </Button>
           </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
           <div className="overflow-x-auto">
-            <TabsList className="grid grid-cols-4 sm:grid-cols-8 bg-slate-800 border-slate-700 min-w-max w-full">
+            <TabsList className="grid grid-cols-8 bg-slate-800 border-slate-700 min-w-max w-full">
               <TabsTrigger value="overview" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden xs:inline">Overview</span>
