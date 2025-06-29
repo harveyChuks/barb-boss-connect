@@ -36,6 +36,8 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
   });
 
   const selectedService = services.find(s => s.id === formData.serviceId);
+  const selectedDate = formData.date ? new Date(formData.date) : undefined;
+  
   const { checkConflict, refetch: refetchTimeSlots, verifySlotAvailable } = useTimeSlots(
     userBusiness?.id || "",
     formData.date,
@@ -376,13 +378,13 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
             />
           </div>
 
-          {formData.date && formData.serviceId && userBusiness && (
+          {formData.date && formData.serviceId && userBusiness && selectedDate && (
             <div className="space-y-2">
               <Label>Available Time Slots</Label>
               <TimeSlotPicker
                 businessId={userBusiness.id}
-                date={formData.date}
-                durationMinutes={selectedService?.duration_minutes || 60}
+                selectedDate={selectedDate}
+                selectedService={selectedService}
                 selectedTime={formData.time}
                 onTimeSelect={(time) => handleInputChange("time", time)}
               />

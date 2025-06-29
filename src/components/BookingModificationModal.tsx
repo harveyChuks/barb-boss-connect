@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -189,8 +188,8 @@ export const BookingModificationModal: React.FC<BookingModificationModalProps> =
                   <Label>Available Time Slots</Label>
                   <TimeSlotPicker
                     businessId={appointment.business_id}
-                    date={newDate}
-                    durationMinutes={appointment.service.duration_minutes}
+                    selectedDate={new Date(newDate)}
+                    selectedService={appointment.service}
                     selectedTime={newTime}
                     onTimeSelect={setNewTime}
                   />
