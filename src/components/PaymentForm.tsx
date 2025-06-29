@@ -7,9 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
-const stripePromise = loadStripe(process.env.NODE_ENV === 'production' 
-  ? 'pk_live_...' // Replace with your live publishable key
-  : 'pk_test_51...' // Replace with your test publishable key
+// Use test key for development - you'll need to replace with your actual keys
+const stripePromise = loadStripe(
+  'pk_test_51QRZQRRyKPjgNdNcQrTZULzQNBMm9wAy0zFTANpUJQJ5FJvQyZt1zFzVQHk9wUG1i1zFwVGVYg1YVYqHCYw00QQqhVgdl'
 );
 
 interface PaymentFormProps {
