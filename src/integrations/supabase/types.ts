@@ -9,73 +9,10 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      appointment_modifications: {
-        Row: {
-          appointment_id: string
-          created_at: string | null
-          id: string
-          modification_type: string
-          modified_by: string | null
-          new_date: string | null
-          new_end_time: string | null
-          new_start_time: string | null
-          new_status: string | null
-          old_date: string | null
-          old_end_time: string | null
-          old_start_time: string | null
-          old_status: string | null
-          reason: string | null
-        }
-        Insert: {
-          appointment_id: string
-          created_at?: string | null
-          id?: string
-          modification_type: string
-          modified_by?: string | null
-          new_date?: string | null
-          new_end_time?: string | null
-          new_start_time?: string | null
-          new_status?: string | null
-          old_date?: string | null
-          old_end_time?: string | null
-          old_start_time?: string | null
-          old_status?: string | null
-          reason?: string | null
-        }
-        Update: {
-          appointment_id?: string
-          created_at?: string | null
-          id?: string
-          modification_type?: string
-          modified_by?: string | null
-          new_date?: string | null
-          new_end_time?: string | null
-          new_start_time?: string | null
-          new_status?: string | null
-          old_date?: string | null
-          old_end_time?: string | null
-          old_start_time?: string | null
-          old_status?: string | null
-          reason?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "appointment_modifications_appointment_id_fkey"
-            columns: ["appointment_id"]
-            isOneToOne: false
-            referencedRelation: "appointments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       appointments: {
         Row: {
           appointment_date: string
           business_id: string
-          can_cancel: boolean | null
-          can_reschedule: boolean | null
-          cancellation_reason: string | null
-          cancelled_at: string | null
           created_at: string | null
           customer_email: string | null
           customer_id: string | null
@@ -93,10 +30,6 @@ export type Database = {
         Insert: {
           appointment_date: string
           business_id: string
-          can_cancel?: boolean | null
-          can_reschedule?: boolean | null
-          cancellation_reason?: string | null
-          cancelled_at?: string | null
           created_at?: string | null
           customer_email?: string | null
           customer_id?: string | null
@@ -114,10 +47,6 @@ export type Database = {
         Update: {
           appointment_date?: string
           business_id?: string
-          can_cancel?: boolean | null
-          can_reschedule?: boolean | null
-          cancellation_reason?: string | null
-          cancelled_at?: string | null
           created_at?: string | null
           customer_email?: string | null
           customer_id?: string | null
@@ -159,47 +88,6 @@ export type Database = {
             columns: ["staff_id"]
             isOneToOne: false
             referencedRelation: "staff"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      business_hours: {
-        Row: {
-          business_id: string
-          created_at: string | null
-          day_of_week: number
-          end_time: string
-          id: string
-          is_closed: boolean | null
-          start_time: string
-          updated_at: string | null
-        }
-        Insert: {
-          business_id: string
-          created_at?: string | null
-          day_of_week: number
-          end_time: string
-          id?: string
-          is_closed?: boolean | null
-          start_time: string
-          updated_at?: string | null
-        }
-        Update: {
-          business_id?: string
-          created_at?: string | null
-          day_of_week?: number
-          end_time?: string
-          id?: string
-          is_closed?: boolean | null
-          start_time?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "business_hours_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
         ]
@@ -284,50 +172,6 @@ export type Database = {
           phone?: string
         }
         Relationships: []
-      }
-      payments: {
-        Row: {
-          amount: number
-          appointment_id: string
-          created_at: string | null
-          currency: string | null
-          id: string
-          payment_intent_id: string | null
-          payment_method: string | null
-          payment_status: string
-          updated_at: string | null
-        }
-        Insert: {
-          amount: number
-          appointment_id: string
-          created_at?: string | null
-          currency?: string | null
-          id?: string
-          payment_intent_id?: string | null
-          payment_method?: string | null
-          payment_status: string
-          updated_at?: string | null
-        }
-        Update: {
-          amount?: number
-          appointment_id?: string
-          created_at?: string | null
-          currency?: string | null
-          id?: string
-          payment_intent_id?: string | null
-          payment_method?: string | null
-          payment_status?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "payments_appointment_id_fkey"
-            columns: ["appointment_id"]
-            isOneToOne: false
-            referencedRelation: "appointments"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       services: {
         Row: {
@@ -451,29 +295,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      check_appointment_conflict: {
-        Args: {
-          p_business_id: string
-          p_appointment_date: string
-          p_start_time: string
-          p_end_time: string
-          p_staff_id?: string
-          p_exclude_appointment_id?: string
-        }
-        Returns: boolean
-      }
-      get_available_time_slots: {
-        Args: {
-          p_business_id: string
-          p_date: string
-          p_duration_minutes: number
-          p_staff_id?: string
-        }
-        Returns: {
-          slot_time: string
-          is_available: boolean
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
       appointment_status:
