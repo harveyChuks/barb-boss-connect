@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { BarChart3, User, Scissors, Calendar, Settings, ArrowLeft, Users } from "lucide-react";
+import { BarChart3, User, Scissors, Calendar, Settings, ArrowLeft, Users, Camera } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StatisticsOverview from "@/components/StatisticsOverview";
 import ProfileManagement from "@/components/ProfileManagement";
@@ -11,6 +11,7 @@ import BookingsManagement from "@/components/BookingsManagement";
 import SettingsSection from "@/components/SettingsSection";
 import StaffManagement from "@/components/StaffManagement";
 import CalendarView from "@/components/CalendarView";
+import WorkPicturesManagement from "@/components/WorkPicturesManagement";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -35,7 +36,7 @@ const Dashboard = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7 bg-slate-800 border-slate-700">
+          <TabsList className="grid w-full grid-cols-8 bg-slate-800 border-slate-700">
             <TabsTrigger value="overview" className="flex items-center space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black">
               <BarChart3 className="w-4 h-4" />
               <span className="hidden sm:inline">Overview</span>
@@ -47,6 +48,10 @@ const Dashboard = () => {
             <TabsTrigger value="services" className="flex items-center space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black">
               <Scissors className="w-4 h-4" />
               <span className="hidden sm:inline">Services</span>
+            </TabsTrigger>
+            <TabsTrigger value="portfolio" className="flex items-center space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black">
+              <Camera className="w-4 h-4" />
+              <span className="hidden sm:inline">Portfolio</span>
             </TabsTrigger>
             <TabsTrigger value="staff" className="flex items-center space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black">
               <Users className="w-4 h-4" />
@@ -76,6 +81,10 @@ const Dashboard = () => {
 
           <TabsContent value="services">
             <ServicesManagement />
+          </TabsContent>
+
+          <TabsContent value="portfolio">
+            <WorkPicturesManagement />
           </TabsContent>
 
           <TabsContent value="staff">
