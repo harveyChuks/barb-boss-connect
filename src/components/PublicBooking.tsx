@@ -8,10 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images } from "lucide-react";
+import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { format, addDays, isAfter, isBefore, startOfDay } from "date-fns";
+import { format, addDays, isAfter, isBefore, startOfDay, addMonths, subMonths, startOfMonth, endOfMonth, eachWeekOfInterval, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isSameDay } from "date-fns";
 
 interface Business {
   id: string;
@@ -64,6 +64,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState("");
+  const [calendarDate, setCalendarDate] = useState(new Date());
   const [formData, setFormData] = useState({
     customer_name: "",
     customer_phone: "",
@@ -242,6 +243,33 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const navigateCalendar = (direction: 'prev' | 'next') => {
+    setCalendarDate(direction === 'prev' ? subMonths(calendarDate, 1) : addMonths(calendarDate, 1));
+  };
+
+  const getDaysInMonth = () => {
+    const start = startOfMonth(calendarDate);
+    const end = endOfMonth(calendarDate);
+    const weeks = eachWeekOfInterval({ start, end });
+    
+    return weeks.map(week => 
+      eachDayOfInterval({ 
+        start: startOfWeek(week), 
+        end: endOfWeek(week) 
+      })
+    );
+  };
+
+  const isDateDisabled = (date: Date) => {
+    return isBefore(date, startOfDay(new Date())) || isAfter(date, addDays(new Date(), 30));
+  };
+
+  const isDateAvailable = (date: Date) => {
+    // Mock availability - you can integrate with real availability data
+    const dayOfWeek = date.getDay();
+    return dayOfWeek !== 0; // Example: closed on Sundays
   };
 
   if (loading) {
@@ -447,21 +475,91 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   Select Date & Time
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  disabled={(date) => 
-                    isBefore(date, startOfDay(new Date())) || 
-                    isAfter(date, addDays(new Date(), 30))
-                  }
-                  className="rounded-md border border-slate-700"
-                />
+              <CardContent className="space-y-6">
+                {/* Custom Calendar View */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-white">
+                      {format(calendarDate, 'MMMM yyyy')}
+                    </h3>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigateCalendar('prev')}
+                        className="border-slate-600 text-white hover:bg-slate-700"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCalendarDate(new Date())}
+                        className="border-slate-600 text-white hover:bg-slate-700"
+                      >
+                        Today
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigateCalendar('next')}
+                        className="border-slate-600 text-white hover:bg-slate-700"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-1 text-center">
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                      <div key={day} className="text-slate-400 text-sm font-medium p-2">
+                        {day}
+                      </div>
+                    ))}
+                    
+                    {getDaysInMonth().flat().map((date, index) => {
+                      const isCurrentMonth = isSameMonth(date, calendarDate);
+                      const isSelected = selectedDate && isSameDay(date, selectedDate);
+                      const isDisabled = isDateDisabled(date);
+                      const isAvailable = isDateAvailable(date) && isCurrentMonth && !isDisabled;
+                      const isToday = isSameDay(date, new Date());
+
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => isAvailable && setSelectedDate(date)}
+                          disabled={!isAvailable}
+                          className={`
+                            aspect-square p-2 text-sm rounded-lg transition-colors relative
+                            ${!isCurrentMonth ? 'text-slate-600' : ''}
+                            ${isSelected ? 'bg-amber-500 text-black font-semibold' : ''}
+                            ${isToday && !isSelected ? 'bg-slate-600 text-white font-semibold' : ''}
+                            ${isAvailable && !isSelected && !isToday ? 'text-white hover:bg-slate-700' : ''}
+                            ${!isAvailable ? 'text-slate-600 cursor-not-allowed' : 'cursor-pointer'}
+                          `}
+                        >
+                          {format(date, 'd')}
+                          {!isAvailable && isCurrentMonth && !isDisabled && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-1 h-1 bg-red-500 rounded-full"></div>
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
                 
                 {selectedDate && (
-                  <div>
-                    <Label className="text-white mb-2 block">Available Times</Label>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-white font-medium">
+                        Available Times for {format(selectedDate, 'MMM d, yyyy')}
+                      </Label>
+                      <Badge variant="secondary" className="text-xs">
+                        {timeSlots.length} slots available
+                      </Badge>
+                    </div>
                     <div className="grid grid-cols-3 gap-2">
                       {timeSlots.map((time) => (
                         <Button
@@ -471,8 +569,8 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                           onClick={() => setSelectedTime(time)}
                           className={
                             selectedTime === time
-                              ? "bg-amber-500 hover:bg-amber-600 text-black"
-                              : "border-slate-600 text-white hover:bg-slate-700"
+                              ? "bg-amber-500 hover:bg-amber-600 text-black font-medium"
+                              : "border-slate-600 text-white hover:bg-slate-700 hover:border-slate-500"
                           }
                         >
                           {time}
