@@ -1,6 +1,6 @@
 
 import { useParams } from "react-router-dom";
-import PublicBooking from "@/components/PublicBooking";
+import EnhancedPublicBooking from "@/components/EnhancedPublicBooking";
 
 const BookingPage = () => {
   const { businessLink } = useParams<{ businessLink: string }>();
@@ -16,7 +16,7 @@ const BookingPage = () => {
     );
   }
 
-  return <PublicBooking businessLink={businessLink} />;
+  return <EnhancedPublicBooking businessLink={businessLink} />;
 };
 
 export default BookingPage;

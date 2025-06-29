@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, Clock, User, Calendar as CalendarIcon, Plus, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, User, Calendar as CalendarIcon, Plus, X, Edit } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -16,6 +15,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import CalendarAnnualView from "./CalendarAnnualView";
+import AppointmentModificationModal from "./AppointmentModificationModal";
 
 interface Appointment {
   id: string;
@@ -26,6 +27,8 @@ interface Appointment {
   end_time: string;
   status: string;
   notes: string | null;
+  can_reschedule: boolean;
+  can_cancel: boolean;
   service: {
     name: string;
     duration_minutes: number;
@@ -42,12 +45,14 @@ const CalendarView = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(false);
   const [business, setBusiness] = useState(null);
-  const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('week');
+  const [viewMode, setViewMode] = useState<'day' | 'week' | 'month' | 'year'>('week');
   const [showNewAppointmentDialog, setShowNewAppointmentDialog] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [showModificationModal, setShowModificationModal] = useState(false);
 
   useEffect(() => {
     fetchBusinessAndAppointments();
-  }, [user, selectedDate]);
+  }, [user, selectedDate, viewMode]);
 
   const fetchBusinessAndAppointments = async () => {
     if (!user) return;
@@ -64,9 +69,19 @@ const CalendarView = () => {
       if (businessError) throw businessError;
       setBusiness(businessData);
 
-      // Get appointments for selected date
-      const startDate = startOfDay(selectedDate);
-      const endDate = endOfDay(selectedDate);
+      // Get appointments for selected date range
+      let startDate, endDate;
+      
+      if (viewMode === 'year') {
+        startDate = new Date(selectedDate.getFullYear(), 0, 1);
+        endDate = new Date(selectedDate.getFullYear(), 11, 31);
+      } else if (viewMode === 'week') {
+        startDate = startOfWeek(selectedDate);
+        endDate = endOfWeek(selectedDate);
+      } else {
+        startDate = startOfDay(selectedDate);
+        endDate = endOfDay(selectedDate);
+      }
 
       const { data: appointmentsData, error: appointmentsError } = await supabase
         .from('appointments')
@@ -95,6 +110,11 @@ const CalendarView = () => {
     }
   };
 
+  const handleAppointmentModification = (appointment: Appointment) => {
+    setSelectedAppointment(appointment);
+    setShowModificationModal(true);
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed': return 'bg-emerald-500 hover:bg-emerald-600';
@@ -119,6 +139,11 @@ const CalendarView = () => {
       setSelectedDate(direction === 'prev' ? subDays(selectedDate, 1) : addDays(selectedDate, 1));
     } else if (viewMode === 'week') {
       setSelectedDate(direction === 'prev' ? subDays(selectedDate, 7) : addDays(selectedDate, 7));
+    } else if (viewMode === 'year') {
+      setSelectedDate(direction === 'prev' ? 
+        new Date(selectedDate.getFullYear() - 1, selectedDate.getMonth(), selectedDate.getDate()) :
+        new Date(selectedDate.getFullYear() + 1, selectedDate.getMonth(), selectedDate.getDate())
+      );
     } else {
       setSelectedDate(direction === 'prev' ? subDays(selectedDate, 30) : addDays(selectedDate, 30));
     }
@@ -156,7 +181,7 @@ const CalendarView = () => {
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
           <div className="flex rounded-lg bg-slate-800 p-1">
-            {['day', 'week', 'month'].map((mode) => (
+            {['day', 'week', 'month', 'year'].map((mode) => (
               <Button
                 key={mode}
                 variant={viewMode === mode ? 'default' : 'ghost'}
@@ -236,6 +261,7 @@ const CalendarView = () => {
                     {viewMode === 'day' && format(selectedDate, 'EEEE, MMMM d, yyyy')}
                     {viewMode === 'week' && `Week of ${format(startOfWeek(selectedDate), 'MMM d')} - ${format(endOfWeek(selectedDate), 'MMM d, yyyy')}`}
                     {viewMode === 'month' && format(selectedDate, 'MMMM yyyy')}
+                    {viewMode === 'year' && `Year ${selectedDate.getFullYear()}`}
                   </CardTitle>
                   <CardDescription className="text-slate-400 text-sm">
                     {appointments.length} appointment{appointments.length !== 1 ? 's' : ''}
@@ -276,6 +302,17 @@ const CalendarView = () => {
                 </div>
               ) : (
                 <>
+                  {/* Annual View */}
+                  {viewMode === 'year' && (
+                    <CalendarAnnualView 
+                      appointments={appointments}
+                      onDateSelect={(date) => {
+                        setSelectedDate(date);
+                        setViewMode('day');
+                      }}
+                    />
+                  )}
+
                   {/* Week View */}
                   {viewMode === 'week' && (
                     <div className="space-y-3 sm:space-y-4">
@@ -302,7 +339,7 @@ const CalendarView = () => {
                                 {dayAppointments.map((appointment) => (
                                   <div
                                     key={appointment.id}
-                                    className="bg-slate-700/50 border border-slate-600 rounded-lg p-2 sm:p-3 hover:bg-slate-700/70 transition-colors cursor-pointer"
+                                    className="bg-slate-700/50 border border-slate-600 rounded-lg p-2 sm:p-3 hover:bg-slate-700/70 transition-colors"
                                   >
                                     <div className="flex items-start justify-between">
                                       <div className="flex-1 min-w-0">
@@ -328,6 +365,14 @@ const CalendarView = () => {
                                           )}
                                         </div>
                                       </div>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleAppointmentModification(appointment)}
+                                        className="text-slate-400 hover:text-white"
+                                      >
+                                        <Edit className="w-4 h-4" />
+                                      </Button>
                                     </div>
                                   </div>
                                 ))}
@@ -350,7 +395,7 @@ const CalendarView = () => {
                         </div>
                       ) : (
                         appointments.map((appointment) => (
-                          <Card key={appointment.id} className="bg-slate-700/50 border-slate-600 hover:bg-slate-700/70 transition-colors cursor-pointer">
+                          <Card key={appointment.id} className="bg-slate-700/50 border-slate-600 hover:bg-slate-700/70 transition-colors">
                             <CardContent className="p-3 sm:p-4">
                               <div className="flex items-start justify-between">
                                 <div className="flex-1 min-w-0">
@@ -386,6 +431,14 @@ const CalendarView = () => {
                                     </div>
                                   )}
                                 </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleAppointmentModification(appointment)}
+                                  className="text-slate-400 hover:text-white"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </Button>
                               </div>
                             </CardContent>
                           </Card>
@@ -408,6 +461,19 @@ const CalendarView = () => {
           </Card>
         </div>
       </div>
+
+      {/* Appointment Modification Modal */}
+      {selectedAppointment && (
+        <AppointmentModificationModal
+          isOpen={showModificationModal}
+          onClose={() => {
+            setShowModificationModal(false);
+            setSelectedAppointment(null);
+          }}
+          appointment={selectedAppointment}
+          onSuccess={fetchBusinessAndAppointments}
+        />
+      )}
     </div>
   );
 };
