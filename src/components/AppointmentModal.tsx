@@ -31,13 +31,10 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
     date: "",
     time: "",
     serviceId: "",
-    notes: "",
-    requiresDeposit: true
+    notes: ""
   });
 
   const selectedService = services.find(s => s.id === formData.serviceId);
-  const selectedDate = formData.date ? new Date(formData.date) : undefined;
-  
   const { checkConflict, refetch: refetchTimeSlots, verifySlotAvailable } = useTimeSlots(
     userBusiness?.id || "",
     formData.date,
@@ -138,6 +135,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
     setLoading(true);
 
     try {
+      // CRITICAL: Double-check slot availability right before booking
       const isSlotStillAvailable = await verifySlotAvailable(formData.time);
       if (!isSlotStillAvailable) {
         toast({
@@ -145,6 +143,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
           description: "This time slot was just booked by someone else. Please select a different time.",
           variant: "destructive",
         });
+        // Refresh time slots to show updated availability
         refetchTimeSlots();
         setLoading(false);
         return;
@@ -155,6 +154,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
       let customerPhone = formData.customerPhone;
       let customerEmail = formData.customerEmail;
 
+      // If customer is selected from dropdown, get their details
       if (customerId) {
         const selectedCustomer = customers.find(c => c.id === customerId);
         if (selectedCustomer) {
@@ -163,6 +163,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
           customerEmail = selectedCustomer.email;
         }
       } else if (customerName && customerPhone) {
+        // Create new customer
         const { data: newCustomer, error: customerError } = await supabase
           .from('customers')
           .insert({
@@ -186,6 +187,15 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
       const startTime = convertTimeToPostgresFormat(formData.time);
       const endTime = calculateEndTime(startTime, selectedService.duration_minutes);
 
+      console.log('Attempting to book appointment:', {
+        date: formData.date,
+        startTime,
+        endTime,
+        businessId: userBusiness.id,
+        serviceId: formData.serviceId
+      });
+
+      // FINAL conflict check before inserting
       const hasConflict = await checkConflict(formData.date, startTime, endTime);
       if (hasConflict) {
         toast({
@@ -193,16 +203,13 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
           description: "This time slot conflicts with another appointment. Please select a different time.",
           variant: "destructive",
         });
+        // Refresh time slots to show updated availability
         refetchTimeSlots();
         setLoading(false);
         return;
       }
 
-      // Calculate deposit amount if required
-      const depositAmount = formData.requiresDeposit && selectedService.price 
-        ? selectedService.price * 0.5 
-        : null;
-
+      // Use a transaction-like approach by immediately marking the slot as taken
       const { error } = await supabase
         .from('appointments')
         .insert({
@@ -216,14 +223,12 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
           start_time: startTime,
           end_time: endTime,
           notes: formData.notes || null,
-          status: 'pending',
-          requires_deposit: formData.requiresDeposit,
-          deposit_amount: depositAmount,
-          deposit_paid: false
+          status: 'pending'
         });
 
       if (error) {
         console.error('Database error:', error);
+        // Check if it's a conflict error
         if (error.message.includes('conflict') || error.message.includes('overlapping')) {
           toast({
             title: "Double Booking Prevented",
@@ -237,11 +242,14 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
         throw error;
       }
 
+      console.log('Appointment successfully created');
+
       toast({
         title: "Appointment Scheduled",
-        description: `Appointment for ${customerName} on ${formData.date} at ${formData.time}${depositAmount ? ` (Deposit required: $${depositAmount})` : ''}`,
+        description: `Appointment for ${customerName} on ${formData.date} at ${formData.time}`,
       });
       
+      // Reset form
       setFormData({
         customerId: "",
         customerName: "",
@@ -250,8 +258,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
         date: "",
         time: "",
         serviceId: "",
-        notes: "",
-        requiresDeposit: true
+        notes: ""
       });
       
       onOpenChange(false);
@@ -268,9 +275,10 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
     }
   };
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
+    // Reset time selection when date or service changes to force fresh slot selection
     if (field === 'date' || field === 'serviceId') {
       setFormData(prev => ({ ...prev, time: "" }));
     }
@@ -378,40 +386,19 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
             />
           </div>
 
-          {formData.date && formData.serviceId && userBusiness && selectedDate && (
+          {/* Time Slot Picker - This now prevents double bookings */}
+          {formData.date && formData.serviceId && userBusiness && (
             <div className="space-y-2">
               <Label>Available Time Slots</Label>
               <TimeSlotPicker
                 businessId={userBusiness.id}
-                selectedDate={selectedDate}
-                selectedService={selectedService}
+                date={formData.date}
+                durationMinutes={selectedService?.duration_minutes || 60}
                 selectedTime={formData.time}
                 onTimeSelect={(time) => handleInputChange("time", time)}
               />
             </div>
           )}
-
-          <div className="space-y-2">
-            <Label htmlFor="requiresDeposit">Payment Options</Label>
-            <Select value={formData.requiresDeposit.toString()} onValueChange={(value) => handleInputChange("requiresDeposit", value === 'true')}>
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                <SelectItem value="true" className="text-white hover:bg-slate-600">
-                  Require 50% deposit
-                </SelectItem>
-                <SelectItem value="false" className="text-white hover:bg-slate-600">
-                  No deposit required
-                </SelectItem>
-              </SelectContent>
-            </Select>
-            {formData.requiresDeposit && selectedService?.price && (
-              <p className="text-sm text-slate-400">
-                Deposit amount: ${(selectedService.price * 0.5).toFixed(2)}
-              </p>
-            )}
-          </div>
 
           <div className="space-y-2">
             <Label htmlFor="notes">Notes (Optional)</Label>

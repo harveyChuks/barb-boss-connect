@@ -16,7 +16,7 @@ const BookingPage = () => {
     );
   }
 
-  return <PublicBooking />;
+  return <PublicBooking businessLink={businessLink} />;
 };
 
 export default BookingPage;

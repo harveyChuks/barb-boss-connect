@@ -2,57 +2,37 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar } from '@/components/ui/calendar';
 import { Clock, AlertCircle, RefreshCw } from 'lucide-react';
 import { useTimeSlots } from '@/hooks/useTimeSlots';
 
-interface Service {
-  id: string;
-  name: string;
-  duration_minutes: number;
-  price: number;
-}
-
 interface TimeSlotPickerProps {
-  businessId?: string;
-  selectedDate?: Date;
-  selectedService?: Service | null;
-  selectedTime?: string;
-  onDateSelect?: (date: Date) => void;
-  onTimeSelect?: (time: string) => void;
+  businessId: string;
+  date: string;
+  durationMinutes: number;
+  staffId?: string;
+  selectedTime: string;
+  onTimeSelect: (time: string) => void;
 }
 
 const TimeSlotPicker = ({
   businessId,
-  selectedDate,
-  selectedService,
-  selectedTime = '',
-  onDateSelect,
+  date,
+  durationMinutes,
+  staffId,
+  selectedTime,
   onTimeSelect
 }: TimeSlotPickerProps) => {
-  const [internalDate, setInternalDate] = useState<Date | undefined>(selectedDate);
+  const { timeSlots, loading, refetch } = useTimeSlots(businessId, date, durationMinutes, staffId);
   const [refreshing, setRefreshing] = useState(false);
-
-  // Only fetch time slots if we have all required data
-  const shouldFetchSlots = businessId && selectedDate && selectedService?.duration_minutes;
-  
-  const { timeSlots, loading, refetch } = useTimeSlots(
-    businessId || '',
-    selectedDate ? selectedDate.toISOString().split('T')[0] : '',
-    selectedService?.duration_minutes || 0,
-    undefined
-  );
 
   // Auto-refresh every 30 seconds to keep availability current
   useEffect(() => {
-    if (!shouldFetchSlots) return;
-    
     const interval = setInterval(() => {
       refetch();
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [refetch, shouldFetchSlots]);
+  }, [refetch]);
 
   const formatTime = (timeString: string) => {
     return new Date(`2000-01-01T${timeString}`).toLocaleTimeString('en-US', {
@@ -69,51 +49,11 @@ const TimeSlotPicker = ({
   };
 
   const handleTimeSelect = (time: string) => {
-    if (onTimeSelect) {
-      // Clear previous selection first
-      onTimeSelect("");
-      // Then set new selection
-      setTimeout(() => onTimeSelect(time), 100);
-    }
+    // Clear previous selection first
+    onTimeSelect("");
+    // Then set new selection
+    setTimeout(() => onTimeSelect(time), 100);
   };
-
-  const handleDateSelect = (date: Date | undefined) => {
-    if (date && onDateSelect) {
-      setInternalDate(date);
-      onDateSelect(date);
-    }
-  };
-
-  // If we're just selecting a date (no businessId provided)
-  if (!businessId && onDateSelect) {
-    return (
-      <Card className="bg-slate-700/50 border-slate-600">
-        <CardContent className="p-4">
-          <Calendar
-            mode="single"
-            selected={internalDate}
-            onSelect={handleDateSelect}
-            disabled={(date) => date < new Date(new Date().toDateString())}
-            className="rounded-md border-0 w-full"
-          />
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // If we don't have the required data for time slots
-  if (!shouldFetchSlots) {
-    return (
-      <Card className="bg-slate-700/50 border-slate-600">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-center text-slate-400">
-            <Clock className="w-4 h-4 mr-2" />
-            <span>Select a service and date first</span>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
 
   if (loading) {
     return (
