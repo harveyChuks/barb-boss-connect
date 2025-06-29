@@ -43,35 +43,35 @@ const Dashboard = () => {
             <TabsList className="grid grid-cols-8 bg-slate-800 border-slate-700 min-w-max w-full">
               <TabsTrigger value="overview" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden xs:inline">Overview</span>
+                <span className="hidden sm:inline">Overview</span>
               </TabsTrigger>
               <TabsTrigger value="profile" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <User className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden xs:inline">Profile</span>
+                <span className="hidden sm:inline">Profile</span>
               </TabsTrigger>
               <TabsTrigger value="services" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <Scissors className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden xs:inline">Services</span>
+                <span className="hidden sm:inline">Services</span>
               </TabsTrigger>
               <TabsTrigger value="portfolio" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <Camera className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden xs:inline">Portfolio</span>
+                <span className="hidden sm:inline">Portfolio</span>
               </TabsTrigger>
               <TabsTrigger value="staff" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <Users className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden xs:inline">Staff</span>
+                <span className="hidden sm:inline">Staff</span>
               </TabsTrigger>
               <TabsTrigger value="bookings" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden xs:inline">Bookings</span>
+                <span className="hidden sm:inline">Bookings</span>
               </TabsTrigger>
               <TabsTrigger value="calendar" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden xs:inline">Calendar</span>
+                <span className="hidden sm:inline">Calendar</span>
               </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden xs:inline">Settings</span>
+                <span className="hidden sm:inline">Settings</span>
               </TabsTrigger>
             </TabsList>
           </div>
