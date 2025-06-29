@@ -1,9 +1,8 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, AlertCircle } from 'lucide-react';
+import { Clock, AlertCircle, RefreshCw } from 'lucide-react';
 import { useTimeSlots } from '@/hooks/useTimeSlots';
 
 interface TimeSlotPickerProps {
@@ -23,7 +22,17 @@ const TimeSlotPicker = ({
   selectedTime,
   onTimeSelect
 }: TimeSlotPickerProps) => {
-  const { timeSlots, loading } = useTimeSlots(businessId, date, durationMinutes, staffId);
+  const { timeSlots, loading, refetch } = useTimeSlots(businessId, date, durationMinutes, staffId);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Auto-refresh every 30 seconds to keep availability current
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [refetch]);
 
   const formatTime = (timeString: string) => {
     return new Date(`2000-01-01T${timeString}`).toLocaleTimeString('en-US', {
@@ -31,6 +40,19 @@ const TimeSlotPicker = ({
       minute: '2-digit',
       hour12: true
     });
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
+  const handleTimeSelect = (time: string) => {
+    // Clear previous selection first
+    onTimeSelect("");
+    // Then set new selection
+    setTimeout(() => onTimeSelect(time), 100);
   };
 
   if (loading) {
@@ -50,9 +72,20 @@ const TimeSlotPicker = ({
     return (
       <Card className="bg-slate-700/50 border-slate-600">
         <CardContent className="p-4">
-          <div className="flex items-center justify-center text-slate-400">
-            <AlertCircle className="w-4 h-4 mr-2" />
-            <span>No available time slots for this date</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-slate-400">
+              <AlertCircle className="w-4 h-4 mr-2" />
+              <span>No available time slots for this date</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="text-slate-400 hover:text-white"
+            >
+              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -64,29 +97,44 @@ const TimeSlotPicker = ({
 
   return (
     <div className="space-y-4">
-      <div>
-        <h4 className="text-white font-medium mb-3">Available Times</h4>
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-          {availableSlots.map((slot) => (
+      <div className="flex items-center justify-between">
+        <h4 className="text-white font-medium">Available Times</h4>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="text-slate-400 hover:text-white"
+        >
+          <RefreshCw className={`w-4 h-4 mr-1 ${refreshing ? 'animate-spin' : ''}`} />
+          Refresh
+        </Button>
+      </div>
+      
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+        {availableSlots.map((slot) => {
+          const formattedTime = formatTime(slot.slot_time);
+          return (
             <Button
               key={slot.slot_time}
-              variant={selectedTime === formatTime(slot.slot_time) ? "default" : "outline"}
+              variant={selectedTime === formattedTime ? "default" : "outline"}
               size="sm"
-              onClick={() => onTimeSelect(formatTime(slot.slot_time))}
+              onClick={() => handleTimeSelect(formattedTime)}
               className={`${
-                selectedTime === formatTime(slot.slot_time)
+                selectedTime === formattedTime
                   ? "bg-amber-500 hover:bg-amber-600 text-black"
                   : "border-slate-600 text-white hover:bg-slate-700"
               }`}
             >
-              {formatTime(slot.slot_time)}
+              {formattedTime}
             </Button>
-          ))}
-        </div>
-        {availableSlots.length === 0 && (
-          <p className="text-slate-400 text-sm">No available slots for this date</p>
-        )}
+          );
+        })}
       </div>
+      
+      {availableSlots.length === 0 && (
+        <p className="text-slate-400 text-sm">No available slots for this date</p>
+      )}
 
       {unavailableSlots.length > 0 && (
         <div>

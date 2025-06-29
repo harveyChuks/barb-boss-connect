@@ -35,7 +35,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
   });
 
   const selectedService = services.find(s => s.id === formData.serviceId);
-  const { checkConflict, refetch: refetchTimeSlots } = useTimeSlots(
+  const { checkConflict, refetch: refetchTimeSlots, verifySlotAvailable } = useTimeSlots(
     userBusiness?.id || "",
     formData.date,
     selectedService?.duration_minutes || 60
@@ -135,6 +135,20 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
     setLoading(true);
 
     try {
+      // CRITICAL: Double-check slot availability right before booking
+      const isSlotStillAvailable = await verifySlotAvailable(formData.time);
+      if (!isSlotStillAvailable) {
+        toast({
+          title: "Time Slot No Longer Available",
+          description: "This time slot was just booked by someone else. Please select a different time.",
+          variant: "destructive",
+        });
+        // Refresh time slots to show updated availability
+        refetchTimeSlots();
+        setLoading(false);
+        return;
+      }
+
       let customerId = formData.customerId;
       let customerName = formData.customerName;
       let customerPhone = formData.customerPhone;
@@ -181,20 +195,21 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
         serviceId: formData.serviceId
       });
 
-      // CRITICAL: Check for conflicts before booking
+      // FINAL conflict check before inserting
       const hasConflict = await checkConflict(formData.date, startTime, endTime);
       if (hasConflict) {
         toast({
           title: "Time Slot Unavailable",
-          description: "This time slot is no longer available. Please select a different time.",
+          description: "This time slot conflicts with another appointment. Please select a different time.",
           variant: "destructive",
         });
         // Refresh time slots to show updated availability
         refetchTimeSlots();
+        setLoading(false);
         return;
       }
 
-      // Proceed with booking only if no conflicts
+      // Use a transaction-like approach by immediately marking the slot as taken
       const { error } = await supabase
         .from('appointments')
         .insert({
@@ -213,6 +228,17 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
 
       if (error) {
         console.error('Database error:', error);
+        // Check if it's a conflict error
+        if (error.message.includes('conflict') || error.message.includes('overlapping')) {
+          toast({
+            title: "Double Booking Prevented",
+            description: "This time slot was just booked. Please select a different time.",
+            variant: "destructive",
+          });
+          refetchTimeSlots();
+          setLoading(false);
+          return;
+        }
         throw error;
       }
 
@@ -251,6 +277,11 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Reset time selection when date or service changes to force fresh slot selection
+    if (field === 'date' || field === 'serviceId') {
+      setFormData(prev => ({ ...prev, time: "" }));
+    }
   };
 
   return (

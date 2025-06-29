@@ -83,10 +83,43 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
     }
   };
 
+  // Enhanced function to verify slot is still available right before booking
+  const verifySlotAvailable = async (timeSlot: string): Promise<boolean> => {
+    try {
+      // Fetch fresh time slots data
+      const { data, error } = await supabase.rpc('get_available_time_slots', {
+        p_business_id: businessId,
+        p_date: date,
+        p_duration_minutes: durationMinutes,
+        p_staff_id: staffId || null
+      });
+
+      if (error) {
+        console.error('Error verifying slot availability:', error);
+        return false;
+      }
+
+      const slot = data?.find((s: TimeSlot) => {
+        const slotTime = new Date(`2000-01-01T${s.slot_time}`).toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        });
+        return slotTime === timeSlot;
+      });
+
+      return slot?.is_available || false;
+    } catch (error) {
+      console.error('Error verifying slot availability:', error);
+      return false;
+    }
+  };
+
   return {
     timeSlots,
     loading,
     refetch: fetchTimeSlots,
-    checkConflict
+    checkConflict,
+    verifySlotAvailable
   };
 };
