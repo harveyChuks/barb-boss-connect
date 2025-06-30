@@ -6,12 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Camera, Save, Copy, ExternalLink, Check } from "lucide-react";
+import { Camera, Save, Copy, ExternalLink, Check, QrCode, Download } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Database } from "@/integrations/supabase/types";
 import { uploadImage } from "@/utils/imageUpload";
+import QRCode from "qrcode";
 
 type BusinessType = Database["public"]["Enums"]["business_type"];
 
@@ -22,6 +23,7 @@ const ProfileManagement = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [business, setBusiness] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -38,6 +40,48 @@ const ProfileManagement = () => {
   useEffect(() => {
     fetchBusinessProfile();
   }, [user]);
+
+  // Generate QR code when business data is available
+  useEffect(() => {
+    if (business?.booking_link) {
+      generateQRCode();
+    }
+  }, [business]);
+
+  const generateQRCode = async () => {
+    if (!business?.booking_link) return;
+    
+    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    try {
+      const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
+        width: 256,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      });
+      setQrCodeDataUrl(qrDataUrl);
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+    }
+  };
+
+  const downloadQRCode = () => {
+    if (!qrCodeDataUrl || !business?.name) return;
+    
+    const link = document.createElement('a');
+    link.download = `${business.name}-booking-qr.png`;
+    link.href = qrCodeDataUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast({
+      title: "QR Code Downloaded",
+      description: "Your booking QR code has been downloaded successfully.",
+    });
+  };
 
   const fetchBusinessProfile = async () => {
     if (!user) return;
@@ -206,12 +250,13 @@ const ProfileManagement = () => {
       {business.booking_link && (
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
-            <CardTitle className="text-white">Your Booking Link</CardTitle>
+            <CardTitle className="text-white">Your Booking Link & QR Code</CardTitle>
             <CardDescription className="text-slate-400">
-              Share this link with clients so they can book appointments online
+              Share this link or QR code with clients so they can book appointments online
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
+            {/* Link Section */}
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <Input
@@ -247,6 +292,42 @@ const ProfileManagement = () => {
                 </Button>
               </div>
             </div>
+
+            {/* QR Code Section */}
+            {qrCodeDataUrl && (
+              <div className="flex flex-col md:flex-row gap-6 items-start">
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="bg-white p-4 rounded-lg">
+                    <img 
+                      src={qrCodeDataUrl} 
+                      alt="Booking QR Code" 
+                      className="w-32 h-32"
+                    />
+                  </div>
+                  <Button
+                    onClick={downloadQRCode}
+                    variant="outline"
+                    size="sm"
+                    className="border-slate-600 text-white hover:bg-slate-700"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download QR
+                  </Button>
+                </div>
+                <div className="flex-1 space-y-2">
+                  <h4 className="text-white font-medium flex items-center">
+                    <QrCode className="w-4 h-4 mr-2 text-amber-400" />
+                    QR Code Instructions
+                  </h4>
+                  <ul className="text-slate-400 text-sm space-y-1">
+                    <li>• Print and display in your business</li>
+                    <li>• Share on social media</li>
+                    <li>• Include in business cards or flyers</li>
+                    <li>• Clients can scan to book instantly</li>
+                  </ul>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

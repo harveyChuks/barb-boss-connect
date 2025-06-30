@@ -81,9 +81,13 @@ export type Database = {
           customer_id: string | null
           customer_name: string
           customer_phone: string
+          deposit_amount: number | null
+          deposit_paid: boolean | null
           end_time: string
           id: string
           notes: string | null
+          payment_intent_id: string | null
+          requires_deposit: boolean | null
           service_id: string
           staff_id: string | null
           start_time: string
@@ -102,9 +106,13 @@ export type Database = {
           customer_id?: string | null
           customer_name: string
           customer_phone: string
+          deposit_amount?: number | null
+          deposit_paid?: boolean | null
           end_time: string
           id?: string
           notes?: string | null
+          payment_intent_id?: string | null
+          requires_deposit?: boolean | null
           service_id: string
           staff_id?: string | null
           start_time: string
@@ -123,9 +131,13 @@ export type Database = {
           customer_id?: string | null
           customer_name?: string
           customer_phone?: string
+          deposit_amount?: number | null
+          deposit_paid?: boolean | null
           end_time?: string
           id?: string
           notes?: string | null
+          payment_intent_id?: string | null
+          requires_deposit?: boolean | null
           service_id?: string
           staff_id?: string | null
           start_time?: string
@@ -159,6 +171,59 @@ export type Database = {
             columns: ["staff_id"]
             isOneToOne: false
             referencedRelation: "staff"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_modifications: {
+        Row: {
+          appointment_id: string
+          created_at: string | null
+          id: string
+          modification_type: string
+          modified_by: string | null
+          new_date: string | null
+          new_end_time: string | null
+          new_start_time: string | null
+          old_date: string | null
+          old_end_time: string | null
+          old_start_time: string | null
+          reason: string | null
+        }
+        Insert: {
+          appointment_id: string
+          created_at?: string | null
+          id?: string
+          modification_type: string
+          modified_by?: string | null
+          new_date?: string | null
+          new_end_time?: string | null
+          new_start_time?: string | null
+          old_date?: string | null
+          old_end_time?: string | null
+          old_start_time?: string | null
+          reason?: string | null
+        }
+        Update: {
+          appointment_id?: string
+          created_at?: string | null
+          id?: string
+          modification_type?: string
+          modified_by?: string | null
+          new_date?: string | null
+          new_end_time?: string | null
+          new_start_time?: string | null
+          old_date?: string | null
+          old_end_time?: string | null
+          old_start_time?: string | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_modifications_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
             referencedColumns: ["id"]
           },
         ]
@@ -451,6 +516,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_deposit_amount: {
+        Args: { service_price: number }
+        Returns: number
+      }
       check_appointment_conflict: {
         Args: {
           p_business_id: string
