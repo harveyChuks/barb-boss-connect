@@ -17,6 +17,7 @@ interface AuthModalProps {
 const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [showResetPassword, setShowResetPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -71,6 +72,9 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
       const { error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`
+        }
       });
 
       if (error) throw error;
@@ -92,9 +96,85 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
     }
   };
 
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(formData.email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Password reset email sent!",
+        description: "Check your email for instructions to reset your password.",
+      });
+      
+      setShowResetPassword(false);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  if (showResetPassword) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="bg-slate-800 border-slate-700 text-white">
+          <DialogHeader>
+            <DialogTitle>Reset Password</DialogTitle>
+            <DialogDescription className="text-slate-400">
+              Enter your email address and we'll send you a link to reset your password.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="reset-email">Email</Label>
+              <Input
+                id="reset-email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                className="bg-slate-700 border-slate-600 text-white"
+                placeholder="your@email.com"
+                required
+              />
+            </div>
+            
+            <div className="flex space-x-2">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="flex-1 bg-amber-500 hover:bg-amber-600 text-black"
+              >
+                {loading ? "Sending..." : "Send Reset Link"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowResetPassword(false)}
+                className="border-slate-600 text-white hover:bg-slate-700"
+              >
+                Back
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -150,6 +230,15 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                 className="w-full bg-amber-500 hover:bg-amber-600 text-black"
               >
                 {loading ? "Signing in..." : "Sign In"}
+              </Button>
+              
+              <Button
+                type="button"
+                variant="link"
+                onClick={() => setShowResetPassword(true)}
+                className="w-full text-slate-300 hover:text-white"
+              >
+                Forgot your password?
               </Button>
             </form>
           </TabsContent>
