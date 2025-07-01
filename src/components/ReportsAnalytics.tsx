@@ -1,0 +1,581 @@
+
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CalendarDays, DollarSign, Users, TrendingUp, TrendingDown, Calendar, Clock, Star } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { format, subDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek } from "date-fns";
+
+interface RevenueData {
+  date: string;
+  revenue: number;
+  bookings: number;
+}
+
+interface ServiceData {
+  name: string;
+  count: number;
+  revenue: number;
+  color: string;
+}
+
+interface StaffData {
+  name: string;
+  bookings: number;
+  revenue: number;
+}
+
+interface OverviewStats {
+  totalRevenue: number;
+  totalBookings: number;
+  averageBookingValue: number;
+  completionRate: number;
+  cancellationRate: number;
+  revenueGrowth: number;
+  bookingGrowth: number;
+}
+
+const ReportsAnalytics = () => {
+  const [dateRange, setDateRange] = useState("30");
+  const [loading, setLoading] = useState(true);
+  const [overviewStats, setOverviewStats] = useState<OverviewStats | null>(null);
+  const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
+  const [serviceData, setServiceData] = useState<ServiceData[]>([]);
+  const [staffData, setStaffData] = useState<StaffData[]>([]);
+  const { toast } = useToast();
+
+  const colors = ['#fbbf24', '#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f'];
+
+  const fetchAnalyticsData = async () => {
+    setLoading(true);
+    try {
+      const days = parseInt(dateRange);
+      const endDate = new Date();
+      const startDate = subDays(endDate, days);
+
+      // Get business ID (in real app, this would come from auth context)
+      const { data: businesses } = await supabase
+        .from('businesses')
+        .select('id')
+        .limit(1)
+        .single();
+
+      if (!businesses) {
+        toast({
+          title: "Error",
+          description: "No business found. Please set up your business first.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const businessId = businesses.id;
+
+      // Fetch appointments with related data
+      const { data: appointments, error } = await supabase
+        .from('appointments')
+        .select(`
+          *,
+          services (name, price),
+          staff (name)
+        `)
+        .eq('business_id', businessId)
+        .gte('appointment_date', format(startDate, 'yyyy-MM-dd'))
+        .lte('appointment_date', format(endDate, 'yyyy-MM-dd'));
+
+      if (error) throw error;
+
+      if (!appointments || appointments.length === 0) {
+        setOverviewStats({
+          totalRevenue: 0,
+          totalBookings: 0,
+          averageBookingValue: 0,
+          completionRate: 0,
+          cancellationRate: 0,
+          revenueGrowth: 0,
+          bookingGrowth: 0,
+        });
+        setRevenueData([]);
+        setServiceData([]);
+        setStaffData([]);
+        return;
+      }
+
+      // Calculate overview stats
+      const completedAppointments = appointments.filter(a => a.status === 'completed');
+      const cancelledAppointments = appointments.filter(a => a.status === 'cancelled');
+      const totalRevenue = completedAppointments.reduce((sum, a) => sum + (a.services?.price || 0), 0);
+      const totalBookings = appointments.length;
+      const averageBookingValue = totalRevenue / (completedAppointments.length || 1);
+      const completionRate = (completedAppointments.length / totalBookings) * 100;
+      const cancellationRate = (cancelledAppointments.length / totalBookings) * 100;
+
+      // Calculate growth (comparing to previous period)
+      const previousStartDate = subDays(startDate, days);
+      const { data: previousAppointments } = await supabase
+        .from('appointments')
+        .select(`*, services (price)`)
+        .eq('business_id', businessId)
+        .gte('appointment_date', format(previousStartDate, 'yyyy-MM-dd'))
+        .lt('appointment_date', format(startDate, 'yyyy-MM-dd'));
+
+      const previousRevenue = previousAppointments?.filter(a => a.status === 'completed')
+        .reduce((sum, a) => sum + (a.services?.price || 0), 0) || 0;
+      const previousBookings = previousAppointments?.length || 0;
+
+      const revenueGrowth = previousRevenue > 0 ? ((totalRevenue - previousRevenue) / previousRevenue) * 100 : 0;
+      const bookingGrowth = previousBookings > 0 ? ((totalBookings - previousBookings) / previousBookings) * 100 : 0;
+
+      setOverviewStats({
+        totalRevenue,
+        totalBookings,
+        averageBookingValue,
+        completionRate,
+        cancellationRate,
+        revenueGrowth,
+        bookingGrowth,
+      });
+
+      // Process revenue data by day
+      const revenueByDay: { [key: string]: { revenue: number; bookings: number } } = {};
+      
+      for (let i = 0; i < days; i++) {
+        const date = subDays(endDate, i);
+        const dateStr = format(date, 'MMM dd');
+        revenueByDay[dateStr] = { revenue: 0, bookings: 0 };
+      }
+
+      completedAppointments.forEach(appointment => {
+        const dateStr = format(new Date(appointment.appointment_date), 'MMM dd');
+        if (revenueByDay[dateStr]) {
+          revenueByDay[dateStr].revenue += appointment.services?.price || 0;
+          revenueByDay[dateStr].bookings += 1;
+        }
+      });
+
+      const revenueChartData = Object.entries(revenueByDay)
+        .map(([date, data]) => ({
+          date,
+          revenue: data.revenue,
+          bookings: data.bookings,
+        }))
+        .reverse();
+
+      setRevenueData(revenueChartData);
+
+      // Process service data
+      const serviceStats: { [key: string]: { count: number; revenue: number } } = {};
+      
+      completedAppointments.forEach(appointment => {
+        const serviceName = appointment.services?.name || 'Unknown Service';
+        if (!serviceStats[serviceName]) {
+          serviceStats[serviceName] = { count: 0, revenue: 0 };
+        }
+        serviceStats[serviceName].count += 1;
+        serviceStats[serviceName].revenue += appointment.services?.price || 0;
+      });
+
+      const serviceChartData = Object.entries(serviceStats)
+        .map(([name, data], index) => ({
+          name,
+          count: data.count,
+          revenue: data.revenue,
+          color: colors[index % colors.length],
+        }))
+        .sort((a, b) => b.revenue - a.revenue);
+
+      setServiceData(serviceChartData);
+
+      // Process staff data
+      const staffStats: { [key: string]: { bookings: number; revenue: number } } = {};
+      
+      completedAppointments.forEach(appointment => {
+        const staffName = appointment.staff?.name || 'Unassigned';
+        if (!staffStats[staffName]) {
+          staffStats[staffName] = { bookings: 0, revenue: 0 };
+        }
+        staffStats[staffName].bookings += 1;
+        staffStats[staffName].revenue += appointment.services?.price || 0;
+      });
+
+      const staffChartData = Object.entries(staffStats)
+        .map(([name, data]) => ({
+          name,
+          bookings: data.bookings,
+          revenue: data.revenue,
+        }))
+        .sort((a, b) => b.revenue - a.revenue);
+
+      setStaffData(staffChartData);
+
+    } catch (error: any) {
+      console.error('Error fetching analytics:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load analytics data",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAnalyticsData();
+  }, [dateRange]);
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
+  };
+
+  const chartConfig = {
+    revenue: {
+      label: "Revenue",
+      color: "#fbbf24",
+    },
+    bookings: {
+      label: "Bookings",
+      color: "#3b82f6",
+    },
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <Card key={i} className="bg-slate-800/50 border-slate-700">
+              <CardContent className="p-6">
+                <div className="animate-pulse">
+                  <div className="h-4 bg-slate-600 rounded w-3/4 mb-2"></div>
+                  <div className="h-8 bg-slate-600 rounded w-1/2"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-white">Business Reports</h2>
+          <p className="text-slate-400">Analyze your business performance and trends</p>
+        </div>
+        <Select value={dateRange} onValueChange={setDateRange}>
+          <SelectTrigger className="w-48 bg-slate-800 border-slate-700 text-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-slate-800 border-slate-700">
+            <SelectItem value="7">Last 7 days</SelectItem>
+            <SelectItem value="30">Last 30 days</SelectItem>
+            <SelectItem value="90">Last 3 months</SelectItem>
+            <SelectItem value="365">Last year</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-400 text-sm">Total Revenue</p>
+                <p className="text-2xl font-bold text-white">
+                  {formatCurrency(overviewStats?.totalRevenue || 0)}
+                </p>
+                <div className="flex items-center mt-1">
+                  {(overviewStats?.revenueGrowth || 0) >= 0 ? (
+                    <TrendingUp className="w-4 h-4 text-green-400 mr-1" />
+                  ) : (
+                    <TrendingDown className="w-4 h-4 text-red-400 mr-1" />
+                  )}
+                  <span className={`text-sm ${
+                    (overviewStats?.revenueGrowth || 0) >= 0 ? 'text-green-400' : 'text-red-400'
+                  }`}>
+                    {Math.abs(overviewStats?.revenueGrowth || 0).toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+              <DollarSign className="w-8 h-8 text-amber-400" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-400 text-sm">Total Bookings</p>
+                <p className="text-2xl font-bold text-white">{overviewStats?.totalBookings || 0}</p>
+                <div className="flex items-center mt-1">
+                  {(overviewStats?.bookingGrowth || 0) >= 0 ? (
+                    <TrendingUp className="w-4 h-4 text-green-400 mr-1" />
+                  ) : (
+                    <TrendingDown className="w-4 h-4 text-red-400 mr-1" />
+                  )}
+                  <span className={`text-sm ${
+                    (overviewStats?.bookingGrowth || 0) >= 0 ? 'text-green-400' : 'text-red-400'
+                  }`}>
+                    {Math.abs(overviewStats?.bookingGrowth || 0).toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+              <Calendar className="w-8 h-8 text-blue-400" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-400 text-sm">Avg Booking Value</p>
+                <p className="text-2xl font-bold text-white">
+                  {formatCurrency(overviewStats?.averageBookingValue || 0)}
+                </p>
+                <p className="text-sm text-slate-400 mt-1">Per completed booking</p>
+              </div>
+              <Star className="w-8 h-8 text-purple-400" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-400 text-sm">Completion Rate</p>
+                <p className="text-2xl font-bold text-white">
+                  {(overviewStats?.completionRate || 0).toFixed(1)}%
+                </p>
+                <p className="text-sm text-red-400 mt-1">
+                  {(overviewStats?.cancellationRate || 0).toFixed(1)}% cancelled
+                </p>
+              </div>
+              <Users className="w-8 h-8 text-green-400" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts */}
+      <Tabs defaultValue="revenue" className="space-y-6">
+        <TabsList className="bg-slate-800 border-slate-700">
+          <TabsTrigger value="revenue" className="text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black">
+            Revenue Trends
+          </TabsTrigger>
+          <TabsTrigger value="services" className="text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black">
+            Service Performance
+          </TabsTrigger>
+          <TabsTrigger value="staff" className="text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black">
+            Staff Performance
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="revenue">
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-white">Revenue & Bookings Over Time</CardTitle>
+              <CardDescription className="text-slate-400">
+                Daily revenue and booking counts for the selected period
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig}>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={revenueData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                    <XAxis 
+                      dataKey="date" 
+                      stroke="#9ca3af"
+                      tick={{ fill: '#9ca3af' }}
+                    />
+                    <YAxis 
+                      yAxisId="revenue"
+                      orientation="left"
+                      stroke="#9ca3af"
+                      tick={{ fill: '#9ca3af' }}
+                      tickFormatter={(value) => `$${value}`}
+                    />
+                    <YAxis 
+                      yAxisId="bookings"
+                      orientation="right"
+                      stroke="#9ca3af"
+                      tick={{ fill: '#9ca3af' }}
+                    />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar 
+                      yAxisId="revenue"
+                      dataKey="revenue" 
+                      fill="#fbbf24" 
+                      name="Revenue"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Line 
+                      yAxisId="bookings"
+                      type="monotone" 
+                      dataKey="bookings" 
+                      stroke="#3b82f6" 
+                      strokeWidth={2}
+                      name="Bookings"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="services">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Service Revenue</CardTitle>
+                <CardDescription className="text-slate-400">
+                  Revenue breakdown by service type
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig}>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={serviceData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={120}
+                        paddingAngle={5}
+                        dataKey="revenue"
+                      >
+                        {serviceData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <ChartTooltip 
+                        content={({ active, payload }) => {
+                          if (active && payload && payload.length) {
+                            const data = payload[0].payload;
+                            return (
+                              <div className="bg-slate-800 border border-slate-600 rounded p-2">
+                                <p className="text-white font-medium">{data.name}</p>
+                                <p className="text-amber-400">Revenue: {formatCurrency(data.revenue)}</p>
+                                <p className="text-blue-400">Bookings: {data.count}</p>
+                              </div>
+                            );
+                          }
+                          return null;
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Service Statistics</CardTitle>
+                <CardDescription className="text-slate-400">
+                  Detailed breakdown of service performance
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {serviceData.map((service, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div 
+                          className="w-4 h-4 rounded-full"
+                          style={{ backgroundColor: service.color }}
+                        />
+                        <div>
+                          <p className="text-white font-medium">{service.name}</p>
+                          <p className="text-slate-400 text-sm">{service.count} bookings</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-white font-medium">{formatCurrency(service.revenue)}</p>
+                        <p className="text-slate-400 text-sm">
+                          {formatCurrency(service.revenue / service.count)} avg
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="staff">
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-white">Staff Performance</CardTitle>
+              <CardDescription className="text-slate-400">
+                Revenue and booking statistics by staff member
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig}>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={staffData} layout="horizontal">
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                    <XAxis 
+                      type="number"
+                      stroke="#9ca3af"
+                      tick={{ fill: '#9ca3af' }}
+                      tickFormatter={(value) => `$${value}`}
+                    />
+                    <YAxis 
+                      type="category"
+                      dataKey="name"
+                      stroke="#9ca3af"
+                      tick={{ fill: '#9ca3af' }}
+                      width={100}
+                    />
+                    <ChartTooltip 
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="bg-slate-800 border border-slate-600 rounded p-2">
+                              <p className="text-white font-medium">{label}</p>
+                              <p className="text-amber-400">Revenue: {formatCurrency(payload[0].value as number)}</p>
+                              <p className="text-blue-400">Bookings: {payload[0].payload.bookings}</p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar 
+                      dataKey="revenue" 
+                      fill="#fbbf24"
+                      radius={[0, 4, 4, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default ReportsAnalytics;

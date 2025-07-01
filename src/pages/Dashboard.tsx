@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { BarChart3, User, Scissors, Calendar, Settings, ArrowLeft, Users, Camera } from "lucide-react";
+import { BarChart3, User, Scissors, Calendar, Settings, ArrowLeft, Users, Camera, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StatisticsOverview from "@/components/StatisticsOverview";
 import ProfileManagement from "@/components/ProfileManagement";
@@ -12,6 +12,7 @@ import SettingsSection from "@/components/SettingsSection";
 import StaffManagement from "@/components/StaffManagement";
 import CalendarView from "@/components/CalendarView";
 import WorkPicturesManagement from "@/components/WorkPicturesManagement";
+import ReportsAnalytics from "@/components/ReportsAnalytics";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -40,10 +41,14 @@ const Dashboard = () => {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
           <div className="overflow-x-auto">
-            <TabsList className="grid grid-cols-8 bg-slate-800 border-slate-700 min-w-max w-full">
+            <TabsList className="grid grid-cols-9 bg-slate-800 border-slate-700 min-w-max w-full">
               <TabsTrigger value="overview" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Overview</span>
+              </TabsTrigger>
+              <TabsTrigger value="reports" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
+                <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Reports</span>
               </TabsTrigger>
               <TabsTrigger value="profile" className="flex items-center space-x-1 sm:space-x-2 text-white data-[state=active]:bg-amber-500 data-[state=active]:text-black px-1 sm:px-3 text-xs sm:text-sm">
                 <User className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -78,6 +83,10 @@ const Dashboard = () => {
 
           <TabsContent value="overview">
             <StatisticsOverview />
+          </TabsContent>
+
+          <TabsContent value="reports">
+            <ReportsAnalytics />
           </TabsContent>
 
           <TabsContent value="profile">
