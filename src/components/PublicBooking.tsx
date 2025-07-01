@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -275,19 +274,19 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-foreground">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
       </div>
     );
   }
 
   if (!business) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="bg-card border-border max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <Card className="bg-slate-800/50 border-slate-700 max-w-md">
           <CardContent className="p-8 text-center">
-            <h2 className="text-xl font-bold text-foreground mb-4">Business Not Found</h2>
-            <p className="text-muted-foreground">The business you're looking for doesn't exist or is no longer accepting bookings.</p>
+            <h2 className="text-xl font-bold text-white mb-4">Business Not Found</h2>
+            <p className="text-slate-400">The business you're looking for doesn't exist or is no longer accepting bookings.</p>
           </CardContent>
         </Card>
       </div>
@@ -295,25 +294,25 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Business Header */}
-        <Card className="bg-card border-border mb-8">
+        <Card className="bg-slate-800/50 border-slate-700 mb-8">
           <CardContent className="p-8">
             <div className="flex items-center space-x-6">
               <Avatar className="w-24 h-24">
                 <AvatarImage src={business.logo_url || ""} alt={business.name} />
-                <AvatarFallback className="bg-muted text-muted-foreground text-2xl">
+                <AvatarFallback className="bg-slate-700 text-white text-2xl">
                   {business.name.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h1 className="text-3xl font-bold text-foreground mb-2">{business.name}</h1>
+                <h1 className="text-3xl font-bold text-white mb-2">{business.name}</h1>
                 <Badge className="mb-3 capitalize">{business.business_type.replace('_', ' ')}</Badge>
                 {business.description && (
-                  <p className="text-muted-foreground mb-4">{business.description}</p>
+                  <p className="text-slate-300 mb-4">{business.description}</p>
                 )}
-                <div className="flex flex-wrap gap-4 text-muted-foreground">
+                <div className="flex flex-wrap gap-4 text-slate-400">
                   {business.phone && (
                     <div className="flex items-center">
                       <Phone className="w-4 h-4 mr-2" />
@@ -340,13 +339,13 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
         {/* Work Portfolio Section */}
         {workPictures.length > 0 && (
-          <Card className="bg-card border-border mb-8">
+          <Card className="bg-slate-800/50 border-slate-700 mb-8">
             <CardHeader>
-              <CardTitle className="text-foreground flex items-center">
+              <CardTitle className="text-white flex items-center">
                 <Images className="w-5 h-5 mr-2" />
                 Our Work Portfolio
               </CardTitle>
-              <CardDescription className="text-muted-foreground">
+              <CardDescription className="text-slate-400">
                 See examples of our previous work and craftsmanship
               </CardDescription>
             </CardHeader>
@@ -383,9 +382,9 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Services & Staff */}
           <div className="space-y-6">
-            <Card className="bg-card border-border">
+            <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-foreground">Our Services</CardTitle>
+                <CardTitle className="text-white">Our Services</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {services.map((service) => (
@@ -393,25 +392,25 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                     key={service.id}
                     className={`p-4 rounded-lg border cursor-pointer transition-colors ${
                       formData.service_id === service.id
-                        ? 'border-primary bg-primary/10'
-                        : 'border-border hover:border-primary/50'
+                        ? 'border-amber-500 bg-amber-500/10'
+                        : 'border-slate-600 hover:border-slate-500'
                     }`}
                     onClick={() => handleInputChange('service_id', service.id)}
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-foreground">{service.name}</h3>
+                      <h3 className="font-semibold text-white">{service.name}</h3>
                       <div className="text-right">
                         {service.price && (
-                          <div className="text-primary font-semibold">${service.price}</div>
+                          <div className="text-amber-400 font-semibold">${service.price}</div>
                         )}
-                        <div className="text-muted-foreground text-sm flex items-center">
+                        <div className="text-slate-400 text-sm flex items-center">
                           <Clock className="w-3 h-3 mr-1" />
                           {service.duration_minutes} min
                         </div>
                       </div>
                     </div>
                     {service.description && (
-                      <p className="text-muted-foreground text-sm">{service.description}</p>
+                      <p className="text-slate-400 text-sm">{service.description}</p>
                     )}
                   </div>
                 ))}
@@ -419,42 +418,42 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
             </Card>
 
             {staff.length > 0 && (
-              <Card className="bg-card border-border">
+              <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader>
-                  <CardTitle className="text-foreground">Choose Your Stylist (Optional)</CardTitle>
+                  <CardTitle className="text-white">Choose Your Stylist (Optional)</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div
                     className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                       formData.staff_id === ""
-                        ? 'border-primary bg-primary/10'
-                        : 'border-border hover:border-primary/50'
+                        ? 'border-amber-500 bg-amber-500/10'
+                        : 'border-slate-600 hover:border-slate-500'
                     }`}
                     onClick={() => handleInputChange('staff_id', '')}
                   >
-                    <div className="text-foreground font-medium">Any Available Stylist</div>
+                    <div className="text-white font-medium">Any Available Stylist</div>
                   </div>
                   {staff.map((member) => (
                     <div
                       key={member.id}
                       className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                         formData.staff_id === member.id
-                          ? 'border-primary bg-primary/10'
-                          : 'border-border hover:border-primary/50'
+                          ? 'border-amber-500 bg-amber-500/10'
+                          : 'border-slate-600 hover:border-slate-500'
                       }`}
                       onClick={() => handleInputChange('staff_id', member.id)}
                     >
                       <div className="flex items-center space-x-3">
                         <Avatar className="w-10 h-10">
                           <AvatarImage src={member.avatar_url || ""} alt={member.name} />
-                          <AvatarFallback className="bg-muted text-muted-foreground">
+                          <AvatarFallback className="bg-slate-700 text-white">
                             {member.name.charAt(0).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="text-foreground font-medium">{member.name}</div>
+                          <div className="text-white font-medium">{member.name}</div>
                           {member.specialties && member.specialties.length > 0 && (
-                            <div className="text-muted-foreground text-sm">
+                            <div className="text-slate-400 text-sm">
                               {member.specialties.slice(0, 2).join(', ')}
                             </div>
                           )}
@@ -469,9 +468,9 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
           {/* Booking Form */}
           <div className="space-y-6">
-            <Card className="bg-card border-border">
+            <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-foreground flex items-center">
+                <CardTitle className="text-white flex items-center">
                   <CalendarIcon className="w-5 h-5 mr-2" />
                   Select Date & Time
                 </CardTitle>
@@ -480,7 +479,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                 {/* Custom Calendar View */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-foreground">
+                    <h3 className="text-lg font-semibold text-white">
                       {format(calendarDate, 'MMMM yyyy')}
                     </h3>
                     <div className="flex gap-2">
@@ -488,7 +487,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         variant="outline"
                         size="sm"
                         onClick={() => navigateCalendar('prev')}
-                        className="border-border text-foreground hover:bg-muted"
+                        className="border-slate-600 text-white hover:bg-slate-700"
                       >
                         <ChevronLeft className="w-4 h-4" />
                       </Button>
@@ -496,7 +495,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         variant="outline"
                         size="sm"
                         onClick={() => setCalendarDate(new Date())}
-                        className="border-border text-foreground hover:bg-muted"
+                        className="border-slate-600 text-white hover:bg-slate-700"
                       >
                         Today
                       </Button>
@@ -504,7 +503,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         variant="outline"
                         size="sm"
                         onClick={() => navigateCalendar('next')}
-                        className="border-border text-foreground hover:bg-muted"
+                        className="border-slate-600 text-white hover:bg-slate-700"
                       >
                         <ChevronRight className="w-4 h-4" />
                       </Button>
@@ -513,7 +512,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
                   <div className="grid grid-cols-7 gap-1 text-center">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="text-muted-foreground text-sm font-medium p-2">
+                      <div key={day} className="text-slate-400 text-sm font-medium p-2">
                         {day}
                       </div>
                     ))}
@@ -532,17 +531,17 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                           disabled={!isAvailable}
                           className={`
                             aspect-square p-2 text-sm rounded-lg transition-colors relative
-                            ${!isCurrentMonth ? 'text-muted-foreground/50' : ''}
-                            ${isSelected ? 'bg-primary text-primary-foreground font-semibold' : ''}
-                            ${isToday && !isSelected ? 'bg-muted text-foreground font-semibold' : ''}
-                            ${isAvailable && !isSelected && !isToday ? 'text-foreground hover:bg-muted' : ''}
-                            ${!isAvailable ? 'text-muted-foreground/50 cursor-not-allowed' : 'cursor-pointer'}
+                            ${!isCurrentMonth ? 'text-slate-600' : ''}
+                            ${isSelected ? 'bg-amber-500 text-black font-semibold' : ''}
+                            ${isToday && !isSelected ? 'bg-slate-600 text-white font-semibold' : ''}
+                            ${isAvailable && !isSelected && !isToday ? 'text-white hover:bg-slate-700' : ''}
+                            ${!isAvailable ? 'text-slate-600 cursor-not-allowed' : 'cursor-pointer'}
                           `}
                         >
                           {format(date, 'd')}
                           {!isAvailable && isCurrentMonth && !isDisabled && (
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-1 h-1 bg-destructive rounded-full"></div>
+                              <div className="w-1 h-1 bg-red-500 rounded-full"></div>
                             </div>
                           )}
                         </button>
@@ -554,7 +553,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                 {selectedDate && (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <Label className="text-foreground font-medium">
+                      <Label className="text-white font-medium">
                         Available Times for {format(selectedDate, 'MMM d, yyyy')}
                       </Label>
                       <Badge variant="secondary" className="text-xs">
@@ -570,8 +569,8 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                           onClick={() => setSelectedTime(time)}
                           className={
                             selectedTime === time
-                              ? "bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
-                              : "border-border text-foreground hover:bg-muted hover:border-primary/50"
+                              ? "bg-amber-500 hover:bg-amber-600 text-black font-medium"
+                              : "border-slate-600 text-white hover:bg-slate-700 hover:border-slate-500"
                           }
                         >
                           {time}
@@ -583,54 +582,54 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
               </CardContent>
             </Card>
 
-            <Card className="bg-card border-border">
+            <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-foreground">Your Information</CardTitle>
+                <CardTitle className="text-white">Your Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="customer_name" className="text-foreground">Full Name *</Label>
+                  <Label htmlFor="customer_name" className="text-white">Full Name *</Label>
                   <Input
                     id="customer_name"
                     value={formData.customer_name}
                     onChange={(e) => handleInputChange("customer_name", e.target.value)}
-                    className="bg-background border-input text-foreground"
+                    className="bg-slate-700 border-slate-600 text-white"
                     placeholder="Your full name"
                     required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="customer_phone" className="text-foreground">Phone Number *</Label>
+                  <Label htmlFor="customer_phone" className="text-white">Phone Number *</Label>
                   <Input
                     id="customer_phone"
                     value={formData.customer_phone}
                     onChange={(e) => handleInputChange("customer_phone", e.target.value)}
-                    className="bg-background border-input text-foreground"
+                    className="bg-slate-700 border-slate-600 text-white"
                     placeholder="Your phone number"
                     required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="customer_email" className="text-foreground">Email (Optional)</Label>
+                  <Label htmlFor="customer_email" className="text-white">Email (Optional)</Label>
                   <Input
                     id="customer_email"
                     type="email"
                     value={formData.customer_email}
                     onChange={(e) => handleInputChange("customer_email", e.target.value)}
-                    className="bg-background border-input text-foreground"
+                    className="bg-slate-700 border-slate-600 text-white"
                     placeholder="your.email@example.com"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="notes" className="text-foreground">Special Requests (Optional)</Label>
+                  <Label htmlFor="notes" className="text-white">Special Requests (Optional)</Label>
                   <Textarea
                     id="notes"
                     value={formData.notes}
                     onChange={(e) => handleInputChange("notes", e.target.value)}
-                    className="bg-background border-input text-foreground"
+                    className="bg-slate-700 border-slate-600 text-white"
                     placeholder="Any special requests or notes..."
                     rows={3}
                   />
@@ -646,7 +645,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                     !selectedDate || 
                     !selectedTime
                   }
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-black font-semibold"
                 >
                   {submitting ? "Booking..." : "Book Appointment"}
                 </Button>

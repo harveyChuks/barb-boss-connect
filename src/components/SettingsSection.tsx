@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Shield, Bell, CreditCard, Users, Calendar } from "lucide-react";
 import BusinessHoursManagement from "./BusinessHoursManagement";
-import ThemeSelector from "./ThemeSelector";
 
 const SettingsSection = () => {
   const settingsCategories = [
@@ -73,33 +72,30 @@ const SettingsSection = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">Settings</h2>
-        <p className="text-muted-foreground">Manage your account and business preferences</p>
+        <h2 className="text-2xl font-bold text-white">Settings</h2>
+        <p className="text-slate-400">Manage your account and business preferences</p>
       </div>
-
-      {/* Theme Selection */}
-      <ThemeSelector />
 
       {/* Business Hours Management - Active Feature */}
       <BusinessHoursManagement />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {settingsCategories.map((category, index) => (
-          <Card key={index} className="bg-card border-border">
+          <Card key={index} className="bg-slate-800/50 border-slate-700">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
-                    <category.icon className="w-5 h-5 text-primary" />
+                  <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center">
+                    <category.icon className="w-5 h-5 text-amber-400" />
                   </div>
                   <div>
-                    <CardTitle className="text-foreground text-lg">{category.title}</CardTitle>
-                    <CardDescription className="text-muted-foreground">
+                    <CardTitle className="text-white text-lg">{category.title}</CardTitle>
+                    <CardDescription className="text-slate-400">
                       {category.description}
                     </CardDescription>
                   </div>
                 </div>
-                <Badge variant="outline" className="border-primary text-primary">
+                <Badge variant="outline" className="border-amber-400 text-amber-400">
                   {category.status}
                 </Badge>
               </div>
@@ -107,15 +103,15 @@ const SettingsSection = () => {
             <CardContent>
               <ul className="space-y-2">
                 {category.items.map((item, itemIndex) => (
-                  <li key={itemIndex} className="text-sm text-muted-foreground flex items-center">
-                    <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full mr-3"></div>
+                  <li key={itemIndex} className="text-sm text-slate-300 flex items-center">
+                    <div className="w-1.5 h-1.5 bg-slate-500 rounded-full mr-3"></div>
                     {item}
                   </li>
                 ))}
               </ul>
               <Button
                 variant="outline"
-                className="w-full mt-4 border-border text-muted-foreground hover:bg-muted"
+                className="w-full mt-4 border-slate-600 text-slate-400 hover:bg-slate-700"
                 disabled
               >
                 Configure
@@ -125,11 +121,11 @@ const SettingsSection = () => {
         ))}
       </div>
 
-      <Card className="bg-card border-border">
+      <Card className="bg-slate-800/50 border-slate-700">
         <CardContent className="p-6 text-center">
-          <Settings className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-foreground mb-2">More Settings Coming Soon</h3>
-          <p className="text-muted-foreground mb-4 max-w-2xl mx-auto">
+          <Settings className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-white mb-2">More Settings Coming Soon</h3>
+          <p className="text-slate-400 mb-4 max-w-2xl mx-auto">
             We're working on bringing you more comprehensive settings to customize your BarbS experience. 
             These features will be available in upcoming updates.
           </p>
