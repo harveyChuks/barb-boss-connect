@@ -244,14 +244,14 @@ const Index = () => {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Three glowing colors - purple right, blue middle, light blue left */}
       <div className="fixed inset-0 pointer-events-none">
         {/* Left corner - light blue */}

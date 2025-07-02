@@ -134,10 +134,10 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
   if (showResetPassword) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="bg-slate-800 border-slate-700 text-white">
+        <DialogContent className="bg-card border-border text-foreground">
           <DialogHeader>
             <DialogTitle>Reset Password</DialogTitle>
-            <DialogDescription className="text-slate-400">
+            <DialogDescription className="text-muted-foreground">
               Enter your email address and we'll send you a link to reset your password.
             </DialogDescription>
           </DialogHeader>
@@ -150,7 +150,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
+                className="bg-input border-border text-foreground"
                 placeholder="your@email.com"
                 required
               />
@@ -169,7 +169,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                 type="button"
                 variant="outline"
                 onClick={() => setShowResetPassword(false)}
-                className="border-slate-600 text-white hover:bg-slate-700"
+                className="border-border text-foreground hover:bg-muted"
               >
                 Back
               </Button>
@@ -182,16 +182,16 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-800 border-slate-700 text-white">
+      <DialogContent className="bg-card border-border text-foreground">
         <DialogHeader>
           <DialogTitle>Welcome to BarbS</DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogDescription className="text-muted-foreground">
             Sign in to manage your business or create a new account
           </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-slate-700">
+          <TabsList className="grid w-full grid-cols-2 bg-muted">
             <TabsTrigger value="login" className="data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
               Login
             </TabsTrigger>
@@ -209,7 +209,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white"
+                  className="bg-input border-border text-foreground"
                   placeholder="your@email.com"
                   required
                 />
@@ -223,7 +223,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={(e) => handleInputChange("password", e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white pr-10"
+                    className="bg-input border-border text-foreground pr-10"
                     placeholder="Enter your password"
                     required
                   />
@@ -235,9 +235,9 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-slate-400 hover:text-white" />
+                      <EyeOff className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                     ) : (
-                      <Eye className="h-4 w-4 text-slate-400 hover:text-white" />
+                      <Eye className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                     )}
                   </Button>
                 </div>
@@ -256,7 +256,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                 type="button"
                 variant="link"
                 onClick={() => setShowResetPassword(true)}
-                className="w-full text-slate-300 hover:text-white"
+                className="w-full text-muted-foreground hover:text-foreground"
               >
                 Forgot your password?
               </Button>
@@ -272,7 +272,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white"
+                  className="bg-input border-border text-foreground"
                   placeholder="your@email.com"
                   required
                 />
@@ -286,7 +286,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={(e) => handleInputChange("password", e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white pr-10"
+                    className="bg-input border-border text-foreground pr-10"
                     placeholder="Create a password"
                     required
                   />
@@ -298,9 +298,9 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-slate-400 hover:text-white" />
+                      <EyeOff className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                     ) : (
-                      <Eye className="h-4 w-4 text-slate-400 hover:text-white" />
+                      <Eye className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                     )}
                   </Button>
                 </div>
@@ -314,7 +314,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                     type={showConfirmPassword ? "text" : "password"}
                     value={formData.confirmPassword}
                     onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white pr-10"
+                    className="bg-input border-border text-foreground pr-10"
                     placeholder="Confirm your password"
                     required
                   />
@@ -326,9 +326,9 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4 text-slate-400 hover:text-white" />
+                      <EyeOff className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                     ) : (
-                      <Eye className="h-4 w-4 text-slate-400 hover:text-white" />
+                      <Eye className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                     )}
                   </Button>
                 </div>
