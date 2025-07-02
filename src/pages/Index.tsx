@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -239,15 +238,13 @@ const Index = () => {
 
       {/* Modals */}
       <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        mode={authMode}
-        onModeChange={setAuthMode}
+        open={showAuthModal}
+        onOpenChange={setShowAuthModal}
       />
 
       <BusinessRegistrationModal
-        isOpen={showRegisterModal}
-        onClose={() => setShowRegisterModal(false)}
+        open={showRegisterModal}
+        onOpenChange={setShowRegisterModal}
       />
     </div>
   );
