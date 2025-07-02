@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -175,7 +176,14 @@ const Index = () => {
                   </Button>
                   <Button 
                     onClick={() => setShowAppointmentModal(true)}
-                    className="bg-amber-500 hover:bg-amber-600 text-black justify-start"
+                    className="justify-start"
+                    style={{ backgroundColor: '#39FF14', color: 'black' }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#32e612';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#39FF14';
+                    }}
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     New Appointment
@@ -192,7 +200,14 @@ const Index = () => {
               ) : (
                 <Button 
                   onClick={() => setShowBusinessModal(true)}
-                  className="bg-amber-500 hover:bg-amber-600 text-black justify-start"
+                  className="justify-start"
+                  style={{ backgroundColor: '#39FF14', color: 'black' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#32e612';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#39FF14';
+                  }}
                 >
                   <Building className="w-4 h-4 mr-2" />
                   Register Business
@@ -210,7 +225,14 @@ const Index = () => {
           ) : (
             <Button 
               onClick={() => setShowAuthModal(true)}
-              className="bg-amber-500 hover:bg-amber-600 text-black justify-start"
+              className="justify-start"
+              style={{ backgroundColor: '#39FF14', color: 'black' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#32e612';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#39FF14';
+              }}
             >
               Sign In / Sign Up
             </Button>
@@ -235,7 +257,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center" style={{ background: '#39FF14' }}>
                 <Scissors className="w-4 h-4 sm:w-6 sm:h-6 text-black" />
               </div>
               <div>
@@ -262,7 +284,13 @@ const Index = () => {
                       </Button>
                       <Button 
                         onClick={() => setShowAppointmentModal(true)}
-                        className="bg-amber-500 hover:bg-amber-600 text-black"
+                        style={{ backgroundColor: '#39FF14', color: 'black' }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#32e612';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#39FF14';
+                        }}
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         New Appointment
@@ -279,7 +307,13 @@ const Index = () => {
                   ) : (
                     <Button 
                       onClick={() => setShowBusinessModal(true)}
-                      className="bg-amber-500 hover:bg-amber-600 text-black"
+                      style={{ backgroundColor: '#39FF14', color: 'black' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#32e612';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#39FF14';
+                      }}
                     >
                       <Building className="w-4 h-4 mr-2" />
                       Register Business
@@ -297,7 +331,13 @@ const Index = () => {
               ) : (
                 <Button 
                   onClick={() => setShowAuthModal(true)}
-                  className="bg-amber-500 hover:bg-amber-600 text-black"
+                  style={{ backgroundColor: '#39FF14', color: 'black' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#32e612';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#39FF14';
+                  }}
                 >
                   Sign In / Sign Up
                 </Button>
@@ -313,7 +353,7 @@ const Index = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {!isAuthenticated ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: '#39FF14' }}>
               <Scissors className="w-8 h-8 sm:w-10 sm:h-10 text-black" />
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Welcome to BarbS</h2>
@@ -323,21 +363,35 @@ const Index = () => {
             </p>
             <Button 
               onClick={() => setShowAuthModal(true)}
-              className="bg-amber-500 hover:bg-amber-600 text-black text-lg px-8 py-3"
+              className="text-lg px-8 py-3"
+              style={{ backgroundColor: '#39FF14', color: 'black' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#32e612';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#39FF14';
+              }}
             >
               Get Started
             </Button>
           </div>
         ) : !userBusiness ? (
           <div className="text-center py-12">
-            <Building className="w-16 h-16 sm:w-20 sm:h-20 text-amber-400 mx-auto mb-6" />
+            <Building className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6" style={{ color: '#39FF14' }} />
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Set Up Your Business</h2>
             <p className="text-slate-400 mb-8 max-w-2xl mx-auto px-4">
               Complete your business registration with our step-by-step process to start accepting bookings.
             </p>
             <Button 
               onClick={() => setShowBusinessModal(true)}
-              className="bg-amber-500 hover:bg-amber-600 text-black text-lg px-8 py-3"
+              className="text-lg px-8 py-3"
+              style={{ backgroundColor: '#39FF14', color: 'black' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#32e612';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#39FF14';
+              }}
             >
               <Building className="w-5 h-5 mr-2" />
               Complete Registration
@@ -409,7 +463,14 @@ const Index = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     <Button 
                       onClick={() => navigate('/dashboard')}
-                      className="bg-amber-500 hover:bg-amber-600 text-black h-12 sm:h-16 text-sm sm:text-lg"
+                      className="h-12 sm:h-16 text-sm sm:text-lg"
+                      style={{ backgroundColor: '#39FF14', color: 'black' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#32e612';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#39FF14';
+                      }}
                     >
                       <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Full Dashboard
@@ -440,7 +501,7 @@ const Index = () => {
               <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-white flex items-center text-lg sm:text-xl">
-                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-amber-400" />
+                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
                     Today's Appointments
                   </CardTitle>
                   <CardDescription className="text-slate-400 text-sm">
@@ -459,7 +520,7 @@ const Index = () => {
                             <p className="font-medium text-white text-sm sm:text-base truncate">{appointment.customer_name}</p>
                             <p className="text-xs sm:text-sm text-slate-400 truncate">{appointment.services?.name || 'Service'}</p>
                           </div>
-                          <Badge variant="outline" className="border-amber-400 text-amber-400 text-xs sm:text-sm ml-2 flex-shrink-0">
+                          <Badge variant="outline" className="text-xs sm:text-sm ml-2 flex-shrink-0" style={{ borderColor: '#39FF14', color: '#39FF14' }}>
                             {appointment.start_time}
                           </Badge>
                         </div>
@@ -480,7 +541,14 @@ const Index = () => {
                       <p className="text-slate-400 text-sm sm:text-base">No appointments for today</p>
                       <Button
                         onClick={() => setShowAppointmentModal(true)}
-                        className="mt-4 bg-amber-500 hover:bg-amber-600 text-black text-sm sm:text-base"
+                        className="mt-4 text-sm sm:text-base"
+                        style={{ backgroundColor: '#39FF14', color: 'black' }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#32e612';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#39FF14';
+                        }}
                       >
                         Schedule First Appointment
                       </Button>
@@ -493,7 +561,7 @@ const Index = () => {
               <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-white flex items-center text-lg sm:text-xl">
-                    <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-amber-400" />
+                    <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
                     Recent Clients
                   </CardTitle>
                   <CardDescription className="text-slate-400 text-sm">
@@ -544,7 +612,14 @@ const Index = () => {
                         {!searchTerm && (
                           <Button
                             onClick={() => setShowClientModal(true)}
-                            className="mt-4 bg-amber-500 hover:bg-amber-600 text-black text-sm sm:text-base"
+                            className="mt-4 text-sm sm:text-base"
+                            style={{ backgroundColor: '#39FF14', color: 'black' }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#32e612';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#39FF14';
+                            }}
                           >
                             Add First Client
                           </Button>

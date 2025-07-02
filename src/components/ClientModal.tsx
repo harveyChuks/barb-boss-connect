@@ -159,7 +159,13 @@ const ClientModal = ({ open, onOpenChange, onClientAdded }: ClientModalProps) =>
             <Button
               type="submit"
               disabled={loading}
-              className="bg-amber-500 hover:bg-amber-600 text-black"
+              style={{ backgroundColor: '#39FF14', color: 'black' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#32e612';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#39FF14';
+              }}
             >
               {loading ? "Adding..." : "Add Client"}
             </Button>
