@@ -169,7 +169,7 @@ const Index = () => {
                   <Button 
                     onClick={() => navigate('/dashboard')}
                     variant="outline" 
-                    className="border-slate-600 text-white hover:bg-slate-800 justify-start"
+                    className="justify-start"
                   >
                     <BarChart3 className="w-4 h-4 mr-2" />
                     Dashboard
@@ -191,7 +191,7 @@ const Index = () => {
                   <Button 
                     onClick={() => setShowClientModal(true)}
                     variant="outline" 
-                    className="border-slate-600 text-white hover:bg-slate-800 justify-start"
+                    className="justify-start"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Client
@@ -216,7 +216,7 @@ const Index = () => {
               <Button 
                 onClick={handleSignOut}
                 variant="outline" 
-                className="border-slate-600 text-white hover:bg-slate-800 justify-start"
+                className="justify-start"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Sign Out
@@ -304,8 +304,7 @@ const Index = () => {
                     <>
                       <Button 
                         onClick={() => navigate('/dashboard')}
-                        variant="outline" 
-                        className="border-slate-600 text-white hover:bg-slate-800"
+                        variant="outline"
                       >
                         <BarChart3 className="w-4 h-4 mr-2" />
                         Dashboard
@@ -325,8 +324,7 @@ const Index = () => {
                       </Button>
                       <Button 
                         onClick={() => setShowClientModal(true)}
-                        variant="outline" 
-                        className="border-slate-600 text-white hover:bg-slate-800"
+                        variant="outline"
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Add Client
@@ -349,8 +347,7 @@ const Index = () => {
                   )}
                   <Button 
                     onClick={handleSignOut}
-                    variant="outline" 
-                    className="border-slate-600 text-white hover:bg-slate-800"
+                    variant="outline"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
                     Sign Out
@@ -506,7 +503,7 @@ const Index = () => {
                     <Button 
                       onClick={() => setShowAppointmentModal(true)}
                       variant="outline"
-                      className="border-slate-600 text-white hover:bg-slate-700 h-12 sm:h-16 text-sm sm:text-lg"
+                      className="h-12 sm:h-16 text-sm sm:text-lg"
                     >
                       <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Book Appointment
@@ -514,7 +511,7 @@ const Index = () => {
                     <Button 
                       onClick={() => setShowClientModal(true)}
                       variant="outline"
-                      className="border-slate-600 text-white hover:bg-slate-700 h-12 sm:h-16 text-sm sm:text-lg"
+                      className="h-12 sm:h-16 text-sm sm:text-lg"
                     >
                       <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Add Client
@@ -554,13 +551,13 @@ const Index = () => {
                         </div>
                       ))}
                       {todayAppointments.length > 3 && (
-                        <Button
-                          onClick={() => navigate('/dashboard')}
-                          variant="outline"
-                          className="w-full border-slate-600 text-white hover:bg-slate-700 text-sm sm:text-base"
-                        >
-                          View All ({todayAppointments.length})
-                        </Button>
+                          <Button
+                            onClick={() => navigate('/dashboard')}
+                            variant="outline"
+                            className="w-full text-sm sm:text-base"
+                          >
+                            View All ({todayAppointments.length})
+                          </Button>
                       )}
                     </div>
                   ) : (
@@ -626,7 +623,7 @@ const Index = () => {
                         <Button
                           onClick={() => navigate('/dashboard')}
                           variant="outline"
-                          className="w-full border-slate-600 text-white hover:bg-slate-700 text-sm sm:text-base"
+                          className="w-full text-sm sm:text-base"
                         >
                           View All Clients
                         </Button>
