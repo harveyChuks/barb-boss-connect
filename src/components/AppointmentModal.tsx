@@ -286,10 +286,10 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-card border-border text-foreground max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Schedule New Appointment</DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogDescription className="text-muted-foreground">
             Book a new appointment for your client.
           </DialogDescription>
         </DialogHeader>
@@ -298,12 +298,12 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
           <div className="space-y-2">
             <Label htmlFor="customer">Customer</Label>
             <Select value={formData.customerId} onValueChange={(value) => handleInputChange("customerId", value)}>
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+              <SelectTrigger className="bg-input border-border text-foreground">
                 <SelectValue placeholder="Select existing customer or enter new below" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
+              <SelectContent className="bg-popover border-border">
                 {customers.map((customer) => (
-                  <SelectItem key={customer.id} value={customer.id} className="text-white hover:bg-slate-600">
+                  <SelectItem key={customer.id} value={customer.id} className="text-foreground hover:bg-muted">
                     {customer.name} - {customer.phone}
                   </SelectItem>
                 ))}
@@ -320,7 +320,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
                     id="customerName"
                     value={formData.customerName}
                     onChange={(e) => handleInputChange("customerName", e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-input border-border text-foreground"
                     placeholder="John Smith"
                     required={!formData.customerId}
                   />
@@ -332,7 +332,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
                     id="customerPhone"
                     value={formData.customerPhone}
                     onChange={(e) => handleInputChange("customerPhone", e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-input border-border text-foreground"
                     placeholder="(555) 123-4567"
                     required={!formData.customerId}
                   />
@@ -346,7 +346,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
                   type="email"
                   value={formData.customerEmail}
                   onChange={(e) => handleInputChange("customerEmail", e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white"
+                  className="bg-input border-border text-foreground"
                   placeholder="john@example.com"
                 />
               </div>
@@ -356,15 +356,15 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
           <div className="space-y-2">
             <Label htmlFor="service">Service</Label>
             <Select value={formData.serviceId} onValueChange={(value) => handleInputChange("serviceId", value)}>
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+              <SelectTrigger className="bg-input border-border text-foreground">
                 <SelectValue placeholder="Select service" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
+              <SelectContent className="bg-popover border-border">
                 {services.map((service) => (
-                  <SelectItem key={service.id} value={service.id} className="text-white hover:bg-slate-600">
+                  <SelectItem key={service.id} value={service.id} className="text-foreground hover:bg-muted">
                     <div className="flex justify-between items-center w-full">
                       <span>{service.name}</span>
-                      <span className="text-sm text-slate-400">
+                      <span className="text-sm text-muted-foreground">
                         {service.duration_minutes}min - ${service.price}
                       </span>
                     </div>
@@ -381,7 +381,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
               type="date"
               value={formData.date}
               onChange={(e) => handleInputChange("date", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
+              className="bg-input border-border text-foreground"
               required
             />
           </div>
@@ -406,7 +406,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
               id="notes"
               value={formData.notes}
               onChange={(e) => handleInputChange("notes", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
+              className="bg-input border-border text-foreground"
               placeholder="Special requests or notes"
             />
           </div>
@@ -416,7 +416,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-slate-600 text-white hover:bg-slate-700"
+              className="border-border text-foreground hover:bg-muted"
             >
               Cancel
             </Button>

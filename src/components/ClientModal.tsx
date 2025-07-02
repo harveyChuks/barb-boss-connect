@@ -89,10 +89,10 @@ const ClientModal = ({ open, onOpenChange, onClientAdded }: ClientModalProps) =>
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-800 border-slate-700 text-white">
+      <DialogContent className="bg-card border-border text-foreground">
         <DialogHeader>
           <DialogTitle>Add New Client</DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogDescription className="text-muted-foreground">
             Enter the client's information to add them to your database.
           </DialogDescription>
         </DialogHeader>
@@ -104,7 +104,7 @@ const ClientModal = ({ open, onOpenChange, onClientAdded }: ClientModalProps) =>
               id="name"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
+              className="bg-input border-border text-foreground"
               placeholder="John Smith"
               required
             />
@@ -117,7 +117,7 @@ const ClientModal = ({ open, onOpenChange, onClientAdded }: ClientModalProps) =>
               type="tel"
               value={formData.phone}
               onChange={(e) => handleInputChange("phone", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
+              className="bg-input border-border text-foreground"
               placeholder="(555) 123-4567"
               required
             />
@@ -130,7 +130,7 @@ const ClientModal = ({ open, onOpenChange, onClientAdded }: ClientModalProps) =>
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
+              className="bg-input border-border text-foreground"
               placeholder="john@example.com"
             />
           </div>
@@ -141,7 +141,7 @@ const ClientModal = ({ open, onOpenChange, onClientAdded }: ClientModalProps) =>
               id="notes"
               value={formData.notes}
               onChange={(e) => handleInputChange("notes", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
+              className="bg-input border-border text-foreground"
               placeholder="Preferred styles, allergies, etc."
               rows={3}
             />
@@ -152,7 +152,7 @@ const ClientModal = ({ open, onOpenChange, onClientAdded }: ClientModalProps) =>
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-slate-600 text-white hover:bg-slate-700"
+              className="border-border text-foreground hover:bg-muted"
             >
               Cancel
             </Button>
