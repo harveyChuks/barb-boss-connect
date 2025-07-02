@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -170,9 +169,9 @@ const BusinessHoursManagement = () => {
 
   if (loading) {
     return (
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-slate-50 border-slate-200">
         <CardContent className="p-6">
-          <p className="text-slate-400">Loading business hours...</p>
+          <p className="text-slate-600">Loading business hours...</p>
         </CardContent>
       </Card>
     );
@@ -180,31 +179,31 @@ const BusinessHoursManagement = () => {
 
   if (!business) {
     return (
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-slate-50 border-slate-200">
         <CardContent className="p-6">
-          <p className="text-slate-400">No business profile found. Please set up your business first.</p>
+          <p className="text-slate-600">No business profile found. Please set up your business first.</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="bg-slate-800/50 border-slate-700">
+    <Card className="bg-slate-50 border-slate-200">
       <CardHeader>
         <div className="flex items-center space-x-2">
           <Clock className="w-5 h-5 text-amber-400" />
-          <CardTitle className="text-white">Business Hours</CardTitle>
+          <CardTitle className="text-slate-800">Business Hours</CardTitle>
         </div>
-        <CardDescription className="text-slate-400">
+        <CardDescription className="text-slate-600">
           Set your operating hours and availability for each day of the week
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
           {businessHours.map((dayHours) => (
-            <div key={dayHours.day_of_week} className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 bg-slate-700/30 rounded-lg">
+            <div key={dayHours.day_of_week} className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 bg-slate-100 rounded-lg">
               <div className="flex items-center space-x-4 min-w-[120px]">
-                <Label className="text-white font-medium w-20">
+                <Label className="text-slate-800 font-medium w-20">
                   {dayNames[dayHours.day_of_week]}
                 </Label>
                 <div className="flex items-center space-x-2">
@@ -214,7 +213,7 @@ const BusinessHoursManagement = () => {
                       updateBusinessHours(dayHours.day_of_week, 'is_closed', !checked)
                     }
                   />
-                  <Label className="text-slate-300 text-sm">
+                  <Label className="text-slate-600 text-sm">
                     {dayHours.is_closed ? 'Closed' : 'Open'}
                   </Label>
                 </div>
@@ -223,11 +222,11 @@ const BusinessHoursManagement = () => {
               {!dayHours.is_closed && (
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
-                    <Label className="text-slate-300 text-sm">From:</Label>
+                    <Label className="text-slate-600 text-sm">From:</Label>
                     <select
                       value={dayHours.start_time}
                       onChange={(e) => updateBusinessHours(dayHours.day_of_week, 'start_time', e.target.value)}
-                      className="bg-slate-600 border border-slate-500 text-white px-3 py-1 rounded text-sm"
+                      className="bg-white border border-slate-300 text-slate-800 px-3 py-1 rounded text-sm"
                     >
                       {timeSlots.map(slot => (
                         <option key={slot.value} value={slot.value}>
@@ -238,11 +237,11 @@ const BusinessHoursManagement = () => {
                   </div>
                   
                   <div className="flex items-center space-x-2">
-                    <Label className="text-slate-300 text-sm">To:</Label>
+                    <Label className="text-slate-600 text-sm">To:</Label>
                     <select
                       value={dayHours.end_time}
                       onChange={(e) => updateBusinessHours(dayHours.day_of_week, 'end_time', e.target.value)}
-                      className="bg-slate-600 border border-slate-500 text-white px-3 py-1 rounded text-sm"
+                      className="bg-white border border-slate-300 text-slate-800 px-3 py-1 rounded text-sm"
                     >
                       {timeSlots.map(slot => (
                         <option key={slot.value} value={slot.value}>
@@ -270,19 +269,19 @@ const BusinessHoursManagement = () => {
           <Button
             onClick={() => fetchBusinessAndHours()}
             variant="outline"
-            className="border-slate-600 text-white hover:bg-slate-700"
+            className="border-slate-300 text-slate-800 hover:bg-slate-100"
           >
             Reset Changes
           </Button>
         </div>
 
-        <div className="bg-slate-700/30 p-4 rounded-lg">
-          <h4 className="text-white font-medium mb-2">Quick Setup</h4>
+        <div className="bg-slate-100 p-4 rounded-lg">
+          <h4 className="text-slate-800 font-medium mb-2">Quick Setup</h4>
           <div className="flex flex-wrap gap-2">
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-600 text-slate-300 hover:bg-slate-700"
+              className="border-slate-300 text-slate-600 hover:bg-slate-200"
               onClick={() => {
                 setBusinessHours(prev => prev.map(hour => ({
                   ...hour,
@@ -298,7 +297,7 @@ const BusinessHoursManagement = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-600 text-slate-300 hover:bg-slate-700"
+              className="border-slate-300 text-slate-600 hover:bg-slate-200"
               onClick={() => {
                 setBusinessHours(prev => prev.map(hour => ({
                   ...hour,
@@ -314,7 +313,7 @@ const BusinessHoursManagement = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-600 text-slate-300 hover:bg-slate-700"
+              className="border-slate-300 text-slate-600 hover:bg-slate-200"
               onClick={() => {
                 setBusinessHours(prev => prev.map(hour => ({
                   ...hour,
