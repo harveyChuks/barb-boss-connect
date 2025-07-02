@@ -12,12 +12,15 @@ import { User, Building2, Phone, Mail, Globe, Instagram, MapPin, Upload, Copy, C
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Database } from "@/integrations/supabase/types";
+
+type BusinessType = Database["public"]["Enums"]["business_type"];
 
 interface Business {
   id: string;
   name: string;
   description: string | null;
-  business_type: string;
+  business_type: BusinessType;
   phone: string | null;
   email: string | null;
   address: string | null;
@@ -37,7 +40,7 @@ const ProfileManagement = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    business_type: "",
+    business_type: "" as BusinessType,
     phone: "",
     email: "",
     address: "",
@@ -68,7 +71,7 @@ const ProfileManagement = () => {
         setFormData({
           name: data.name || "",
           description: data.description || "",
-          business_type: data.business_type || "",
+          business_type: data.business_type || "barbershop",
           phone: data.phone || "",
           email: data.email || "",
           address: data.address || "",

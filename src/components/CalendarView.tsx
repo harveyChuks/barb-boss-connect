@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -392,13 +392,12 @@ const CalendarView = () => {
 
       {showAppointmentModal && (
         <AppointmentModal
-          isOpen={showAppointmentModal}
-          onClose={() => {
-            setShowAppointmentModal(false);
-            setSelectedAppointment(null);
+          open={showAppointmentModal}
+          onOpenChange={(open) => {
+            setShowAppointmentModal(open);
+            if (!open) setSelectedAppointment(null);
           }}
-          appointment={selectedAppointment}
-          onSave={() => {
+          onAppointmentCreated={() => {
             fetchBusinessAndAppointments();
             setShowAppointmentModal(false);
             setSelectedAppointment(null);

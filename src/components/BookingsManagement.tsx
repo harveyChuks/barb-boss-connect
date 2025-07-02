@@ -454,13 +454,12 @@ const BookingsManagement = () => {
       {/* Appointment Modal */}
       {showAppointmentModal && (
         <AppointmentModal
-          isOpen={showAppointmentModal}
-          onClose={() => {
-            setShowAppointmentModal(false);
-            setSelectedAppointment(null);
+          open={showAppointmentModal}
+          onOpenChange={(open) => {
+            setShowAppointmentModal(open);
+            if (!open) setSelectedAppointment(null);
           }}
-          appointment={selectedAppointment}
-          onSave={() => {
+          onAppointmentCreated={() => {
             fetchBusinessAndAppointments();
             setShowAppointmentModal(false);
             setSelectedAppointment(null);
