@@ -291,7 +291,7 @@ const Index = () => {
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-white">BarbS</h1>
                 {userBusiness && (
-                  <p className="text-xs text-slate-400 hidden sm:block">{userBusiness.name}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block">{userBusiness.name}</p>
                 )}
               </div>
             </div>
