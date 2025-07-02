@@ -477,10 +477,10 @@ const Index = () => {
 
             {/* Quick Actions */}
             <div className="mb-6 sm:mb-8">
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-slate-200 border-slate-300">
                 <CardHeader className="pb-3 sm:pb-6">
-                  <CardTitle className="text-white text-lg sm:text-xl">Quick Actions</CardTitle>
-                  <CardDescription className="text-slate-400 text-sm sm:text-base">
+                  <CardTitle className="text-slate-800 text-lg sm:text-xl">Quick Actions</CardTitle>
+                  <CardDescription className="text-slate-600 text-sm sm:text-base">
                     Access your most used features or visit the full dashboard
                   </CardDescription>
                 </CardHeader>
@@ -523,13 +523,13 @@ const Index = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {/* Today's Appointments */}
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-slate-200 border-slate-300">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-white flex items-center text-lg sm:text-xl">
+                  <CardTitle className="text-slate-800 flex items-center text-lg sm:text-xl">
                     <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
                     Today's Appointments
                   </CardTitle>
-                  <CardDescription className="text-slate-400 text-sm">
+                  <CardDescription className="text-slate-600 text-sm">
                     {todayAppointments.length} appointments scheduled
                   </CardDescription>
                 </CardHeader>
@@ -539,11 +539,11 @@ const Index = () => {
                       {todayAppointments.slice(0, 3).map((appointment) => (
                         <div
                           key={appointment.id}
-                          className="flex items-center justify-between p-3 sm:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors"
+                          className="flex items-center justify-between p-3 sm:p-4 bg-slate-300/50 rounded-lg hover:bg-slate-300/70 transition-colors"
                         >
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-white text-sm sm:text-base truncate">{appointment.customer_name}</p>
-                            <p className="text-xs sm:text-sm text-slate-400 truncate">{appointment.services?.name || 'Service'}</p>
+                            <p className="font-medium text-slate-800 text-sm sm:text-base truncate">{appointment.customer_name}</p>
+                            <p className="text-xs sm:text-sm text-slate-600 truncate">{appointment.services?.name || 'Service'}</p>
                           </div>
                           <Badge variant="outline" className="text-xs sm:text-sm ml-2 flex-shrink-0" style={{ borderColor: '#39FF14', color: '#39FF14' }}>
                             {appointment.start_time}
@@ -562,8 +562,8 @@ const Index = () => {
                     </div>
                   ) : (
                     <div className="text-center py-6 sm:py-8">
-                      <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 mx-auto mb-4" />
-                      <p className="text-slate-400 text-sm sm:text-base">No appointments for today</p>
+                      <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-slate-600 mx-auto mb-4" />
+                      <p className="text-slate-600 text-sm sm:text-base">No appointments for today</p>
                       <Button
                         onClick={() => setShowAppointmentModal(true)}
                         className="mt-4 text-sm sm:text-base"
@@ -583,25 +583,25 @@ const Index = () => {
               </Card>
 
               {/* Recent Clients */}
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-slate-200 border-slate-300">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-white flex items-center text-lg sm:text-xl">
+                  <CardTitle className="text-slate-800 flex items-center text-lg sm:text-xl">
                     <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
                     Recent Clients
                   </CardTitle>
-                  <CardDescription className="text-slate-400 text-sm">
+                  <CardDescription className="text-slate-600 text-sm">
                     Your client database
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3 sm:space-y-4">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-600 w-4 h-4" />
                       <Input
                         placeholder="Search clients..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 bg-slate-700/50 border-slate-600 text-white placeholder-slate-400 text-sm sm:text-base"
+                        className="pl-10 bg-slate-300/50 border-slate-400 text-slate-800 placeholder-slate-600 text-sm sm:text-base"
                       />
                     </div>
                     {filteredClients.length > 0 ? (
@@ -609,13 +609,13 @@ const Index = () => {
                         {filteredClients.slice(0, 4).map((client) => (
                           <div
                             key={client.id}
-                            className="flex items-center justify-between p-2 sm:p-3 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors cursor-pointer"
+                            className="flex items-center justify-between p-2 sm:p-3 bg-slate-300/50 rounded-lg hover:bg-slate-300/70 transition-colors cursor-pointer"
                           >
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-white text-sm sm:text-base truncate">{client.name}</p>
-                              <p className="text-xs sm:text-sm text-slate-400 truncate">{client.phone}</p>
+                              <p className="font-medium text-slate-800 text-sm sm:text-base truncate">{client.name}</p>
+                              <p className="text-xs sm:text-sm text-slate-600 truncate">{client.phone}</p>
                             </div>
-                            <Badge variant="secondary" className="bg-slate-600 text-slate-300 text-xs flex-shrink-0 ml-2">
+                            <Badge variant="secondary" className="bg-slate-400 text-slate-800 text-xs flex-shrink-0 ml-2">
                               Recent
                             </Badge>
                           </div>
@@ -630,8 +630,8 @@ const Index = () => {
                       </div>
                     ) : (
                       <div className="text-center py-6 sm:py-8">
-                        <Users className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 mx-auto mb-4" />
-                        <p className="text-slate-400 text-sm sm:text-base">
+                        <Users className="w-10 h-10 sm:w-12 sm:h-12 text-slate-600 mx-auto mb-4" />
+                        <p className="text-slate-600 text-sm sm:text-base">
                           {searchTerm ? "No clients match your search" : "No clients yet"}
                         </p>
                         {!searchTerm && (
