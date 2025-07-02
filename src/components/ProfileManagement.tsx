@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -285,7 +286,7 @@ const ProfileManagement = () => {
                 </Button>
                 <Button
                   onClick={openBookingPage}
-                  className="bg-amber-500 hover:bg-amber-600 text-black"
+                  className="bg-[#39FF14] hover:bg-[#32E512] text-black"
                 >
                   <ExternalLink className="w-4 h-4 mr-2" />
                   Preview
@@ -316,7 +317,7 @@ const ProfileManagement = () => {
                 </div>
                 <div className="flex-1 space-y-2">
                   <h4 className="text-white font-medium flex items-center">
-                    <QrCode className="w-4 h-4 mr-2 text-amber-400" />
+                    <QrCode className="w-4 h-4 mr-2 text-[#39FF14]" />
                     QR Code Instructions
                   </h4>
                   <ul className="text-slate-400 text-sm space-y-1">
@@ -476,7 +477,7 @@ const ProfileManagement = () => {
           <Button
             onClick={handleSave}
             disabled={loading}
-            className="bg-amber-500 hover:bg-amber-600 text-black"
+            className="bg-[#39FF14] hover:bg-[#32E512] text-black"
           >
             <Save className="w-4 h-4 mr-2" />
             {loading ? "Saving..." : "Save Changes"}

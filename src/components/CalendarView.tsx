@@ -157,7 +157,7 @@ const CalendarView = () => {
                 size="sm"
                 onClick={() => setViewMode(mode as any)}
                 className={`flex-1 sm:flex-none ${viewMode === mode 
-                  ? "bg-amber-500 hover:bg-amber-600 text-black" 
+                  ? "bg-[#39FF14] hover:bg-[#32E512] text-black" 
                   : "text-white hover:bg-slate-700"
                 }`}
               >
@@ -167,7 +167,7 @@ const CalendarView = () => {
           </div>
           <Button 
             onClick={() => setShowNewAppointmentModal(true)}
-            className="bg-amber-500 hover:bg-amber-600 text-black text-sm sm:text-base"
+            className="bg-[#39FF14] hover:bg-[#32E512] text-black text-sm sm:text-base"
           >
             <Plus className="w-4 h-4 mr-2" />
             New Appointment
@@ -263,11 +263,11 @@ const CalendarView = () => {
                         const isToday = format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
                         
                         return (
-                          <div key={day.toISOString()} className={`border-l-4 pl-3 sm:pl-4 py-2 ${isToday ? 'border-amber-500 bg-amber-500/5' : 'border-slate-600'}`}>
+                          <div key={day.toISOString()} className={`border-l-4 pl-3 sm:pl-4 py-2 ${isToday ? 'border-[#39FF14] bg-[#39FF14]/5' : 'border-slate-600'}`}>
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                              <h3 className={`font-semibold text-sm sm:text-base ${isToday ? 'text-amber-400' : 'text-white'}`}>
+                              <h3 className={`font-semibold text-sm sm:text-base ${isToday ? 'text-[#39FF14]' : 'text-white'}`}>
                                 {format(day, 'EEEE, MMM d')}
-                                {isToday && <Badge className="ml-2 bg-amber-500 text-black text-xs">Today</Badge>}
+                                {isToday && <Badge className="ml-2 bg-[#39FF14] text-black text-xs">Today</Badge>}
                               </h3>
                               <span className="text-slate-400 text-xs sm:text-sm">
                                 {dayAppointments.length} appointment{dayAppointments.length !== 1 ? 's' : ''}

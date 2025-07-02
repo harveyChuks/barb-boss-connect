@@ -137,7 +137,7 @@ const SettingsSection = () => {
             <Badge variant="outline" className="border-blue-400 text-blue-400">Enhanced Security</Badge>
             <Badge variant="outline" className="border-green-400 text-green-400">Team Management</Badge>
             <Badge variant="outline" className="border-purple-400 text-purple-400">Custom Integrations</Badge>
-            <Badge variant="outline" className="border-orange-400 text-orange-400">Advanced Analytics</Badge>
+            <Badge variant="outline" className="border-[#39FF14] text-[#39FF14]">Advanced Analytics</Badge>
           </div>
         </CardContent>
       </Card>
