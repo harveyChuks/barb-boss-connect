@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -159,14 +160,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1"
-                style={{ backgroundColor: '#39FF14', color: 'black' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#32e612';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#39FF14';
-                }}
+                className="flex-1 bg-amber-500 hover:bg-amber-600 text-black"
               >
                 {loading ? "Sending..." : "Send Reset Link"}
               </Button>
@@ -197,34 +191,10 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
 
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-slate-700">
-            <TabsTrigger 
-              value="login" 
-              className="data-[state=active]:text-black"
-              style={{ 
-                '--active-bg': '#39FF14'
-              } as React.CSSProperties}
-              data-state="inactive"
-              onMouseEnter={(e) => {
-                if (e.currentTarget.getAttribute('data-state') === 'active') {
-                  e.currentTarget.style.backgroundColor = '#39FF14';
-                }
-              }}
-            >
+            <TabsTrigger value="login" className="data-[state=active]:bg-amber-500 data-[state=active]:text-black">
               Login
             </TabsTrigger>
-            <TabsTrigger 
-              value="signup" 
-              className="data-[state=active]:text-black"
-              style={{ 
-                '--active-bg': '#39FF14'
-              } as React.CSSProperties}
-              data-state="inactive"
-              onMouseEnter={(e) => {
-                if (e.currentTarget.getAttribute('data-state') === 'active') {
-                  e.currentTarget.style.backgroundColor = '#39FF14';
-                }
-              }}
-            >
+            <TabsTrigger value="signup" className="data-[state=active]:bg-amber-500 data-[state=active]:text-black">
               Sign Up
             </TabsTrigger>
           </TabsList>
@@ -275,14 +245,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full"
-                style={{ backgroundColor: '#39FF14', color: 'black' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#32e612';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#39FF14';
-                }}
+                className="w-full bg-amber-500 hover:bg-amber-600 text-black"
               >
                 {loading ? "Signing in..." : "Sign In"}
               </Button>
@@ -372,14 +335,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full"
-                style={{ backgroundColor: '#39FF14', color: 'black' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#32e612';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#39FF14';
-                }}
+                className="w-full bg-amber-500 hover:bg-amber-600 text-black"
               >
                 {loading ? "Creating account..." : "Create Account"}
               </Button>
