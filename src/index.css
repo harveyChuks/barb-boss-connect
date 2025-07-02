@@ -78,7 +78,7 @@
   }
 
   .dark {
-    --background: 127 32% 16%;
+    --background: 127 35% 10%;
     --foreground: 0 0% 98%;
 
     --card: 0 0% 5%;
@@ -124,5 +124,10 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  .dark body {
+    background: radial-gradient(ellipse at center, hsl(127, 35%, 12%) 0%, hsl(127, 35%, 8%) 100%);
+    box-shadow: inset 0 0 200px hsla(127, 50%, 20%, 0.3);
   }
 }
