@@ -97,7 +97,7 @@ const StatisticsOverview = () => {
       value: `$${stats.monthlyRevenue.toLocaleString()}`,
       description: "Revenue this month",
       icon: DollarSign,
-      color: "text-yellow-600"
+      color: "text-primary"
     },
     {
       title: "Average Rating",
@@ -111,7 +111,7 @@ const StatisticsOverview = () => {
       value: stats.totalBookings.toString(),
       description: "All time appointments",
       icon: TrendingUp,
-      color: "text-orange-600"
+      color: "text-primary"
     },
     {
       title: "This Week",
