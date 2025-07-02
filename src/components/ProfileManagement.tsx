@@ -1,93 +1,58 @@
-import { useState, useEffect, useRef } from "react";
+
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Camera, Save, Copy, ExternalLink, Check, QrCode, Download } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { User, Building2, Phone, Mail, Globe, Instagram, MapPin, Upload, Copy, Check, ExternalLink } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Database } from "@/integrations/supabase/types";
-import { uploadImage } from "@/utils/imageUpload";
-import QRCode from "qrcode";
 
-type BusinessType = Database["public"]["Enums"]["business_type"];
+interface Business {
+  id: string;
+  name: string;
+  description: string | null;
+  business_type: string;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  website: string | null;
+  instagram: string | null;
+  logo_url: string | null;
+  booking_link: string | null;
+}
 
 const ProfileManagement = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [business, setBusiness] = useState<Business | null>(null);
   const [loading, setLoading] = useState(false);
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const [business, setBusiness] = useState(null);
-  const [copiedLink, setCopiedLink] = useState(false);
-  const [qrCodeDataUrl, setQrCodeDataUrl] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    business_type: "" as BusinessType,
+    business_type: "",
     phone: "",
     email: "",
     address: "",
     website: "",
-    instagram: "",
-    logo_url: ""
+    instagram: ""
   });
 
   useEffect(() => {
-    fetchBusinessProfile();
+    fetchBusiness();
   }, [user]);
 
-  // Generate QR code when business data is available
-  useEffect(() => {
-    if (business?.booking_link) {
-      generateQRCode();
-    }
-  }, [business]);
-
-  const generateQRCode = async () => {
-    if (!business?.booking_link) return;
-    
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
-    try {
-      const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
-        width: 256,
-        margin: 2,
-        color: {
-          dark: '#000000',
-          light: '#FFFFFF'
-        }
-      });
-      setQrCodeDataUrl(qrDataUrl);
-    } catch (error) {
-      console.error('Error generating QR code:', error);
-    }
-  };
-
-  const downloadQRCode = () => {
-    if (!qrCodeDataUrl || !business?.name) return;
-    
-    const link = document.createElement('a');
-    link.download = `${business.name}-booking-qr.png`;
-    link.href = qrCodeDataUrl;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    toast({
-      title: "QR Code Downloaded",
-      description: "Your booking QR code has been downloaded successfully.",
-    });
-  };
-
-  const fetchBusinessProfile = async () => {
+  const fetchBusiness = async () => {
     if (!user) return;
 
     try {
-      console.log('Fetching business profile for user:', user.id);
       const { data, error } = await supabase
         .from('businesses')
         .select('*')
@@ -95,65 +60,71 @@ const ProfileManagement = () => {
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching business:', error);
         throw error;
       }
 
       if (data) {
-        console.log('Business data fetched:', data);
         setBusiness(data);
         setFormData({
           name: data.name || "",
           description: data.description || "",
-          business_type: data.business_type || "barbershop",
+          business_type: data.business_type || "",
           phone: data.phone || "",
           email: data.email || "",
           address: data.address || "",
           website: data.website || "",
-          instagram: data.instagram || "",
-          logo_url: data.logo_url || ""
+          instagram: data.instagram || ""
         });
-      } else {
-        console.log('No business found for user');
       }
     } catch (error) {
-      console.error('Error fetching business profile:', error);
+      console.error('Error fetching business:', error);
     }
+  };
+
+  const generateBookingLink = () => {
+    const businessName = formData.name.toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    
+    return businessName + '-' + Math.random().toString(36).substring(2, 8);
   };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleBusinessTypeChange = (value: BusinessType) => {
-    setFormData(prev => ({ ...prev, business_type: value }));
-  };
-
-  const handleImageUpload = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !business || !user) return;
+    if (!file || !business) return;
 
-    setUploadingImage(true);
+    setUploading(true);
     try {
-      const logoUrl = await uploadImage(file, 'business-logos', `${user.id}/${business.id}`);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `logo_${business.id}_${Date.now()}.${fileExt}`;
       
-      setFormData(prev => ({ ...prev, logo_url: logoUrl }));
-      
-      // Update the database immediately
-      const { error } = await supabase
+      const { error: uploadError } = await supabase.storage
+        .from('business-assets')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('business-assets')
+        .getPublicUrl(fileName);
+
+      const { error: updateError } = await supabase
         .from('businesses')
-        .update({ logo_url: logoUrl })
+        .update({ logo_url: publicUrl })
         .eq('id', business.id);
 
-      if (error) throw error;
+      if (updateError) throw updateError;
 
+      setBusiness(prev => prev ? { ...prev, logo_url: publicUrl } : null);
+      
       toast({
         title: "Logo Updated",
-        description: "Your business logo has been uploaded successfully.",
+        description: "Your business logo has been updated successfully.",
       });
     } catch (error: any) {
       toast({
@@ -162,65 +133,61 @@ const ProfileManagement = () => {
         variant: "destructive",
       });
     } finally {
-      setUploadingImage(false);
+      setUploading(false);
     }
   };
 
-  const copyBookingLink = async () => {
-    if (!business?.booking_link) return;
-    
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
-    try {
-      await navigator.clipboard.writeText(bookingUrl);
-      setCopiedLink(true);
-      toast({
-        title: "Booking Link Copied",
-        description: "Your booking link has been copied to clipboard.",
-      });
-      setTimeout(() => setCopiedLink(false), 2000);
-    } catch (error) {
-      toast({
-        title: "Copy Failed",
-        description: "Failed to copy booking link. Please copy it manually.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const openBookingPage = () => {
-    if (!business?.booking_link) return;
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
-    window.open(bookingUrl, '_blank');
-  };
-
-  const handleSave = async () => {
-    if (!business) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
 
     setLoading(true);
     try {
-      const updateData = {
+      const businessData = {
+        owner_id: user.id,
         name: formData.name,
-        description: formData.description,
+        description: formData.description || null,
         business_type: formData.business_type,
-        phone: formData.phone,
-        email: formData.email,
-        address: formData.address,
-        website: formData.website,
-        instagram: formData.instagram,
-        logo_url: formData.logo_url
+        phone: formData.phone || null,
+        email: formData.email || null,
+        address: formData.address || null,
+        website: formData.website || null,
+        instagram: formData.instagram || null,
+        booking_link: business?.booking_link || generateBookingLink(),
+        is_active: true
       };
 
-      const { error } = await supabase
-        .from('businesses')
-        .update(updateData)
-        .eq('id', business.id);
+      if (business) {
+        // Update existing business
+        const { error } = await supabase
+          .from('businesses')
+          .update(businessData)
+          .eq('id', business.id);
 
-      if (error) throw error;
+        if (error) throw error;
 
-      toast({
-        title: "Profile Updated",
-        description: "Your business profile has been successfully updated.",
-      });
+        toast({
+          title: "Profile Updated",
+          description: "Your business profile has been updated successfully.",
+        });
+      } else {
+        // Create new business
+        const { data, error } = await supabase
+          .from('businesses')
+          .insert(businessData)
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        setBusiness(data);
+        toast({
+          title: "Profile Created",
+          description: "Your business profile has been created successfully.",
+        });
+      }
+
+      fetchBusiness();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -232,257 +199,304 @@ const ProfileManagement = () => {
     }
   };
 
-  if (!business) {
-    return (
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardContent className="p-6">
-          <p className="text-slate-400">No business profile found. Please register your business first.</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const copyBookingLink = () => {
+    if (business?.booking_link) {
+      const fullLink = `${window.location.origin}/book/${business.booking_link}`;
+      navigator.clipboard.writeText(fullLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      toast({
+        title: "Link Copied",
+        description: "Booking link has been copied to clipboard.",
+      });
+    }
+  };
 
-  const bookingUrl = business.booking_link ? `${window.location.origin}/book/${business.booking_link}` : '';
+  const openBookingLink = () => {
+    if (business?.booking_link) {
+      const fullLink = `${window.location.origin}/book/${business.booking_link}`;
+      window.open(fullLink, '_blank');
+    }
+  };
 
   return (
     <div className="space-y-6">
-      {/* Booking Link Section */}
-      {business.booking_link && (
-        <Card className="bg-slate-800/50 border-slate-700">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground">Business Profile</h2>
+        <p className="text-muted-foreground">Manage your business information and public profile</p>
+      </div>
+
+      {business?.booking_link && (
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-white">Your Booking Link & QR Code</CardTitle>
-            <CardDescription className="text-slate-400">
-              Share this link or QR code with clients so they can book appointments online
+            <CardTitle className="text-foreground flex items-center">
+              <ExternalLink className="w-5 h-5 mr-2" />
+              Your Booking Link
+            </CardTitle>
+            <CardDescription className="text-muted-foreground">
+              Share this link with customers to let them book appointments
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Link Section */}
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <Input
-                  value={bookingUrl}
-                  readOnly
-                  className="bg-slate-700 border-slate-600 text-white font-mono text-sm"
-                />
+          <CardContent>
+            <div className="flex items-center space-x-2">
+              <div className="flex-1 p-3 bg-muted rounded-lg text-muted-foreground font-mono text-sm">
+                {window.location.origin}/book/{business.booking_link}
               </div>
-              <div className="flex gap-2">
-                <Button
-                  onClick={copyBookingLink}
-                  variant="outline"
-                  className="border-slate-600 text-white hover:bg-slate-700"
-                >
-                  {copiedLink ? (
-                    <>
-                      <Check className="w-4 h-4 mr-2" />
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4 mr-2" />
-                      Copy Link
-                    </>
-                  )}
-                </Button>
-                <Button
-                  onClick={openBookingPage}
-                  className="bg-amber-500 hover:bg-amber-600 text-black"
-                >
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Preview
-                </Button>
-              </div>
+              <Button
+                onClick={copyBookingLink}
+                variant="outline"
+                size="sm"
+                className="border-border text-foreground hover:bg-muted"
+              >
+                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              </Button>
+              <Button
+                onClick={openBookingLink}
+                size="sm"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Open
+              </Button>
             </div>
-
-            {/* QR Code Section */}
-            {qrCodeDataUrl && (
-              <div className="flex flex-col md:flex-row gap-6 items-start">
-                <div className="flex flex-col items-center space-y-3">
-                  <div className="bg-white p-4 rounded-lg">
-                    <img 
-                      src={qrCodeDataUrl} 
-                      alt="Booking QR Code" 
-                      className="w-32 h-32"
-                    />
-                  </div>
-                  <Button
-                    onClick={downloadQRCode}
-                    variant="outline"
-                    size="sm"
-                    className="border-slate-600 text-white hover:bg-slate-700"
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Download QR
-                  </Button>
-                </div>
-                <div className="flex-1 space-y-2">
-                  <h4 className="text-white font-medium flex items-center">
-                    <QrCode className="w-4 h-4 mr-2 text-amber-400" />
-                    QR Code Instructions
-                  </h4>
-                  <ul className="text-slate-400 text-sm space-y-1">
-                    <li>• Print and display in your business</li>
-                    <li>• Share on social media</li>
-                    <li>• Include in business cards or flyers</li>
-                    <li>• Clients can scan to book instantly</li>
-                  </ul>
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
       )}
 
-      {/* Business Profile Section */}
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardHeader>
-          <CardTitle className="text-white">Business Profile</CardTitle>
-          <CardDescription className="text-slate-400">
-            Manage your business information and settings
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Profile Photo Section */}
-          <div className="flex items-center space-x-4">
-            <Avatar className="w-20 h-20">
-              <AvatarImage src={formData.logo_url} alt={formData.name} />
-              <AvatarFallback className="bg-slate-700 text-white text-lg">
-                {formData.name ? formData.name.charAt(0).toUpperCase() : 'B'}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <CardTitle className="text-foreground">Business Logo</CardTitle>
+            <CardDescription className="text-muted-foreground">
+              Upload your business logo
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center space-y-4">
+            <Avatar className="w-32 h-32">
+              <AvatarImage src={business?.logo_url || ""} alt="Business Logo" />
+              <AvatarFallback className="bg-muted text-muted-foreground text-4xl">
+                <Building2 className="w-16 h-16" />
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col space-y-2">
-              <Button
-                variant="outline"
-                onClick={handleImageUpload}
-                disabled={uploadingImage}
-                className="border-slate-600 text-white hover:bg-slate-700"
-              >
-                <Camera className="w-4 h-4 mr-2" />
-                {uploadingImage ? "Uploading..." : "Change Photo"}
-              </Button>
+            <div className="w-full">
               <input
                 type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
                 accept="image/*"
+                onChange={handleLogoUpload}
                 className="hidden"
+                id="logo-upload"
+                disabled={uploading}
               />
-              {formData.name && (
-                <p className="text-slate-300 font-medium">{formData.name}</p>
-              )}
+              <label htmlFor="logo-upload">
+                <Button
+                  variant="outline"
+                  className="w-full border-border text-foreground hover:bg-muted"
+                  disabled={uploading}
+                  asChild
+                >
+                  <span>
+                    <Upload className="w-4 h-4 mr-2" />
+                    {uploading ? "Uploading..." : "Upload Logo"}
+                  </span>
+                </Button>
+              </label>
             </div>
-          </div>
+          </CardContent>
+        </Card>
 
-          {/* Basic Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Business Name</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
-                placeholder="Enter your business name"
-              />
+        <div className="lg:col-span-2">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <Card className="bg-card border-border">
+              <CardHeader>
+                <CardTitle className="text-foreground">Basic Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-foreground">Business Name *</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange("name", e.target.value)}
+                      className="bg-background border-border text-foreground"
+                      placeholder="Your Business Name"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="business_type" className="text-foreground">Business Type *</Label>
+                    <Select value={formData.business_type} onValueChange={(value) => handleInputChange("business_type", value)}>
+                      <SelectTrigger className="bg-background border-border text-foreground">
+                        <SelectValue placeholder="Select business type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="barbershop">Barbershop</SelectItem>
+                        <SelectItem value="hair_salon">Hair Salon</SelectItem>
+                        <SelectItem value="makeup_artist">Makeup Artist</SelectItem>
+                        <SelectItem value="nail_salon">Nail Salon</SelectItem>
+                        <SelectItem value="spa">Spa</SelectItem>
+                        <SelectItem value="beauty_clinic">Beauty Clinic</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-foreground">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => handleInputChange("description", e.target.value)}
+                    className="bg-background border-border text-foreground"
+                    placeholder="Tell customers about your business..."
+                    rows={3}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border">
+              <CardHeader>
+                <CardTitle className="text-foreground">Contact Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-foreground">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      className="bg-background border-border text-foreground"
+                      placeholder="+1 (555) 123-4567"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-foreground">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      className="bg-background border-border text-foreground"
+                      placeholder="contact@yourbusiness.com"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="address" className="text-foreground">Address</Label>
+                  <Input
+                    id="address"
+                    value={formData.address}
+                    onChange={(e) => handleInputChange("address", e.target.value)}
+                    className="bg-background border-border text-foreground"
+                    placeholder="123 Main St, City, State 12345"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="website" className="text-foreground">Website</Label>
+                    <Input
+                      id="website"
+                      value={formData.website}
+                      onChange={(e) => handleInputChange("website", e.target.value)}
+                      className="bg-background border-border text-foreground"
+                      placeholder="https://yourbusiness.com"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="instagram" className="text-foreground">Instagram</Label>
+                    <Input
+                      id="instagram"
+                      value={formData.instagram}
+                      onChange={(e) => handleInputChange("instagram", e.target.value)}
+                      className="bg-background border-border text-foreground"
+                      placeholder="@yourbusiness"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Button
+              type="submit"
+              disabled={loading || !formData.name || !formData.business_type}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              {loading ? "Saving..." : business ? "Update Profile" : "Create Profile"}
+            </Button>
+          </form>
+        </div>
+      </div>
+
+      {business && (
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <CardTitle className="text-foreground">Profile Preview</CardTitle>
+            <CardDescription className="text-muted-foreground">
+              This is how your business will appear to customers
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-start space-x-4 p-6 bg-muted rounded-lg">
+              <Avatar className="w-16 h-16">
+                <AvatarImage src={business.logo_url || ""} alt={business.name} />
+                <AvatarFallback className="bg-background text-foreground">
+                  {business.name.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <div className="flex items-center space-x-2 mb-2">
+                  <h3 className="text-xl font-bold text-foreground">{business.name}</h3>
+                  <Badge variant="secondary" className="capitalize">
+                    {business.business_type.replace('_', ' ')}
+                  </Badge>
+                </div>
+                {business.description && (
+                  <p className="text-muted-foreground mb-3">{business.description}</p>
+                )}
+                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                  {business.phone && (
+                    <div className="flex items-center">
+                      <Phone className="w-4 h-4 mr-1" />
+                      {business.phone}
+                    </div>
+                  )}
+                  {business.email && (
+                    <div className="flex items-center">
+                      <Mail className="w-4 h-4 mr-1" />
+                      {business.email}
+                    </div>
+                  )}
+                  {business.address && (
+                    <div className="flex items-center">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {business.address}
+                    </div>
+                  )}
+                  {business.website && (
+                    <div className="flex items-center">
+                      <Globe className="w-4 h-4 mr-1" />
+                      Website
+                    </div>
+                  )}
+                  {business.instagram && (
+                    <div className="flex items-center">
+                      <Instagram className="w-4 h-4 mr-1" />
+                      {business.instagram}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="business_type">Business Type</Label>
-              <Select value={formData.business_type} onValueChange={handleBusinessTypeChange}>
-                <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                  <SelectValue placeholder="Select business type" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-700 border-slate-600">
-                  <SelectItem value="barbershop">Barbershop</SelectItem>
-                  <SelectItem value="hair_salon">Hair Salon</SelectItem>
-                  <SelectItem value="makeup_artist">Makeup Artist</SelectItem>
-                  <SelectItem value="nail_salon">Nail Salon</SelectItem>
-                  <SelectItem value="spa">Spa</SelectItem>
-                  <SelectItem value="beauty_clinic">Beauty Clinic</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
-                placeholder="Business phone number"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
-                placeholder="Business email address"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
-              rows={3}
-              placeholder="Describe your business services and specialties"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="address">Address</Label>
-            <Input
-              id="address"
-              value={formData.address}
-              onChange={(e) => handleInputChange("address", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
-              placeholder="Business address"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="website">Website</Label>
-              <Input
-                id="website"
-                value={formData.website}
-                onChange={(e) => handleInputChange("website", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
-                placeholder="https://yourwebsite.com"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="instagram">Instagram</Label>
-              <Input
-                id="instagram"
-                value={formData.instagram}
-                onChange={(e) => handleInputChange("instagram", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
-                placeholder="@yourbusiness"
-              />
-            </div>
-          </div>
-
-          <Button
-            onClick={handleSave}
-            disabled={loading}
-            className="bg-amber-500 hover:bg-amber-600 text-black"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            {loading ? "Saving..." : "Save Changes"}
-          </Button>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
