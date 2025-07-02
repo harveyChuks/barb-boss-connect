@@ -252,8 +252,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Three glowing colors - purple right, blue middle, light blue left */}
-      <div className="fixed inset-0 pointer-events-none">
+      {/* Three glowing colors - purple right, blue middle, light blue left - hidden in light mode */}
+      <div className="fixed inset-0 pointer-events-none dark:block hidden">
         {/* Left corner - light blue */}
         <div 
           className="absolute bottom-0 left-0 w-[1000px] h-[1000px] rounded-full opacity-40 blur-3xl"
