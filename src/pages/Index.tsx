@@ -1,253 +1,664 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Users, BarChart3, Settings, Clock, Shield, Zap, Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import ClientModal from "@/components/ClientModal";
+import AppointmentModal from "@/components/AppointmentModal";
 import AuthModal from "@/components/auth/AuthModal";
-import BusinessRegistrationModal from "@/components/business/BusinessRegistrationModal";
+import MultiStepRegistrationModal from "@/components/business/MultiStepRegistrationModal";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const { user, loading: authLoading, signOut, isAuthenticated } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [showClientModal, setShowClientModal] = useState(false);
+  const [showAppointmentModal, setShowAppointmentModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [showBusinessModal, setShowBusinessModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [userBusiness, setUserBusiness] = useState(null);
+  const [todayAppointments, setTodayAppointments] = useState([]);
+  const [recentClients, setRecentClients] = useState([]);
+  const [stats, setStats] = useState({
+    todayAppointments: 0,
+    totalClients: 0,
+    weeklyAppointments: 0,
+    todayRevenue: 0
+  });
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    setAuthMode('login');
-    setShowAuthModal(true);
-  };
+  const fetchUserBusiness = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('businesses')
+        .select('*')
+        .eq('owner_id', user.id)
+        .single();
 
-  const handleRegister = () => {
-    setAuthMode('register');
-    setShowAuthModal(true);
-  };
+      if (error && error.code !== 'PGRST116') {
+        throw error;
+      }
 
-  const handleBusinessRegister = () => {
-    setShowRegisterModal(true);
-  };
-
-  const features = [
-    {
-      icon: Calendar,
-      title: "Smart Scheduling",
-      description: "Intelligent appointment booking with conflict detection and automatic reminders"
-    },
-    {
-      icon: Users,
-      title: "Client Management",
-      description: "Comprehensive customer profiles with booking history and preferences"
-    },
-    {
-      icon: BarChart3,
-      title: "Business Analytics",
-      description: "Detailed insights into your business performance and growth metrics"
-    },
-    {
-      icon: Settings,
-      title: "Customization",
-      description: "Personalize your booking experience with custom branding and settings"
+      setUserBusiness(data);
+    } catch (error: any) {
+      console.error('Error fetching business:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const benefits = [
-    {
-      icon: Clock,
-      title: "Save Time",
-      description: "Reduce no-shows by 75% with automated reminders and confirmations"
-    },
-    {
-      icon: Shield,
-      title: "Secure & Reliable",
-      description: "Enterprise-grade security with 99.9% uptime guarantee"
-    },
-    {
-      icon: Zap,
-      title: "Easy Setup",
-      description: "Get your booking system running in under 5 minutes"
-    },
-    {
-      icon: Star,
-      title: "Premium Support",
-      description: "24/7 customer support to help you succeed"
+  const fetchDashboardData = async () => {
+    if (!userBusiness) return;
+
+    setLoading(true);
+    try {
+      // Fetch today's appointments
+      const today = new Date().toISOString().split('T')[0];
+      const { data: appointments } = await supabase
+        .from('appointments')
+        .select(`
+          *,
+          services (
+            name
+          )
+        `)
+        .eq('business_id', userBusiness.id)
+        .eq('appointment_date', today);
+
+      setTodayAppointments(appointments || []);
+
+      // Fetch recent clients
+      const { data: clients } = await supabase
+        .from('customers')
+        .select('*')
+        .limit(4);
+
+      setRecentClients(clients || []);
+
+      // Calculate stats
+      const totalClients = await supabase
+        .from('customers')
+        .select('*', { count: 'exact', head: true });
+
+      // Calculate weekly appointments (last 7 days)
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const weeklyAppointments = await supabase
+        .from('appointments')
+        .select('*', { count: 'exact', head: true })
+        .eq('business_id', userBusiness.id)
+        .gte('appointment_date', sevenDaysAgo);
+
+      // Calculate today's revenue (mock data for now)
+      const todayRevenue = 480;
+
+      setStats({
+        todayAppointments: appointments?.length || 0,
+        totalClients: totalClients.count || 0,
+        weeklyAppointments: weeklyAppointments.count || 0,
+        todayRevenue: todayRevenue || 0
+      });
+    } catch (error: any) {
+      console.error('Error fetching dashboard data:', error);
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchUserBusiness();
+    }
+  }, [isAuthenticated, user]);
+
+  useEffect(() => {
+    if (userBusiness) {
+      fetchDashboardData();
+    }
+  }, [userBusiness]);
+
+  const filteredClients = recentClients.filter(client =>
+    client.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleSignOut = async () => {
+    await signOut();
+    setUserBusiness(null);
+    toast({
+      title: "Signed out",
+      description: "You've been successfully signed out.",
+    });
+  };
+
+  const handleAuthSuccess = () => {
+    fetchUserBusiness();
+  };
+
+  const handleBusinessCreated = () => {
+    fetchUserBusiness();
+  };
+
+  const MobileMenu = () => (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="sm" className="md:hidden text-white">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="bg-slate-900 border-slate-700">
+        <div className="flex flex-col space-y-4 pt-8">
+          {isAuthenticated ? (
+            <>
+              {userBusiness ? (
+                <>
+                  <Button 
+                    onClick={() => navigate('/dashboard')}
+                    variant="outline" 
+                    className="border-slate-600 text-white hover:bg-slate-800 justify-start"
+                  >
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Button>
+                  <Button 
+                    onClick={() => setShowAppointmentModal(true)}
+                    className="justify-start"
+                    style={{ backgroundColor: '#39FF14', color: 'black' }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#32e612';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#39FF14';
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    New Appointment
+                  </Button>
+                  <Button 
+                    onClick={() => setShowClientModal(true)}
+                    variant="outline" 
+                    className="border-slate-600 text-white hover:bg-slate-800 justify-start"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Client
+                  </Button>
+                </>
+              ) : (
+                <Button 
+                  onClick={() => setShowBusinessModal(true)}
+                  className="justify-start"
+                  style={{ backgroundColor: '#39FF14', color: 'black' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#32e612';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#39FF14';
+                  }}
+                >
+                  <Building className="w-4 h-4 mr-2" />
+                  Register Business
+                </Button>
+              )}
+              <Button 
+                onClick={handleSignOut}
+                variant="outline" 
+                className="border-slate-600 text-white hover:bg-slate-800 justify-start"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <Button 
+              onClick={() => setShowAuthModal(true)}
+              className="justify-start"
+              style={{ backgroundColor: '#39FF14', color: 'black' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#32e612';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#39FF14';
+              }}
+            >
+              Sign In / Sign Up
+            </Button>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
-      <nav className="border-b border-slate-700/50 backdrop-blur-sm bg-slate-900/50 sticky top-0 z-50">
+      {/* Header */}
+      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="text-2xl font-bold text-white">
-                Barb<span className="text-[#39FF14]">S</span>
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center" style={{ background: '#39FF14' }}>
+                <Scissors className="w-4 h-4 sm:w-6 sm:h-6 text-black" />
+              </div>
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold text-white">BarbS</h1>
+                {userBusiness && (
+                  <p className="text-xs text-slate-400 hidden sm:block">{userBusiness.name}</p>
+                )}
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                onClick={handleLogin}
-                className="text-white hover:text-[#39FF14] hover:bg-slate-800"
-              >
-                Sign In
-              </Button>
-              <Button
-                onClick={handleBusinessRegister}
-                className="bg-[#39FF14] hover:bg-[#32E512] text-black font-semibold"
-              >
-                Start Free Trial
-              </Button>
+            
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center space-x-4">
+              {isAuthenticated ? (
+                <>
+                  {userBusiness ? (
+                    <>
+                      <Button 
+                        onClick={() => navigate('/dashboard')}
+                        variant="outline" 
+                        className="border-slate-600 text-white hover:bg-slate-800"
+                      >
+                        <BarChart3 className="w-4 h-4 mr-2" />
+                        Dashboard
+                      </Button>
+                      <Button 
+                        onClick={() => setShowAppointmentModal(true)}
+                        style={{ backgroundColor: '#39FF14', color: 'black' }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#32e612';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#39FF14';
+                        }}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        New Appointment
+                      </Button>
+                      <Button 
+                        onClick={() => setShowClientModal(true)}
+                        variant="outline" 
+                        className="border-slate-600 text-white hover:bg-slate-800"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Client
+                      </Button>
+                    </>
+                  ) : (
+                    <Button 
+                      onClick={() => setShowBusinessModal(true)}
+                      style={{ backgroundColor: '#39FF14', color: 'black' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#32e612';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#39FF14';
+                      }}
+                    >
+                      <Building className="w-4 h-4 mr-2" />
+                      Register Business
+                    </Button>
+                  )}
+                  <Button 
+                    onClick={handleSignOut}
+                    variant="outline" 
+                    className="border-slate-600 text-white hover:bg-slate-800"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <Button 
+                  onClick={() => setShowAuthModal(true)}
+                  style={{ backgroundColor: '#39FF14', color: 'black' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#32e612';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#39FF14';
+                  }}
+                >
+                  Sign In / Sign Up
+                </Button>
+              )}
             </div>
+
+            {/* Mobile Menu */}
+            <MobileMenu />
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            Modern Booking for
-            <span className="text-[#39FF14] block">Beauty Professionals</span>
-          </h1>
-          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            Streamline your salon, barbershop, or beauty business with our intelligent booking system. 
-            Reduce no-shows, increase revenue, and delight your clients.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              onClick={handleBusinessRegister}
-              className="bg-[#39FF14] hover:bg-[#32E512] text-black font-semibold text-lg px-8 py-3"
-            >
-              Book Appointment
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={handleLogin}
-              className="border-slate-600 text-white hover:bg-slate-800 text-lg px-8 py-3"
-            >
-              Watch Demo
-            </Button>
-          </div>
-        </div>
-
-        {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-[#39FF14]/10 rounded-full blur-xl"></div>
-        <div className="absolute bottom-20 right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-xl"></div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Everything You Need to Succeed
-            </h2>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-              Powerful features designed specifically for beauty and wellness professionals
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        {!isAuthenticated ? (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: '#39FF14' }}>
+              <Scissors className="w-8 h-8 sm:w-10 sm:h-10 text-black" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Welcome to BarbS</h2>
+            <p className="text-slate-400 mb-8 max-w-2xl mx-auto px-4">
+              The ultimate booking platform for barbershops, salons, and beauty professionals. 
+              Manage your business, accept bookings, and grow your clientele.
             </p>
+            <Button 
+              onClick={() => setShowAuthModal(true)}
+              className="text-lg px-8 py-3"
+              style={{ backgroundColor: '#39FF14', color: 'black' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#32e612';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#39FF14';
+              }}
+            >
+              Get Started
+            </Button>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="bg-slate-800/50 border-slate-700 hover:border-[#39FF14]/50 transition-all duration-300">
-                <CardHeader>
-                  <feature.icon className="w-12 h-12 text-[#39FF14] mb-4" />
-                  <CardTitle className="text-white">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-slate-400">
-                    {feature.description}
-                  </CardDescription>
+        ) : !userBusiness ? (
+          <div className="text-center py-12">
+            <Building className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6" style={{ color: '#39FF14' }} />
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Set Up Your Business</h2>
+            <p className="text-slate-400 mb-8 max-w-2xl mx-auto px-4">
+              Complete your business registration with our step-by-step process to start accepting bookings.
+            </p>
+            <Button 
+              onClick={() => setShowBusinessModal(true)}
+              className="text-lg px-8 py-3"
+              style={{ backgroundColor: '#39FF14', color: 'black' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#32e612';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#39FF14';
+              }}
+            >
+              <Building className="w-5 h-5 mr-2" />
+              Complete Registration
+            </Button>
+          </div>
+        ) : (
+          <>
+            {/* Quick Stats Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Today's Appointments</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.todayAppointments}</p>
+                    </div>
+                    <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
+                  </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Benefits Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Why Choose BarbS?
-            </h2>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-              Join thousands of professionals who trust BarbS to grow their business
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-start space-x-4 p-6 rounded-lg bg-slate-800/30 border border-slate-700/50">
-                <div className="w-12 h-12 bg-[#39FF14]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <benefit.icon className="w-6 h-6 text-[#39FF14]" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">{benefit.title}</h3>
-                  <p className="text-slate-400">{benefit.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Total Clients</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.totalClients}</p>
+                    </div>
+                    <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
+                  </div>
+                </CardContent>
+              </Card>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/30">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Transform Your Business?
-          </h2>
-          <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-            Start your free trial today and see why beauty professionals choose BarbS
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              onClick={handleBusinessRegister}
-              className="bg-[#39FF14] hover:bg-[#32E512] text-black font-semibold text-lg px-8 py-3"
-            >
-              Start Free Trial
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-slate-600 text-white hover:bg-slate-800 text-lg px-8 py-3"
-            >
-              Contact Sales
-            </Button>
-          </div>
-        </div>
-      </section>
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-slate-400 text-xs sm:text-sm font-medium">This Week</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.weeklyAppointments}</p>
+                    </div>
+                    <Scissors className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600" />
+                  </div>
+                </CardContent>
+              </Card>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-700/50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-2xl font-bold text-white mb-4 md:mb-0">
-              Barb<span className="text-[#39FF14]">S</span>
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Revenue Today</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">${stats.todayRevenue}</p>
+                    </div>
+                    <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" />
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-            <div className="text-slate-400 text-center md:text-right">
-              <p>&copy; 2024 BarbS. All rights reserved.</p>
-              <p className="text-sm mt-1">Built for beauty professionals, by professionals</p>
+
+            {/* Quick Actions */}
+            <div className="mb-6 sm:mb-8">
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-3 sm:pb-6">
+                  <CardTitle className="text-white text-lg sm:text-xl">Quick Actions</CardTitle>
+                  <CardDescription className="text-slate-400 text-sm sm:text-base">
+                    Access your most used features or visit the full dashboard
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                    <Button 
+                      onClick={() => navigate('/dashboard')}
+                      className="h-12 sm:h-16 text-sm sm:text-lg"
+                      style={{ backgroundColor: '#39FF14', color: 'black' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#32e612';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#39FF14';
+                      }}
+                    >
+                      <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                      Full Dashboard
+                    </Button>
+                    <Button 
+                      onClick={() => setShowAppointmentModal(true)}
+                      variant="outline"
+                      className="border-slate-600 text-white hover:bg-slate-700 h-12 sm:h-16 text-sm sm:text-lg"
+                    >
+                      <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                      Book Appointment
+                    </Button>
+                    <Button 
+                      onClick={() => setShowClientModal(true)}
+                      variant="outline"
+                      className="border-slate-600 text-white hover:bg-slate-700 h-12 sm:h-16 text-sm sm:text-lg"
+                    >
+                      <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                      Add Client
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </div>
-        </div>
-      </footer>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+              {/* Today's Appointments */}
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-white flex items-center text-lg sm:text-xl">
+                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
+                    Today's Appointments
+                  </CardTitle>
+                  <CardDescription className="text-slate-400 text-sm">
+                    {todayAppointments.length} appointments scheduled
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {todayAppointments.length > 0 ? (
+                    <div className="space-y-3 sm:space-y-4">
+                      {todayAppointments.slice(0, 3).map((appointment) => (
+                        <div
+                          key={appointment.id}
+                          className="flex items-center justify-between p-3 sm:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-white text-sm sm:text-base truncate">{appointment.customer_name}</p>
+                            <p className="text-xs sm:text-sm text-slate-400 truncate">{appointment.services?.name || 'Service'}</p>
+                          </div>
+                          <Badge variant="outline" className="text-xs sm:text-sm ml-2 flex-shrink-0" style={{ borderColor: '#39FF14', color: '#39FF14' }}>
+                            {appointment.start_time}
+                          </Badge>
+                        </div>
+                      ))}
+                      {todayAppointments.length > 3 && (
+                        <Button
+                          onClick={() => navigate('/dashboard')}
+                          variant="outline"
+                          className="w-full border-slate-600 text-white hover:bg-slate-700 text-sm sm:text-base"
+                        >
+                          View All ({todayAppointments.length})
+                        </Button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-6 sm:py-8">
+                      <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 mx-auto mb-4" />
+                      <p className="text-slate-400 text-sm sm:text-base">No appointments for today</p>
+                      <Button
+                        onClick={() => setShowAppointmentModal(true)}
+                        className="mt-4 text-sm sm:text-base"
+                        style={{ backgroundColor: '#39FF14', color: 'black' }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#32e612';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#39FF14';
+                        }}
+                      >
+                        Schedule First Appointment
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Recent Clients */}
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-white flex items-center text-lg sm:text-xl">
+                    <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
+                    Recent Clients
+                  </CardTitle>
+                  <CardDescription className="text-slate-400 text-sm">
+                    Your client database
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                      <Input
+                        placeholder="Search clients..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 bg-slate-700/50 border-slate-600 text-white placeholder-slate-400 text-sm sm:text-base"
+                      />
+                    </div>
+                    {filteredClients.length > 0 ? (
+                      <div className="space-y-2 sm:space-y-3">
+                        {filteredClients.slice(0, 4).map((client) => (
+                          <div
+                            key={client.id}
+                            className="flex items-center justify-between p-2 sm:p-3 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors cursor-pointer"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-white text-sm sm:text-base truncate">{client.name}</p>
+                              <p className="text-xs sm:text-sm text-slate-400 truncate">{client.phone}</p>
+                            </div>
+                            <Badge variant="secondary" className="bg-slate-600 text-slate-300 text-xs flex-shrink-0 ml-2">
+                              Recent
+                            </Badge>
+                          </div>
+                        ))}
+                        <Button
+                          onClick={() => navigate('/dashboard')}
+                          variant="outline"
+                          className="w-full border-slate-600 text-white hover:bg-slate-700 text-sm sm:text-base"
+                        >
+                          View All Clients
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="text-center py-6 sm:py-8">
+                        <Users className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 mx-auto mb-4" />
+                        <p className="text-slate-400 text-sm sm:text-base">
+                          {searchTerm ? "No clients match your search" : "No clients yet"}
+                        </p>
+                        {!searchTerm && (
+                          <Button
+                            onClick={() => setShowClientModal(true)}
+                            className="mt-4 text-sm sm:text-base"
+                            style={{ backgroundColor: '#39FF14', color: 'black' }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#32e612';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#39FF14';
+                            }}
+                          >
+                            Add First Client
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </>
+        )}
+      </main>
 
       {/* Modals */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        mode={authMode}
-        onModeChange={setAuthMode}
+      <ClientModal 
+        open={showClientModal} 
+        onOpenChange={setShowClientModal}
+        onClientAdded={() => {
+          fetchUserBusiness();
+          fetchDashboardData();
+        }}
       />
-
-      <BusinessRegistrationModal
-        isOpen={showRegisterModal}
-        onClose={() => setShowRegisterModal(false)}
+      <AppointmentModal 
+        open={showAppointmentModal} 
+        onOpenChange={setShowAppointmentModal}
+        onAppointmentCreated={() => {
+          fetchDashboardData();
+        }}
+      />
+      <AuthModal 
+        open={showAuthModal} 
+        onOpenChange={setShowAuthModal}
+        onAuthSuccess={handleAuthSuccess}
+      />
+      <MultiStepRegistrationModal 
+        open={showBusinessModal} 
+        onOpenChange={setShowBusinessModal}
+        onBusinessCreated={handleBusinessCreated}
       />
     </div>
   );
