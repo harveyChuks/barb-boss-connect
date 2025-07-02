@@ -392,7 +392,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                     key={service.id}
                     className={`p-4 rounded-lg border cursor-pointer transition-colors ${
                       formData.service_id === service.id
-                        ? 'border-amber-500 bg-amber-500/10'
+                        ? 'border-primary bg-primary/10'
                         : 'border-slate-600 hover:border-slate-500'
                     }`}
                     onClick={() => handleInputChange('service_id', service.id)}
@@ -401,7 +401,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                       <h3 className="font-semibold text-white">{service.name}</h3>
                       <div className="text-right">
                         {service.price && (
-                          <div className="text-amber-400 font-semibold">${service.price}</div>
+                          <div className="text-primary font-semibold">${service.price}</div>
                         )}
                         <div className="text-slate-400 text-sm flex items-center">
                           <Clock className="w-3 h-3 mr-1" />
@@ -426,7 +426,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   <div
                     className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                       formData.staff_id === ""
-                        ? 'border-amber-500 bg-amber-500/10'
+                        ? 'border-primary bg-primary/10'
                         : 'border-slate-600 hover:border-slate-500'
                     }`}
                     onClick={() => handleInputChange('staff_id', '')}
@@ -438,7 +438,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                       key={member.id}
                       className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                         formData.staff_id === member.id
-                          ? 'border-amber-500 bg-amber-500/10'
+                          ? 'border-primary bg-primary/10'
                           : 'border-slate-600 hover:border-slate-500'
                       }`}
                       onClick={() => handleInputChange('staff_id', member.id)}
@@ -532,7 +532,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                           className={`
                             aspect-square p-2 text-sm rounded-lg transition-colors relative
                             ${!isCurrentMonth ? 'text-slate-600' : ''}
-                            ${isSelected ? 'bg-amber-500 text-black font-semibold' : ''}
+                            ${isSelected ? 'bg-primary text-black font-semibold' : ''}
                             ${isToday && !isSelected ? 'bg-slate-600 text-white font-semibold' : ''}
                             ${isAvailable && !isSelected && !isToday ? 'text-white hover:bg-slate-700' : ''}
                             ${!isAvailable ? 'text-slate-600 cursor-not-allowed' : 'cursor-pointer'}
@@ -569,7 +569,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                           onClick={() => setSelectedTime(time)}
                           className={
                             selectedTime === time
-                              ? "bg-amber-500 hover:bg-amber-600 text-black font-medium"
+                              ? "bg-primary hover:bg-primary/90 text-black font-medium"
                               : "border-slate-600 text-white hover:bg-slate-700 hover:border-slate-500"
                           }
                         >
@@ -645,7 +645,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                     !selectedDate || 
                     !selectedTime
                   }
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-black font-semibold"
+                  className="w-full bg-primary hover:bg-primary/90 text-black font-semibold"
                 >
                   {submitting ? "Booking..." : "Book Appointment"}
                 </Button>
