@@ -41,7 +41,7 @@ const CalendarView = () => {
 
   useEffect(() => {
     fetchBusinessAndAppointments();
-  }, [user, selectedDate]);
+  }, [user, selectedDate, viewMode]);
 
   const fetchBusinessAndAppointments = async () => {
     if (!user) return;
@@ -58,9 +58,19 @@ const CalendarView = () => {
       if (businessError) throw businessError;
       setBusiness(businessData);
 
-      // Get appointments for selected date
-      const startDate = startOfDay(selectedDate);
-      const endDate = endOfDay(selectedDate);
+      // Get appointments for selected date range based on view mode
+      let startDate, endDate;
+      
+      if (viewMode === 'day') {
+        startDate = startOfDay(selectedDate);
+        endDate = endOfDay(selectedDate);
+      } else if (viewMode === 'week') {
+        startDate = startOfWeek(selectedDate);
+        endDate = endOfWeek(selectedDate);
+      } else { // month view
+        startDate = startOfWeek(selectedDate);
+        endDate = endOfWeek(addDays(selectedDate, 30));
+      }
 
       const { data: appointmentsData, error: appointmentsError } = await supabase
         .from('appointments')
