@@ -10,6 +10,9 @@ import { User, Camera, MapPin, Phone, Mail, Globe, Instagram } from "lucide-reac
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Database } from "@/integrations/supabase/types";
+
+type BusinessType = Database['public']['Enums']['business_type'];
 
 const ProfileManagement = () => {
   const { user } = useAuth();
@@ -18,7 +21,7 @@ const ProfileManagement = () => {
   const [business, setBusiness] = useState({
     name: '',
     description: '',
-    business_type: '',
+    business_type: '' as BusinessType,
     address: '',
     phone: '',
     email: '',
@@ -154,7 +157,7 @@ const ProfileManagement = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="business_type" className="text-slate-700">Business Type</Label>
-                <Select value={business.business_type} onValueChange={(value) => handleInputChange('business_type', value)}>
+                <Select value={business.business_type} onValueChange={(value: BusinessType) => handleInputChange('business_type', value)}>
                   <SelectTrigger className="bg-white border-slate-300 text-slate-800">
                     <SelectValue placeholder="Select business type" />
                   </SelectTrigger>
