@@ -241,7 +241,7 @@ const WorkPicturesManagement = () => {
             <Button
               onClick={handleImageUpload}
               disabled={uploading}
-              className="bg-amber-500 hover:bg-amber-600 text-black"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               <Plus className="w-4 h-4 mr-2" />
               {uploading ? "Uploading..." : "Add Picture"}
@@ -271,7 +271,7 @@ const WorkPicturesManagement = () => {
               <p className="text-slate-400 mb-4">Start building your portfolio by adding pictures of your work.</p>
               <Button
                 onClick={handleImageUpload}
-                className="bg-amber-500 hover:bg-amber-600 text-black"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Your First Picture
@@ -288,7 +288,7 @@ const WorkPicturesManagement = () => {
                       className="w-full h-full object-cover"
                     />
                     {picture.id.startsWith('mock-') && (
-                      <Badge className="absolute top-2 left-2 bg-amber-500 text-black">
+                      <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">
                         Sample
                       </Badge>
                     )}

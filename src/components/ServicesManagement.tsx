@@ -178,7 +178,7 @@ const ServicesManagement = () => {
           <h2 className="text-2xl font-bold text-white">Services Management</h2>
           <p className="text-slate-400">Manage your business services and pricing</p>
         </div>
-        <Button onClick={openNewServiceModal} className="bg-amber-500 hover:bg-amber-600 text-black">
+        <Button onClick={openNewServiceModal} className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <Plus className="w-4 h-4 mr-2" />
           Add Service
         </Button>
@@ -235,7 +235,7 @@ const ServicesManagement = () => {
         <Card className="bg-slate-800/50 border-slate-700">
           <CardContent className="p-12 text-center">
             <p className="text-slate-400 mb-4">No services added yet</p>
-            <Button onClick={openNewServiceModal} className="bg-amber-500 hover:bg-amber-600 text-black">
+            <Button onClick={openNewServiceModal} className="bg-primary hover:bg-primary/90 text-primary-foreground">
               <Plus className="w-4 h-4 mr-2" />
               Add Your First Service
             </Button>
@@ -321,7 +321,7 @@ const ServicesManagement = () => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="bg-amber-500 hover:bg-amber-600 text-black"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {loading ? "Saving..." : editingService ? "Update Service" : "Add Service"}
               </Button>

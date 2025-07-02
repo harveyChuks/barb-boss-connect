@@ -193,7 +193,7 @@ const StaffManagement = () => {
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-amber-500 hover:bg-amber-600 text-black">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
               <Plus className="w-4 h-4 mr-2" />
               Add Staff
             </Button>
@@ -244,7 +244,7 @@ const StaffManagement = () => {
               <Button
                 onClick={handleSubmit}
                 disabled={loading || !formData.name.trim()}
-                className="bg-amber-500 hover:bg-amber-600 text-black"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {loading ? "Saving..." : editingStaff ? "Update" : "Add Staff"}
               </Button>
@@ -328,7 +328,7 @@ const StaffManagement = () => {
             <p className="text-slate-400 mb-4">Get started by adding your first team member.</p>
             <Button
               onClick={() => setDialogOpen(true)}
-              className="bg-amber-500 hover:bg-amber-600 text-black"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add First Staff Member
