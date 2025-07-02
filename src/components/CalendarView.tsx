@@ -43,6 +43,15 @@ const CalendarView = () => {
     fetchBusinessAndAppointments();
   }, [user, selectedDate, viewMode]);
 
+  // Auto-refresh appointments every 30 seconds to keep in sync
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchBusinessAndAppointments();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const fetchBusinessAndAppointments = async () => {
     if (!user) return;
 
