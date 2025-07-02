@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -251,17 +252,27 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      {/* Glowing purple corners */}
+      {/* Three glowing colors - purple right, blue middle, light blue left */}
       <div className="fixed inset-0 pointer-events-none">
+        {/* Left corner - light blue */}
         <div 
-          className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full opacity-30 blur-3xl"
+          className="absolute bottom-0 left-0 w-[1000px] h-[1000px] rounded-full opacity-40 blur-3xl"
           style={{ 
-            background: 'radial-gradient(circle, #5e17eb 0%, transparent 70%)',
+            background: 'radial-gradient(circle, #38b6ff 0%, transparent 70%)',
             transform: 'translate(-50%, 50%)'
           }}
         />
+        {/* Middle - blue */}
         <div 
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full opacity-30 blur-3xl"
+          className="absolute bottom-0 left-1/2 w-[1000px] h-[1000px] rounded-full opacity-35 blur-3xl"
+          style={{ 
+            background: 'radial-gradient(circle, #5271ff 0%, transparent 70%)',
+            transform: 'translate(-50%, 50%)'
+          }}
+        />
+        {/* Right corner - purple */}
+        <div 
+          className="absolute bottom-0 right-0 w-[1000px] h-[1000px] rounded-full opacity-40 blur-3xl"
           style={{ 
             background: 'radial-gradient(circle, #5e17eb 0%, transparent 70%)',
             transform: 'translate(50%, 50%)'
