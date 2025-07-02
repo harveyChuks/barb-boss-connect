@@ -251,16 +251,16 @@ const ReportsAnalytics = () => {
     return (
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <Card key={i} className="bg-slate-800/50 border-slate-700">
-              <CardContent className="p-6">
-                <div className="animate-pulse">
-                  <div className="h-4 bg-slate-600 rounded w-3/4 mb-2"></div>
-                  <div className="h-8 bg-slate-600 rounded w-1/2"></div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        {[...Array(4)].map((_, i) => (
+          <Card key={i} className="bg-card border-border">
+            <CardContent className="p-6">
+              <div className="animate-pulse">
+                <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                <div className="h-8 bg-muted rounded w-1/2"></div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
         </div>
       </div>
     );
@@ -270,14 +270,14 @@ const ReportsAnalytics = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white">Business Reports</h2>
-          <p className="text-slate-400">Analyze your business performance and trends</p>
+          <h2 className="text-2xl font-bold text-foreground">Business Reports</h2>
+          <p className="text-muted-foreground">Analyze your business performance and trends</p>
         </div>
         <Select value={dateRange} onValueChange={setDateRange}>
-          <SelectTrigger className="w-48 bg-slate-800 border-slate-700 text-white">
+          <SelectTrigger className="w-48 bg-card border-border text-foreground">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-slate-800 border-slate-700">
+          <SelectContent className="bg-card border-border">
             <SelectItem value="7">Last 7 days</SelectItem>
             <SelectItem value="30">Last 30 days</SelectItem>
             <SelectItem value="90">Last 3 months</SelectItem>
@@ -288,12 +288,12 @@ const ReportsAnalytics = () => {
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Total Revenue</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-muted-foreground text-sm">Total Revenue</p>
+                <p className="text-2xl font-bold text-foreground">
                   {formatCurrency(overviewStats?.totalRevenue || 0)}
                 </p>
                 <div className="flex items-center mt-1">
@@ -314,12 +314,12 @@ const ReportsAnalytics = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Total Bookings</p>
-                <p className="text-2xl font-bold text-white">{overviewStats?.totalBookings || 0}</p>
+                <p className="text-muted-foreground text-sm">Total Bookings</p>
+                <p className="text-2xl font-bold text-foreground">{overviewStats?.totalBookings || 0}</p>
                 <div className="flex items-center mt-1">
                   {(overviewStats?.bookingGrowth || 0) >= 0 ? (
                     <TrendingUp className="w-4 h-4 text-green-400 mr-1" />
@@ -338,27 +338,27 @@ const ReportsAnalytics = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Avg Booking Value</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-muted-foreground text-sm">Avg Booking Value</p>
+                <p className="text-2xl font-bold text-foreground">
                   {formatCurrency(overviewStats?.averageBookingValue || 0)}
                 </p>
-                <p className="text-sm text-slate-400 mt-1">Per completed booking</p>
+                <p className="text-sm text-muted-foreground mt-1">Per completed booking</p>
               </div>
               <Star className="w-8 h-8 text-purple-400" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Completion Rate</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-muted-foreground text-sm">Completion Rate</p>
+                <p className="text-2xl font-bold text-foreground">
                   {(overviewStats?.completionRate || 0).toFixed(1)}%
                 </p>
                 <p className="text-sm text-red-400 mt-1">
@@ -373,23 +373,23 @@ const ReportsAnalytics = () => {
 
       {/* Charts */}
       <Tabs defaultValue="revenue" className="space-y-6">
-        <TabsList className="bg-slate-800 border-slate-700">
-          <TabsTrigger value="revenue" className="text-white data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
+        <TabsList className="bg-card border-border">
+          <TabsTrigger value="revenue" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
             Revenue Trends
           </TabsTrigger>
-          <TabsTrigger value="services" className="text-white data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
+          <TabsTrigger value="services" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
             Service Performance
           </TabsTrigger>
-          <TabsTrigger value="staff" className="text-white data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
+          <TabsTrigger value="staff" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
             Staff Performance
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="revenue">
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">Revenue & Bookings Over Time</CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardTitle className="text-foreground">Revenue & Bookings Over Time</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Daily revenue and booking counts for the selected period
               </CardDescription>
             </CardHeader>

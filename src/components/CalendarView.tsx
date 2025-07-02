@@ -132,9 +132,9 @@ const CalendarView = () => {
 
   if (!business) {
     return (
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-card border-border">
         <CardContent className="p-6">
-          <p className="text-slate-400">No business profile found. Please register your business first.</p>
+          <p className="text-muted-foreground">No business profile found. Please register your business first.</p>
         </CardContent>
       </Card>
     );
@@ -145,11 +145,11 @@ const CalendarView = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white">Calendar</h2>
-          <p className="text-slate-400 text-sm sm:text-base">Manage your appointments</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground">Calendar</h2>
+          <p className="text-muted-foreground text-sm sm:text-base">Manage your appointments</p>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-          <div className="flex rounded-lg bg-slate-800 p-1">
+          <div className="flex rounded-lg bg-card p-1">
             {['day', 'week', 'month'].map((mode) => (
               <Button
                 key={mode}
@@ -158,7 +158,7 @@ const CalendarView = () => {
                 onClick={() => setViewMode(mode as any)}
                 className={`flex-1 sm:flex-none ${viewMode === mode 
                   ? "bg-[#39FF14] hover:bg-[#32E512] text-black" 
-                  : "text-white hover:bg-slate-700"
+                  : "text-foreground hover:bg-muted"
                 }`}
               >
                 {mode.charAt(0).toUpperCase() + mode.slice(1)}
@@ -177,29 +177,29 @@ const CalendarView = () => {
 
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-6">
         {/* Mini Calendar */}
-        <Card className="bg-slate-800/50 border-slate-700 xl:block hidden">
+        <Card className="bg-card border-border xl:block hidden">
           <CardHeader className="pb-3">
-            <CardTitle className="text-white text-lg">Calendar</CardTitle>
+            <CardTitle className="text-foreground text-lg">Calendar</CardTitle>
           </CardHeader>
           <CardContent>
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={(date) => date && setSelectedDate(date)}
-              className="rounded-md border border-slate-700 w-full"
+              className="rounded-md border border-border w-full"
             />
             <div className="mt-4 space-y-2">
               <div className="flex items-center gap-2 text-sm">
                 <div className="w-3 h-3 rounded bg-emerald-500"></div>
-                <span className="text-slate-300">Confirmed</span>
+                <span className="text-muted-foreground">Confirmed</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <div className="w-3 h-3 rounded bg-amber-500"></div>
-                <span className="text-slate-300">Pending</span>
+                <span className="text-muted-foreground">Pending</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <div className="w-3 h-3 rounded bg-blue-500"></div>
-                <span className="text-slate-300">Completed</span>
+                <span className="text-muted-foreground">Completed</span>
               </div>
             </div>
           </CardContent>
@@ -207,16 +207,16 @@ const CalendarView = () => {
 
         {/* Main Calendar View */}
         <div className="xl:col-span-3">
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-card border-border">
             <CardHeader className="pb-3">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <CardTitle className="text-white text-lg sm:text-xl">
+                  <CardTitle className="text-foreground text-lg sm:text-xl">
                     {viewMode === 'day' && format(selectedDate, 'EEEE, MMMM d, yyyy')}
                     {viewMode === 'week' && `Week of ${format(startOfWeek(selectedDate), 'MMM d')} - ${format(endOfWeek(selectedDate), 'MMM d, yyyy')}`}
                     {viewMode === 'month' && format(selectedDate, 'MMMM yyyy')}
                   </CardTitle>
-                  <CardDescription className="text-slate-400 text-sm">
+                  <CardDescription className="text-muted-foreground text-sm">
                     {appointments.length} appointment{appointments.length !== 1 ? 's' : ''}
                   </CardDescription>
                 </div>
@@ -225,7 +225,7 @@ const CalendarView = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => navigateDate('prev')}
-                    className="border-slate-600 text-white hover:bg-slate-700"
+                    className="border-border text-foreground hover:bg-muted"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </Button>
@@ -233,7 +233,7 @@ const CalendarView = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setSelectedDate(new Date())}
-                    className="border-slate-600 text-white hover:bg-slate-700 px-2 sm:px-4 text-sm"
+                    className="border-border text-foreground hover:bg-muted px-2 sm:px-4 text-sm"
                   >
                     Today
                   </Button>
@@ -241,7 +241,7 @@ const CalendarView = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => navigateDate('next')}
-                    className="border-slate-600 text-white hover:bg-slate-700"
+                    className="border-border text-foreground hover:bg-muted"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </Button>
@@ -251,7 +251,7 @@ const CalendarView = () => {
             <CardContent>
               {loading ? (
                 <div className="text-center py-12">
-                  <div className="text-slate-400">Loading appointments...</div>
+                  <div className="text-muted-foreground">Loading appointments...</div>
                 </div>
               ) : (
                 <>
@@ -265,23 +265,23 @@ const CalendarView = () => {
                         return (
                           <div key={day.toISOString()} className={`border-l-4 pl-3 sm:pl-4 py-2 ${isToday ? 'border-[#39FF14] bg-[#39FF14]/5' : 'border-slate-600'}`}>
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                              <h3 className={`font-semibold text-sm sm:text-base ${isToday ? 'text-[#39FF14]' : 'text-white'}`}>
+                              <h3 className={`font-semibold text-sm sm:text-base ${isToday ? 'text-[#39FF14]' : 'text-foreground'}`}>
                                 {format(day, 'EEEE, MMM d')}
                                 {isToday && <Badge className="ml-2 bg-[#39FF14] text-black text-xs">Today</Badge>}
                               </h3>
-                              <span className="text-slate-400 text-xs sm:text-sm">
+                              <span className="text-muted-foreground text-xs sm:text-sm">
                                 {dayAppointments.length} appointment{dayAppointments.length !== 1 ? 's' : ''}
                               </span>
                             </div>
                             
                             {dayAppointments.length === 0 ? (
-                              <p className="text-slate-500 text-xs sm:text-sm italic">No appointments scheduled</p>
+                              <p className="text-muted-foreground text-xs sm:text-sm italic">No appointments scheduled</p>
                             ) : (
                               <div className="grid gap-2">
                                 {dayAppointments.map((appointment) => (
                                   <div
                                     key={appointment.id}
-                                    className="bg-slate-700/50 border border-slate-600 rounded-lg p-2 sm:p-3 hover:bg-slate-700/70 transition-colors cursor-pointer"
+                                    className="bg-muted border border-border rounded-lg p-2 sm:p-3 hover:bg-accent transition-colors cursor-pointer"
                                   >
                                     <div className="flex items-start justify-between">
                                       <div className="flex-1 min-w-0">
@@ -289,19 +289,19 @@ const CalendarView = () => {
                                           <Badge className={`${getStatusColor(appointment.status)} text-white text-xs w-fit`}>
                                             {appointment.status}
                                           </Badge>
-                                          <div className="flex items-center text-slate-300 text-xs sm:text-sm">
+                                          <div className="flex items-center text-muted-foreground text-xs sm:text-sm">
                                             <Clock className="w-3 h-3 mr-1" />
                                             {formatTime(appointment.start_time)} - {formatTime(appointment.end_time)}
                                           </div>
                                         </div>
-                                        <div className="flex items-center text-white font-medium mb-1 text-sm sm:text-base">
+                                        <div className="flex items-center text-foreground font-medium mb-1 text-sm sm:text-base">
                                           <User className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
                                           <span className="truncate">{appointment.customer_name}</span>
                                         </div>
-                                        <div className="text-slate-300 text-xs sm:text-sm">
+                                        <div className="text-muted-foreground text-xs sm:text-sm">
                                           <span className="truncate">{appointment.service?.name}</span>
                                           {appointment.staff && (
-                                            <span className="text-slate-400 ml-2 hidden sm:inline">
+                                            <span className="text-muted-foreground ml-2 hidden sm:inline">
                                               • {appointment.staff.name}
                                             </span>
                                           )}
@@ -323,13 +323,13 @@ const CalendarView = () => {
                     <div className="space-y-3">
                       {appointments.length === 0 ? (
                         <div className="text-center py-8 sm:py-12">
-                          <CalendarIcon className="w-12 h-12 sm:w-16 sm:h-16 text-slate-500 mx-auto mb-4" />
-                          <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">No Appointments</h3>
-                          <p className="text-slate-400 text-sm sm:text-base">No appointments scheduled for this date.</p>
+                          <CalendarIcon className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground mx-auto mb-4" />
+                          <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2">No Appointments</h3>
+                          <p className="text-muted-foreground text-sm sm:text-base">No appointments scheduled for this date.</p>
                         </div>
                       ) : (
                         appointments.map((appointment) => (
-                          <Card key={appointment.id} className="bg-slate-700/50 border-slate-600 hover:bg-slate-700/70 transition-colors cursor-pointer">
+                          <Card key={appointment.id} className="bg-card border-border hover:bg-accent transition-colors cursor-pointer">
                             <CardContent className="p-3 sm:p-4">
                               <div className="flex items-start justify-between">
                                 <div className="flex-1 min-w-0">
@@ -337,30 +337,30 @@ const CalendarView = () => {
                                     <Badge className={`${getStatusColor(appointment.status)} text-white text-xs w-fit`}>
                                       {appointment.status}
                                     </Badge>
-                                    <div className="flex items-center text-slate-300 text-sm">
+                                    <div className="flex items-center text-muted-foreground text-sm">
                                       <Clock className="w-4 h-4 mr-1" />
                                       {formatTime(appointment.start_time)} - {formatTime(appointment.end_time)}
                                     </div>
                                   </div>
-                                  <div className="flex items-center text-white font-semibold mb-2 text-sm sm:text-base">
+                                  <div className="flex items-center text-foreground font-semibold mb-2 text-sm sm:text-base">
                                     <User className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
                                     <span className="truncate">{appointment.customer_name}</span>
                                   </div>
-                                  <div className="text-slate-300 mb-1 text-sm">
+                                  <div className="text-muted-foreground mb-1 text-sm">
                                     Service: <span className="truncate">{appointment.service?.name}</span>
                                     {appointment.service?.duration_minutes && (
-                                      <span className="text-slate-400 ml-2">
+                                      <span className="text-muted-foreground ml-2">
                                         ({appointment.service.duration_minutes} min)
                                       </span>
                                     )}
                                   </div>
                                   {appointment.staff && (
-                                    <div className="text-slate-400 text-sm">
+                                    <div className="text-muted-foreground text-sm">
                                       Staff: {appointment.staff.name}
                                     </div>
                                   )}
                                   {appointment.notes && (
-                                    <div className="text-slate-400 text-sm mt-2 italic">
+                                    <div className="text-muted-foreground text-sm mt-2 italic">
                                       "{appointment.notes}"
                                     </div>
                                   )}
@@ -376,9 +376,9 @@ const CalendarView = () => {
                   {/* Month View */}
                   {viewMode === 'month' && (
                     <div className="text-center py-8 sm:py-12">
-                      <CalendarIcon className="w-12 h-12 sm:w-16 sm:h-16 text-slate-500 mx-auto mb-4" />
-                      <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">Month View</h3>
-                      <p className="text-slate-400 text-sm sm:text-base">Month view coming soon. Use day or week view for now.</p>
+                      <CalendarIcon className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2">Month View</h3>
+                      <p className="text-muted-foreground text-sm sm:text-base">Month view coming soon. Use day or week view for now.</p>
                     </div>
                   )}
                 </>
