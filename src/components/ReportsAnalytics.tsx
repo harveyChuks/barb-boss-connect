@@ -49,7 +49,7 @@ const ReportsAnalytics = () => {
   const [staffData, setStaffData] = useState<StaffData[]>([]);
   const { toast } = useToast();
 
-  const colors = ['hsl(var(--primary))', '#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f'];
+  const colors = ['#39FF14', '#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f'];
 
   const fetchAnalyticsData = async () => {
     setLoading(true);
@@ -238,8 +238,8 @@ const ReportsAnalytics = () => {
 
   const chartConfig = {
     revenue: {
-      label: "Revenue",
-      color: "hsl(var(--primary))",
+      label: "Revenue", 
+      color: "#39FF14",
     },
     bookings: {
       label: "Bookings",
@@ -309,7 +309,7 @@ const ReportsAnalytics = () => {
                   </span>
                 </div>
               </div>
-              <DollarSign className="w-8 h-8 text-primary" />
+              <DollarSign className="w-8 h-8 text-[#39FF14]" />
             </div>
           </CardContent>
         </Card>
@@ -374,13 +374,13 @@ const ReportsAnalytics = () => {
       {/* Charts */}
       <Tabs defaultValue="revenue" className="space-y-6">
         <TabsList className="bg-slate-800 border-slate-700">
-          <TabsTrigger value="revenue" className="text-white data-[state=active]:bg-primary data-[state=active]:text-black">
+          <TabsTrigger value="revenue" className="text-white data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
             Revenue Trends
           </TabsTrigger>
-          <TabsTrigger value="services" className="text-white data-[state=active]:bg-primary data-[state=active]:text-black">
+          <TabsTrigger value="services" className="text-white data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
             Service Performance
           </TabsTrigger>
-          <TabsTrigger value="staff" className="text-white data-[state=active]:bg-primary data-[state=active]:text-black">
+          <TabsTrigger value="staff" className="text-white data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
             Staff Performance
           </TabsTrigger>
         </TabsList>
@@ -420,7 +420,7 @@ const ReportsAnalytics = () => {
                     <Bar 
                       yAxisId="revenue"
                       dataKey="revenue" 
-                      fill="hsl(var(--primary))" 
+                      fill="#39FF14" 
                       name="Revenue"
                       radius={[4, 4, 0, 0]}
                     />
@@ -472,7 +472,7 @@ const ReportsAnalytics = () => {
                             return (
                               <div className="bg-slate-800 border border-slate-600 rounded p-2">
                                 <p className="text-white font-medium">{data.name}</p>
-                                <p className="text-primary">Revenue: {formatCurrency(data.revenue)}</p>
+                                <p className="text-[#39FF14]">Revenue: {formatCurrency(data.revenue)}</p>
                                 <p className="text-blue-400">Bookings: {data.count}</p>
                               </div>
                             );
@@ -553,7 +553,7 @@ const ReportsAnalytics = () => {
                           return (
                             <div className="bg-slate-800 border border-slate-600 rounded p-2">
                               <p className="text-white font-medium">{label}</p>
-                              <p className="text-primary">Revenue: {formatCurrency(payload[0].value as number)}</p>
+                              <p className="text-[#39FF14]">Revenue: {formatCurrency(payload[0].value as number)}</p>
                               <p className="text-blue-400">Bookings: {payload[0].payload.bookings}</p>
                             </div>
                           );
@@ -563,7 +563,7 @@ const ReportsAnalytics = () => {
                     />
                     <Bar 
                       dataKey="revenue" 
-                      fill="hsl(var(--primary))"
+                      fill="#39FF14"
                       radius={[0, 4, 4, 0]}
                     />
                   </BarChart>

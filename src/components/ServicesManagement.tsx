@@ -218,7 +218,7 @@ const ServicesManagement = () => {
             <CardContent>
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
-                  <DollarSign className="w-4 h-4 text-green-400" />
+                  <DollarSign className="w-4 h-4 text-[#39FF14]" />
                   <span className="text-white font-semibold">${service.price}</span>
                 </div>
                 <div className="flex items-center space-x-2">
