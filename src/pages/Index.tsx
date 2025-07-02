@@ -251,19 +251,19 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      {/* Glowing yellow corners */}
+      {/* Glowing purple corners */}
       <div className="fixed inset-0 pointer-events-none">
         <div 
-          className="absolute bottom-0 left-0 w-96 h-96 rounded-full opacity-20 blur-3xl"
+          className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full opacity-30 blur-3xl"
           style={{ 
-            background: 'radial-gradient(circle, #FFFF33 0%, transparent 70%)',
+            background: 'radial-gradient(circle, #5e17eb 0%, transparent 70%)',
             transform: 'translate(-50%, 50%)'
           }}
         />
         <div 
-          className="absolute bottom-0 right-0 w-96 h-96 rounded-full opacity-20 blur-3xl"
+          className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full opacity-30 blur-3xl"
           style={{ 
-            background: 'radial-gradient(circle, #FFFF33 0%, transparent 70%)',
+            background: 'radial-gradient(circle, #5e17eb 0%, transparent 70%)',
             transform: 'translate(50%, 50%)'
           }}
         />
