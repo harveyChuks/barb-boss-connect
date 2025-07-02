@@ -175,8 +175,8 @@ const ServicesManagement = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-white">Services Management</h2>
-          <p className="text-slate-400">Manage your business services and pricing</p>
+          <h2 className="text-2xl font-bold text-foreground">Services Management</h2>
+          <p className="text-muted-foreground">Manage your business services and pricing</p>
         </div>
         <Button onClick={openNewServiceModal} className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <Plus className="w-4 h-4 mr-2" />
@@ -186,12 +186,12 @@ const ServicesManagement = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {services.filter(service => service.is_active).map((service) => (
-          <Card key={service.id} className="bg-slate-800/50 border-slate-700">
+          <Card key={service.id} className="bg-card border-border">
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle className="text-white text-lg">{service.name}</CardTitle>
-                  <CardDescription className="text-slate-400">
+                  <CardTitle className="text-foreground text-lg">{service.name}</CardTitle>
+                  <CardDescription className="text-muted-foreground">
                     {service.description}
                   </CardDescription>
                 </div>
@@ -200,7 +200,7 @@ const ServicesManagement = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => handleEdit(service)}
-                    className="border-slate-600 text-white hover:bg-slate-700"
+                    className="border-border text-foreground hover:bg-muted"
                   >
                     <Edit className="w-3 h-3" />
                   </Button>
@@ -218,12 +218,12 @@ const ServicesManagement = () => {
             <CardContent>
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
-                  <DollarSign className="w-4 h-4 text-[#39FF14]" />
-                  <span className="text-white font-semibold">${service.price}</span>
+                  <DollarSign className="w-4 h-4 text-primary" />
+                  <span className="text-foreground font-semibold">${service.price}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-blue-400" />
-                  <span className="text-slate-300">{service.duration_minutes}min</span>
+                  <span className="text-muted-foreground">{service.duration_minutes}min</span>
                 </div>
               </div>
             </CardContent>
@@ -232,9 +232,9 @@ const ServicesManagement = () => {
       </div>
 
       {services.filter(service => service.is_active).length === 0 && (
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-12 text-center">
-            <p className="text-slate-400 mb-4">No services added yet</p>
+            <p className="text-muted-foreground mb-4">No services added yet</p>
             <Button onClick={openNewServiceModal} className="bg-primary hover:bg-primary/90 text-primary-foreground">
               <Plus className="w-4 h-4 mr-2" />
               Add Your First Service
@@ -245,12 +245,12 @@ const ServicesManagement = () => {
 
       {/* Service Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="bg-slate-800 border-slate-700 text-white">
+        <DialogContent className="bg-card border-border text-foreground">
           <DialogHeader>
             <DialogTitle>
               {editingService ? "Edit Service" : "Add New Service"}
             </DialogTitle>
-            <DialogDescription className="text-slate-400">
+            <DialogDescription className="text-muted-foreground">
               {editingService ? "Update your service details" : "Add a new service to your business"}
             </DialogDescription>
           </DialogHeader>
@@ -262,7 +262,7 @@ const ServicesManagement = () => {
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
+                className="bg-input border-border text-foreground"
                 placeholder="Haircut & Style"
                 required
               />
@@ -274,7 +274,7 @@ const ServicesManagement = () => {
                 id="description"
                 value={formData.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
+                className="bg-input border-border text-foreground"
                 placeholder="Professional haircut and styling service"
                 rows={3}
               />
@@ -289,7 +289,7 @@ const ServicesManagement = () => {
                   step="0.01"
                   value={formData.price}
                   onChange={(e) => handleInputChange("price", e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white"
+                  className="bg-input border-border text-foreground"
                   placeholder="25.00"
                   required
                 />
@@ -302,7 +302,7 @@ const ServicesManagement = () => {
                   type="number"
                   value={formData.duration_minutes}
                   onChange={(e) => handleInputChange("duration_minutes", e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white"
+                  className="bg-input border-border text-foreground"
                   placeholder="30"
                   required
                 />
@@ -314,7 +314,7 @@ const ServicesManagement = () => {
                 type="button"
                 variant="outline"
                 onClick={() => setShowModal(false)}
-                className="border-slate-600 text-white hover:bg-slate-700"
+                className="border-border text-foreground hover:bg-muted"
               >
                 Cancel
               </Button>

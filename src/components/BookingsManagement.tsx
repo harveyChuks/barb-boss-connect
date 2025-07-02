@@ -167,7 +167,7 @@ const BookingsManagement = () => {
       case "no_show":
         return "bg-gray-600 text-white";
       default:
-        return "bg-slate-600 text-white";
+        return "bg-muted text-muted-foreground";
     }
   };
 
@@ -191,12 +191,12 @@ const BookingsManagement = () => {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-8 bg-slate-700 rounded animate-pulse"></div>
+        <div className="h-8 bg-muted rounded animate-pulse"></div>
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
-            <Card key={i} className="bg-slate-800/50 border-slate-700 animate-pulse">
+            <Card key={i} className="bg-card border-border animate-pulse">
               <CardContent className="p-6">
-                <div className="h-20 bg-slate-700 rounded"></div>
+                <div className="h-20 bg-muted rounded"></div>
               </CardContent>
             </Card>
           ))}
@@ -208,29 +208,29 @@ const BookingsManagement = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-white">Bookings Management</h2>
-        <p className="text-slate-400">View and manage all your appointments</p>
+        <h2 className="text-2xl font-bold text-foreground">Bookings Management</h2>
+        <p className="text-muted-foreground">View and manage all your appointments</p>
       </div>
 
       {/* Filters */}
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-card border-border">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 placeholder="Search appointments..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-slate-700 border-slate-600 text-white"
+                className="pl-10 bg-input border-border text-foreground"
               />
             </div>
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+              <SelectTrigger className="bg-input border-border text-foreground">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
+              <SelectContent className="bg-popover border-border">
                 <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="confirmed">Confirmed</SelectItem>
@@ -241,10 +241,10 @@ const BookingsManagement = () => {
             </Select>
 
             <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+              <SelectTrigger className="bg-input border-border text-foreground">
                 <SelectValue placeholder="Filter by date" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
+              <SelectContent className="bg-popover border-border">
                 <SelectItem value="all">All Dates</SelectItem>
                 <SelectItem value="today">Today</SelectItem>
                 <SelectItem value="upcoming">Upcoming</SelectItem>
@@ -252,7 +252,7 @@ const BookingsManagement = () => {
               </SelectContent>
             </Select>
 
-            <div className="text-sm text-slate-400 flex items-center">
+            <div className="text-sm text-muted-foreground flex items-center">
               <Filter className="w-4 h-4 mr-2" />
               {filteredAppointments.length} of {appointments.length} appointments
             </div>
@@ -263,41 +263,41 @@ const BookingsManagement = () => {
       {/* Appointments List */}
       <div className="space-y-4">
         {filteredAppointments.map((appointment) => (
-          <Card key={appointment.id} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+          <Card key={appointment.id} className="bg-card border-border hover:bg-accent transition-colors">
             <CardContent className="p-6">
               <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
-                      <User className="w-4 h-4 text-slate-400" />
-                      <span className="font-semibold text-white">{appointment.customer_name}</span>
+                      <User className="w-4 h-4 text-muted-foreground" />
+                      <span className="font-semibold text-foreground">{appointment.customer_name}</span>
                     </div>
                     <Badge className={getStatusBadgeColor(appointment.status)}>
                       {appointment.status}
                     </Badge>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-slate-300">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-muted-foreground">
                     <div className="flex items-center space-x-2">
-                      <Calendar className="w-4 h-4 text-slate-400" />
+                      <Calendar className="w-4 h-4 text-muted-foreground" />
                       <span>{formatDate(appointment.appointment_date)}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-slate-400" />
+                      <Clock className="w-4 h-4 text-muted-foreground" />
                       <span>{formatTime(appointment.start_time)} - {formatTime(appointment.end_time)}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Phone className="w-4 h-4 text-slate-400" />
+                      <Phone className="w-4 h-4 text-muted-foreground" />
                       <span>{appointment.customer_phone}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="text-[#39FF14] font-semibold">
+                    <div className="text-primary font-semibold">
                       {appointment.services.name} - ${appointment.services.price}
                     </div>
                     {appointment.customer_email && (
-                      <div className="flex items-center space-x-2 text-sm text-slate-400">
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                         <Mail className="w-3 h-3" />
                         <span>{appointment.customer_email}</span>
                       </div>
@@ -305,7 +305,7 @@ const BookingsManagement = () => {
                   </div>
 
                   {appointment.notes && (
-                    <div className="text-sm text-slate-400">
+                    <div className="text-sm text-muted-foreground">
                       <strong>Notes:</strong> {appointment.notes}
                     </div>
                   )}
@@ -316,10 +316,10 @@ const BookingsManagement = () => {
                     value={appointment.status}
                     onValueChange={(value: AppointmentStatus) => updateAppointmentStatus(appointment.id, value)}
                   >
-                    <SelectTrigger className="bg-slate-700 border-slate-600 text-white min-w-[120px]">
+                    <SelectTrigger className="bg-input border-border text-foreground min-w-[120px]">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-700 border-slate-600">
+                    <SelectContent className="bg-popover border-border">
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="confirmed">Confirmed</SelectItem>
                       <SelectItem value="completed">Completed</SelectItem>
@@ -335,11 +335,11 @@ const BookingsManagement = () => {
       </div>
 
       {filteredAppointments.length === 0 && !loading && (
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-12 text-center">
-            <Calendar className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-            <p className="text-slate-400 mb-2">No appointments found</p>
-            <p className="text-sm text-slate-500">
+            <Calendar className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground mb-2">No appointments found</p>
+            <p className="text-sm text-muted-foreground">
               {searchTerm || statusFilter !== "all" || dateFilter !== "all"
                 ? "Try adjusting your filters"
                 : "Your appointments will appear here"}

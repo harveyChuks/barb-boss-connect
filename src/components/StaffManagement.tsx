@@ -176,9 +176,9 @@ const StaffManagement = () => {
 
   if (!business) {
     return (
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-card border-border">
         <CardContent className="p-6">
-          <p className="text-slate-400">No business profile found. Please register your business first.</p>
+          <p className="text-muted-foreground">No business profile found. Please register your business first.</p>
         </CardContent>
       </Card>
     );
@@ -188,8 +188,8 @@ const StaffManagement = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-white">Staff Management</h2>
-          <p className="text-slate-400">Manage your team members and their information</p>
+          <h2 className="text-2xl font-bold text-foreground">Staff Management</h2>
+          <p className="text-muted-foreground">Manage your team members and their information</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
@@ -198,44 +198,44 @@ const StaffManagement = () => {
               Add Staff
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-slate-800 border-slate-700">
+          <DialogContent className="bg-card border-border">
             <DialogHeader>
-              <DialogTitle className="text-white">
+              <DialogTitle className="text-foreground">
                 {editingStaff ? "Edit Staff Member" : "Add New Staff Member"}
               </DialogTitle>
-              <DialogDescription className="text-slate-400">
+              <DialogDescription className="text-muted-foreground">
                 Enter the staff member's information below.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-white">Name</Label>
+                <Label htmlFor="name" className="text-foreground">Name</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white"
+                  className="bg-input border-border text-foreground"
                   placeholder="Staff member's name"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="bio" className="text-white">Bio</Label>
+                <Label htmlFor="bio" className="text-foreground">Bio</Label>
                 <Textarea
                   id="bio"
                   value={formData.bio}
                   onChange={(e) => handleInputChange("bio", e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white"
+                  className="bg-input border-border text-foreground"
                   placeholder="Brief description about the staff member"
                   rows={3}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="specialties" className="text-white">Specialties</Label>
+                <Label htmlFor="specialties" className="text-foreground">Specialties</Label>
                 <Input
                   id="specialties"
                   value={formData.specialties}
                   onChange={(e) => handleInputChange("specialties", e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white"
+                  className="bg-input border-border text-foreground"
                   placeholder="Haircuts, Beard trim, Styling (comma separated)"
                 />
               </div>
@@ -255,24 +255,24 @@ const StaffManagement = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {staff.map((staffMember) => (
-          <Card key={staffMember.id} className="bg-slate-800/50 border-slate-700">
+          <Card key={staffMember.id} className="bg-card border-border">
             <CardContent className="p-6">
               <div className="flex items-start space-x-4">
                 <Avatar className="w-16 h-16">
                   <AvatarImage src={staffMember.avatar_url || ""} alt={staffMember.name} />
-                  <AvatarFallback className="bg-slate-700 text-white">
+                  <AvatarFallback className="bg-muted text-foreground">
                     {staffMember.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-semibold text-white truncate">{staffMember.name}</h3>
+                    <h3 className="text-lg font-semibold text-foreground truncate">{staffMember.name}</h3>
                     <Badge variant={staffMember.is_active ? "default" : "secondary"}>
                       {staffMember.is_active ? "Active" : "Inactive"}
                     </Badge>
                   </div>
                   {staffMember.bio && (
-                    <p className="text-slate-400 text-sm mb-3 line-clamp-2">{staffMember.bio}</p>
+                    <p className="text-muted-foreground text-sm mb-3 line-clamp-2">{staffMember.bio}</p>
                   )}
                   {staffMember.specialties && staffMember.specialties.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-3">
@@ -293,7 +293,7 @@ const StaffManagement = () => {
                       size="sm"
                       variant="outline"
                       onClick={() => handleEdit(staffMember)}
-                      className="border-slate-600 text-white hover:bg-slate-700"
+                      className="border-border text-foreground hover:bg-muted"
                     >
                       <Edit className="w-3 h-3" />
                     </Button>
@@ -301,7 +301,7 @@ const StaffManagement = () => {
                       size="sm"
                       variant="outline"
                       onClick={() => toggleStaffStatus(staffMember)}
-                      className="border-slate-600 text-white hover:bg-slate-700"
+                      className="border-border text-foreground hover:bg-muted"
                     >
                       <User className="w-3 h-3" />
                     </Button>
@@ -321,11 +321,11 @@ const StaffManagement = () => {
       </div>
 
       {staff.length === 0 && (
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-8 text-center">
-            <User className="w-12 h-12 text-slate-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-white mb-2">No Staff Members</h3>
-            <p className="text-slate-400 mb-4">Get started by adding your first team member.</p>
+            <User className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">No Staff Members</h3>
+            <p className="text-muted-foreground mb-4">Get started by adding your first team member.</p>
             <Button
               onClick={() => setDialogOpen(true)}
               className="bg-primary hover:bg-primary/90 text-primary-foreground"

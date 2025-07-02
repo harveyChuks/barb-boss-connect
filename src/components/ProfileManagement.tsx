@@ -235,9 +235,9 @@ const ProfileManagement = () => {
 
   if (!business) {
     return (
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-card border-border">
         <CardContent className="p-6">
-          <p className="text-slate-400">No business profile found. Please register your business first.</p>
+          <p className="text-muted-foreground">No business profile found. Please register your business first.</p>
         </CardContent>
       </Card>
     );
@@ -249,10 +249,10 @@ const ProfileManagement = () => {
     <div className="space-y-6">
       {/* Booking Link Section */}
       {business.booking_link && (
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-white">Your Booking Link & QR Code</CardTitle>
-            <CardDescription className="text-slate-400">
+            <CardTitle className="text-foreground">Your Booking Link & QR Code</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Share this link or QR code with clients so they can book appointments online
             </CardDescription>
           </CardHeader>
@@ -263,14 +263,14 @@ const ProfileManagement = () => {
                 <Input
                   value={bookingUrl}
                   readOnly
-                  className="bg-slate-700 border-slate-600 text-white font-mono text-sm"
+                  className="bg-input border-border text-foreground font-mono text-sm"
                 />
               </div>
               <div className="flex gap-2">
                 <Button
                   onClick={copyBookingLink}
                   variant="outline"
-                  className="border-slate-600 text-white hover:bg-slate-700"
+                  className="border-border text-foreground hover:bg-muted"
                 >
                   {copiedLink ? (
                     <>
@@ -286,7 +286,7 @@ const ProfileManagement = () => {
                 </Button>
                 <Button
                   onClick={openBookingPage}
-                  className="bg-[#39FF14] hover:bg-[#32E512] text-black"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   <ExternalLink className="w-4 h-4 mr-2" />
                   Preview
@@ -309,18 +309,18 @@ const ProfileManagement = () => {
                     onClick={downloadQRCode}
                     variant="outline"
                     size="sm"
-                    className="border-slate-600 text-white hover:bg-slate-700"
+                    className="border-border text-foreground hover:bg-muted"
                   >
                     <Download className="w-4 h-4 mr-2" />
                     Download QR
                   </Button>
                 </div>
                 <div className="flex-1 space-y-2">
-                  <h4 className="text-white font-medium flex items-center">
-                    <QrCode className="w-4 h-4 mr-2 text-[#39FF14]" />
+                  <h4 className="text-foreground font-medium flex items-center">
+                    <QrCode className="w-4 h-4 mr-2 text-primary" />
                     QR Code Instructions
                   </h4>
-                  <ul className="text-slate-400 text-sm space-y-1">
+                  <ul className="text-muted-foreground text-sm space-y-1">
                     <li>• Print and display in your business</li>
                     <li>• Share on social media</li>
                     <li>• Include in business cards or flyers</li>
@@ -334,10 +334,10 @@ const ProfileManagement = () => {
       )}
 
       {/* Business Profile Section */}
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-white">Business Profile</CardTitle>
-          <CardDescription className="text-slate-400">
+          <CardTitle className="text-foreground">Business Profile</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Manage your business information and settings
           </CardDescription>
         </CardHeader>
@@ -346,7 +346,7 @@ const ProfileManagement = () => {
           <div className="flex items-center space-x-4">
             <Avatar className="w-20 h-20">
               <AvatarImage src={formData.logo_url} alt={formData.name} />
-              <AvatarFallback className="bg-slate-700 text-white text-lg">
+              <AvatarFallback className="bg-muted text-foreground text-lg">
                 {formData.name ? formData.name.charAt(0).toUpperCase() : 'B'}
               </AvatarFallback>
             </Avatar>
@@ -355,7 +355,7 @@ const ProfileManagement = () => {
                 variant="outline"
                 onClick={handleImageUpload}
                 disabled={uploadingImage}
-                className="border-slate-600 text-white hover:bg-slate-700"
+                className="border-border text-foreground hover:bg-muted"
               >
                 <Camera className="w-4 h-4 mr-2" />
                 {uploadingImage ? "Uploading..." : "Change Photo"}
@@ -368,7 +368,7 @@ const ProfileManagement = () => {
                 className="hidden"
               />
               {formData.name && (
-                <p className="text-slate-300 font-medium">{formData.name}</p>
+                <p className="text-muted-foreground font-medium">{formData.name}</p>
               )}
             </div>
           </div>
@@ -381,7 +381,7 @@ const ProfileManagement = () => {
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
+                className="bg-input border-border text-foreground"
                 placeholder="Enter your business name"
               />
             </div>
@@ -389,10 +389,10 @@ const ProfileManagement = () => {
             <div className="space-y-2">
               <Label htmlFor="business_type">Business Type</Label>
               <Select value={formData.business_type} onValueChange={handleBusinessTypeChange}>
-                <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                <SelectTrigger className="bg-input border-border text-foreground">
                   <SelectValue placeholder="Select business type" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-700 border-slate-600">
+                <SelectContent className="bg-popover border-border">
                   <SelectItem value="barbershop">Barbershop</SelectItem>
                   <SelectItem value="hair_salon">Hair Salon</SelectItem>
                   <SelectItem value="makeup_artist">Makeup Artist</SelectItem>
@@ -409,7 +409,7 @@ const ProfileManagement = () => {
                 id="phone"
                 value={formData.phone}
                 onChange={(e) => handleInputChange("phone", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
+                className="bg-input border-border text-foreground"
                 placeholder="Business phone number"
               />
             </div>
@@ -421,7 +421,7 @@ const ProfileManagement = () => {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
+                className="bg-input border-border text-foreground"
                 placeholder="Business email address"
               />
             </div>
@@ -433,7 +433,7 @@ const ProfileManagement = () => {
               id="description"
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
+              className="bg-input border-border text-foreground"
               rows={3}
               placeholder="Describe your business services and specialties"
             />
@@ -445,7 +445,7 @@ const ProfileManagement = () => {
               id="address"
               value={formData.address}
               onChange={(e) => handleInputChange("address", e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
+              className="bg-input border-border text-foreground"
               placeholder="Business address"
             />
           </div>
@@ -457,7 +457,7 @@ const ProfileManagement = () => {
                 id="website"
                 value={formData.website}
                 onChange={(e) => handleInputChange("website", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
+                className="bg-input border-border text-foreground"
                 placeholder="https://yourwebsite.com"
               />
             </div>
@@ -468,7 +468,7 @@ const ProfileManagement = () => {
                 id="instagram"
                 value={formData.instagram}
                 onChange={(e) => handleInputChange("instagram", e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white"
+                className="bg-input border-border text-foreground"
                 placeholder="@yourbusiness"
               />
             </div>
@@ -477,7 +477,7 @@ const ProfileManagement = () => {
           <Button
             onClick={handleSave}
             disabled={loading}
-            className="bg-[#39FF14] hover:bg-[#32E512] text-black"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
           >
             <Save className="w-4 h-4 mr-2" />
             {loading ? "Saving..." : "Save Changes"}
