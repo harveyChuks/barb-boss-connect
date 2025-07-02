@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -160,7 +159,7 @@ const Index = () => {
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="bg-slate-900 border-slate-700">
+      <SheetContent side="right" className="bg-slate-100 border-slate-200">
         <div className="flex flex-col space-y-4 pt-8">
           {isAuthenticated ? (
             <>
@@ -169,21 +168,14 @@ const Index = () => {
                   <Button 
                     onClick={() => navigate('/dashboard')}
                     variant="outline" 
-                    className="border-slate-600 text-white hover:bg-slate-800 justify-start"
+                    className="border-slate-300 text-slate-700 hover:bg-slate-200 justify-start"
                   >
                     <BarChart3 className="w-4 h-4 mr-2" />
                     Dashboard
                   </Button>
                   <Button 
                     onClick={() => setShowAppointmentModal(true)}
-                    className="justify-start"
-                    style={{ backgroundColor: '#39FF14', color: 'black' }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#32e612';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#39FF14';
-                    }}
+                    className="justify-start bg-amber-500 hover:bg-amber-600 text-black"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     New Appointment
@@ -191,7 +183,7 @@ const Index = () => {
                   <Button 
                     onClick={() => setShowClientModal(true)}
                     variant="outline" 
-                    className="border-slate-600 text-white hover:bg-slate-800 justify-start"
+                    className="border-slate-300 text-slate-700 hover:bg-slate-200 justify-start"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Client
@@ -200,14 +192,7 @@ const Index = () => {
               ) : (
                 <Button 
                   onClick={() => setShowBusinessModal(true)}
-                  className="justify-start"
-                  style={{ backgroundColor: '#39FF14', color: 'black' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#32e612';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#39FF14';
-                  }}
+                  className="justify-start bg-amber-500 hover:bg-amber-600 text-black"
                 >
                   <Building className="w-4 h-4 mr-2" />
                   Register Business
@@ -216,7 +201,7 @@ const Index = () => {
               <Button 
                 onClick={handleSignOut}
                 variant="outline" 
-                className="border-slate-600 text-white hover:bg-slate-800 justify-start"
+                className="border-slate-300 text-slate-700 hover:bg-slate-200 justify-start"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Sign Out
@@ -225,14 +210,7 @@ const Index = () => {
           ) : (
             <Button 
               onClick={() => setShowAuthModal(true)}
-              className="justify-start"
-              style={{ backgroundColor: '#39FF14', color: 'black' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#32e612';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#39FF14';
-              }}
+              className="justify-start bg-amber-500 hover:bg-amber-600 text-black"
             >
               Sign In / Sign Up
             </Button>
@@ -429,48 +407,48 @@ const Index = () => {
           <>
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+              <Card className="bg-slate-50 border-slate-200 hover:bg-slate-100 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Today's Appointments</p>
-                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.todayAppointments}</p>
+                      <p className="text-slate-600 text-xs sm:text-sm font-medium">Today's Appointments</p>
+                      <p className="text-xl sm:text-3xl font-bold text-slate-800 mt-1 sm:mt-2">{stats.todayAppointments}</p>
                     </div>
                     <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+              <Card className="bg-slate-50 border-slate-200 hover:bg-slate-100 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Total Clients</p>
-                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.totalClients}</p>
+                      <p className="text-slate-600 text-xs sm:text-sm font-medium">Total Clients</p>
+                      <p className="text-xl sm:text-3xl font-bold text-slate-800 mt-1 sm:mt-2">{stats.totalClients}</p>
                     </div>
                     <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+              <Card className="bg-slate-50 border-slate-200 hover:bg-slate-100 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-slate-400 text-xs sm:text-sm font-medium">This Week</p>
-                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.weeklyAppointments}</p>
+                      <p className="text-slate-600 text-xs sm:text-sm font-medium">This Week</p>
+                      <p className="text-xl sm:text-3xl font-bold text-slate-800 mt-1 sm:mt-2">{stats.weeklyAppointments}</p>
                     </div>
                     <Scissors className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+              <Card className="bg-slate-50 border-slate-200 hover:bg-slate-100 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Revenue Today</p>
-                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">${stats.todayRevenue}</p>
+                      <p className="text-slate-600 text-xs sm:text-sm font-medium">Revenue Today</p>
+                      <p className="text-xl sm:text-3xl font-bold text-slate-800 mt-1 sm:mt-2">${stats.todayRevenue}</p>
                     </div>
                     <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" />
                   </div>
@@ -480,10 +458,10 @@ const Index = () => {
 
             {/* Quick Actions */}
             <div className="mb-6 sm:mb-8">
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-slate-50 border-slate-200">
                 <CardHeader className="pb-3 sm:pb-6">
-                  <CardTitle className="text-white text-lg sm:text-xl">Quick Actions</CardTitle>
-                  <CardDescription className="text-slate-400 text-sm sm:text-base">
+                  <CardTitle className="text-slate-800 text-lg sm:text-xl">Quick Actions</CardTitle>
+                  <CardDescription className="text-slate-600 text-sm sm:text-base">
                     Access your most used features or visit the full dashboard
                   </CardDescription>
                 </CardHeader>
@@ -491,14 +469,7 @@ const Index = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     <Button 
                       onClick={() => navigate('/dashboard')}
-                      className="h-12 sm:h-16 text-sm sm:text-lg"
-                      style={{ backgroundColor: '#39FF14', color: 'black' }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#32e612';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#39FF14';
-                      }}
+                      className="h-12 sm:h-16 text-sm sm:text-lg bg-amber-500 hover:bg-amber-600 text-black"
                     >
                       <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Full Dashboard
@@ -506,7 +477,7 @@ const Index = () => {
                     <Button 
                       onClick={() => setShowAppointmentModal(true)}
                       variant="outline"
-                      className="border-slate-600 text-white hover:bg-slate-700 h-12 sm:h-16 text-sm sm:text-lg"
+                      className="border-slate-300 text-slate-700 hover:bg-slate-100 h-12 sm:h-16 text-sm sm:text-lg"
                     >
                       <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Book Appointment
@@ -514,7 +485,7 @@ const Index = () => {
                     <Button 
                       onClick={() => setShowClientModal(true)}
                       variant="outline"
-                      className="border-slate-600 text-white hover:bg-slate-700 h-12 sm:h-16 text-sm sm:text-lg"
+                      className="border-slate-300 text-slate-700 hover:bg-slate-100 h-12 sm:h-16 text-sm sm:text-lg"
                     >
                       <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Add Client
@@ -526,13 +497,13 @@ const Index = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {/* Today's Appointments */}
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-slate-50 border-slate-200">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-white flex items-center text-lg sm:text-xl">
-                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
+                  <CardTitle className="text-slate-800 flex items-center text-lg sm:text-xl">
+                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-amber-500" />
                     Today's Appointments
                   </CardTitle>
-                  <CardDescription className="text-slate-400 text-sm">
+                  <CardDescription className="text-slate-600 text-sm">
                     {todayAppointments.length} appointments scheduled
                   </CardDescription>
                 </CardHeader>
@@ -542,13 +513,13 @@ const Index = () => {
                       {todayAppointments.slice(0, 3).map((appointment) => (
                         <div
                           key={appointment.id}
-                          className="flex items-center justify-between p-3 sm:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors"
+                          className="flex items-center justify-between p-3 sm:p-4 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
                         >
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-white text-sm sm:text-base truncate">{appointment.customer_name}</p>
-                            <p className="text-xs sm:text-sm text-slate-400 truncate">{appointment.services?.name || 'Service'}</p>
+                            <p className="font-medium text-slate-800 text-sm sm:text-base truncate">{appointment.customer_name}</p>
+                            <p className="text-xs sm:text-sm text-slate-600 truncate">{appointment.services?.name || 'Service'}</p>
                           </div>
-                          <Badge variant="outline" className="text-xs sm:text-sm ml-2 flex-shrink-0" style={{ borderColor: '#39FF14', color: '#39FF14' }}>
+                          <Badge variant="outline" className="text-xs sm:text-sm ml-2 flex-shrink-0 border-amber-500 text-amber-600">
                             {appointment.start_time}
                           </Badge>
                         </div>
@@ -557,7 +528,7 @@ const Index = () => {
                         <Button
                           onClick={() => navigate('/dashboard')}
                           variant="outline"
-                          className="w-full border-slate-600 text-white hover:bg-slate-700 text-sm sm:text-base"
+                          className="w-full border-slate-300 text-slate-700 hover:bg-slate-100 text-sm sm:text-base"
                         >
                           View All ({todayAppointments.length})
                         </Button>
@@ -566,17 +537,10 @@ const Index = () => {
                   ) : (
                     <div className="text-center py-6 sm:py-8">
                       <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 mx-auto mb-4" />
-                      <p className="text-slate-400 text-sm sm:text-base">No appointments for today</p>
+                      <p className="text-slate-600 text-sm sm:text-base">No appointments for today</p>
                       <Button
                         onClick={() => setShowAppointmentModal(true)}
-                        className="mt-4 text-sm sm:text-base"
-                        style={{ backgroundColor: '#39FF14', color: 'black' }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#32e612';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#39FF14';
-                        }}
+                        className="mt-4 text-sm sm:text-base bg-amber-500 hover:bg-amber-600 text-black"
                       >
                         Schedule First Appointment
                       </Button>
@@ -586,13 +550,13 @@ const Index = () => {
               </Card>
 
               {/* Recent Clients */}
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-slate-50 border-slate-200">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-white flex items-center text-lg sm:text-xl">
-                    <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
+                  <CardTitle className="text-slate-800 flex items-center text-lg sm:text-xl">
+                    <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-amber-500" />
                     Recent Clients
                   </CardTitle>
-                  <CardDescription className="text-slate-400 text-sm">
+                  <CardDescription className="text-slate-600 text-sm">
                     Your client database
                   </CardDescription>
                 </CardHeader>
@@ -604,7 +568,7 @@ const Index = () => {
                         placeholder="Search clients..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 bg-slate-700/50 border-slate-600 text-white placeholder-slate-400 text-sm sm:text-base"
+                        className="pl-10 bg-white border-slate-300 text-slate-800 placeholder-slate-400 text-sm sm:text-base"
                       />
                     </div>
                     {filteredClients.length > 0 ? (
@@ -612,13 +576,13 @@ const Index = () => {
                         {filteredClients.slice(0, 4).map((client) => (
                           <div
                             key={client.id}
-                            className="flex items-center justify-between p-2 sm:p-3 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors cursor-pointer"
+                            className="flex items-center justify-between p-2 sm:p-3 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
                           >
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-white text-sm sm:text-base truncate">{client.name}</p>
-                              <p className="text-xs sm:text-sm text-slate-400 truncate">{client.phone}</p>
+                              <p className="font-medium text-slate-800 text-sm sm:text-base truncate">{client.name}</p>
+                              <p className="text-xs sm:text-sm text-slate-600 truncate">{client.phone}</p>
                             </div>
-                            <Badge variant="secondary" className="bg-slate-600 text-slate-300 text-xs flex-shrink-0 ml-2">
+                            <Badge variant="secondary" className="bg-slate-200 text-slate-700 text-xs flex-shrink-0 ml-2">
                               Recent
                             </Badge>
                           </div>
@@ -626,7 +590,7 @@ const Index = () => {
                         <Button
                           onClick={() => navigate('/dashboard')}
                           variant="outline"
-                          className="w-full border-slate-600 text-white hover:bg-slate-700 text-sm sm:text-base"
+                          className="w-full border-slate-300 text-slate-700 hover:bg-slate-100 text-sm sm:text-base"
                         >
                           View All Clients
                         </Button>
@@ -634,20 +598,13 @@ const Index = () => {
                     ) : (
                       <div className="text-center py-6 sm:py-8">
                         <Users className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 mx-auto mb-4" />
-                        <p className="text-slate-400 text-sm sm:text-base">
+                        <p className="text-slate-600 text-sm sm:text-base">
                           {searchTerm ? "No clients match your search" : "No clients yet"}
                         </p>
                         {!searchTerm && (
                           <Button
                             onClick={() => setShowClientModal(true)}
-                            className="mt-4 text-sm sm:text-base"
-                            style={{ backgroundColor: '#39FF14', color: 'black' }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = '#32e612';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor = '#39FF14';
-                            }}
+                            className="mt-4 text-sm sm:text-base bg-amber-500 hover:bg-amber-600 text-black"
                           >
                             Add First Client
                           </Button>
