@@ -192,10 +192,10 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
 
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-slate-700">
-            <TabsTrigger value="login" className="data-[state=active]:text-black" style={{ backgroundColor: 'data-[state=active]:#39FF14' }}>
+            <TabsTrigger value="login" className="data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
               Login
             </TabsTrigger>
-            <TabsTrigger value="signup" className="data-[state=active]:text-black" style={{ backgroundColor: 'data-[state=active]:#39FF14' }}>
+            <TabsTrigger value="signup" className="data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
               Sign Up
             </TabsTrigger>
           </TabsList>
