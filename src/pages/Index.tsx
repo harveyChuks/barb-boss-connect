@@ -250,9 +250,27 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black relative overflow-hidden">
+      {/* Glowing yellow corners */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div 
+          className="absolute bottom-0 left-0 w-96 h-96 rounded-full opacity-20 blur-3xl"
+          style={{ 
+            background: 'radial-gradient(circle, #FFFF33 0%, transparent 70%)',
+            transform: 'translate(-50%, 50%)'
+          }}
+        />
+        <div 
+          className="absolute bottom-0 right-0 w-96 h-96 rounded-full opacity-20 blur-3xl"
+          style={{ 
+            background: 'radial-gradient(circle, #FFFF33 0%, transparent 70%)',
+            transform: 'translate(50%, 50%)'
+          }}
+        />
+      </div>
+
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700">
+      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
@@ -349,7 +367,7 @@ const Index = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 relative z-10">
         {!isAuthenticated ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: '#39FF14' }}>
