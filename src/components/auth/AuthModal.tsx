@@ -160,7 +160,8 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-amber-500 hover:bg-amber-600 text-black"
+                className="flex-1 bg-green-500 hover:bg-green-600 text-black"
+                style={{ backgroundColor: '#39FF14' }}
               >
                 {loading ? "Sending..." : "Send Reset Link"}
               </Button>
@@ -191,10 +192,10 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
 
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-slate-700">
-            <TabsTrigger value="login" className="data-[state=active]:bg-amber-500 data-[state=active]:text-black">
+            <TabsTrigger value="login" className="data-[state=active]:text-black" style={{ backgroundColor: 'data-[state=active]:#39FF14' }}>
               Login
             </TabsTrigger>
-            <TabsTrigger value="signup" className="data-[state=active]:bg-amber-500 data-[state=active]:text-black">
+            <TabsTrigger value="signup" className="data-[state=active]:text-black" style={{ backgroundColor: 'data-[state=active]:#39FF14' }}>
               Sign Up
             </TabsTrigger>
           </TabsList>
@@ -245,7 +246,8 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-amber-500 hover:bg-amber-600 text-black"
+                className="w-full bg-green-500 hover:bg-green-600 text-black"
+                style={{ backgroundColor: '#39FF14' }}
               >
                 {loading ? "Signing in..." : "Sign In"}
               </Button>
@@ -335,7 +337,8 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-amber-500 hover:bg-amber-600 text-black"
+                className="w-full bg-green-500 hover:bg-green-600 text-black"
+                style={{ backgroundColor: '#39FF14' }}
               >
                 {loading ? "Creating account..." : "Create Account"}
               </Button>
