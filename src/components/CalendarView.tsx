@@ -181,12 +181,12 @@ const CalendarView = () => {
           <CardHeader className="pb-3">
             <CardTitle className="text-foreground text-lg">Calendar</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-3">
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={(date) => date && setSelectedDate(date)}
-              className="rounded-md border border-border w-full"
+              className="rounded-md border-0 w-full p-0"
             />
             <div className="mt-4 space-y-2">
               <div className="flex items-center gap-2 text-sm">
