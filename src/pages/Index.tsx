@@ -426,48 +426,48 @@ const Index = () => {
           <>
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+              <Card className="bg-slate-200 border-slate-300 hover:bg-slate-300 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Today's Appointments</p>
-                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.todayAppointments}</p>
+                      <p className="text-slate-600 text-xs sm:text-sm font-medium">Today's Appointments</p>
+                      <p className="text-xl sm:text-3xl font-bold text-slate-800 mt-1 sm:mt-2">{stats.todayAppointments}</p>
                     </div>
                     <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+              <Card className="bg-slate-200 border-slate-300 hover:bg-slate-300 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Total Clients</p>
-                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.totalClients}</p>
+                      <p className="text-slate-600 text-xs sm:text-sm font-medium">Total Clients</p>
+                      <p className="text-xl sm:text-3xl font-bold text-slate-800 mt-1 sm:mt-2">{stats.totalClients}</p>
                     </div>
                     <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+              <Card className="bg-slate-200 border-slate-300 hover:bg-slate-300 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-slate-400 text-xs sm:text-sm font-medium">This Week</p>
-                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.weeklyAppointments}</p>
+                      <p className="text-slate-600 text-xs sm:text-sm font-medium">This Week</p>
+                      <p className="text-xl sm:text-3xl font-bold text-slate-800 mt-1 sm:mt-2">{stats.weeklyAppointments}</p>
                     </div>
                     <Scissors className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+              <Card className="bg-slate-200 border-slate-300 hover:bg-slate-300 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Revenue Today</p>
-                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">${stats.todayRevenue}</p>
+                      <p className="text-slate-600 text-xs sm:text-sm font-medium">Revenue Today</p>
+                      <p className="text-xl sm:text-3xl font-bold text-slate-800 mt-1 sm:mt-2">${stats.todayRevenue}</p>
                     </div>
                     <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" />
                   </div>
