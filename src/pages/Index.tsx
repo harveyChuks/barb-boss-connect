@@ -155,11 +155,11 @@ const Index = () => {
   const MobileMenu = () => (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="sm" className="md:hidden">
+        <Button variant="ghost" size="sm" className="md:hidden text-white">
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="bg-card border-border">
+      <SheetContent side="right" className="bg-slate-900 border-slate-700">
         <div className="flex flex-col space-y-4 pt-8">
           {isAuthenticated ? (
             <>
@@ -168,14 +168,14 @@ const Index = () => {
                   <Button 
                     onClick={() => navigate('/dashboard')}
                     variant="outline" 
-                    className="justify-start"
+                    className="border-slate-600 text-white hover:bg-slate-800 justify-start"
                   >
                     <BarChart3 className="w-4 h-4 mr-2" />
                     Dashboard
                   </Button>
                   <Button 
                     onClick={() => setShowAppointmentModal(true)}
-                    className="justify-start"
+                    className="bg-amber-500 hover:bg-amber-600 text-black justify-start"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     New Appointment
@@ -183,7 +183,7 @@ const Index = () => {
                   <Button 
                     onClick={() => setShowClientModal(true)}
                     variant="outline" 
-                    className="justify-start"
+                    className="border-slate-600 text-white hover:bg-slate-800 justify-start"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Client
@@ -192,7 +192,7 @@ const Index = () => {
               ) : (
                 <Button 
                   onClick={() => setShowBusinessModal(true)}
-                  className="justify-start"
+                  className="bg-amber-500 hover:bg-amber-600 text-black justify-start"
                 >
                   <Building className="w-4 h-4 mr-2" />
                   Register Business
@@ -201,7 +201,7 @@ const Index = () => {
               <Button 
                 onClick={handleSignOut}
                 variant="outline" 
-                className="justify-start"
+                className="border-slate-600 text-white hover:bg-slate-800 justify-start"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Sign Out
@@ -210,7 +210,7 @@ const Index = () => {
           ) : (
             <Button 
               onClick={() => setShowAuthModal(true)}
-              className="justify-start"
+              className="bg-amber-500 hover:bg-amber-600 text-black justify-start"
             >
               Sign In / Sign Up
             </Button>
@@ -222,26 +222,26 @@ const Index = () => {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-foreground text-xl">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Header */}
-      <header className="bg-card/20 backdrop-blur-sm border-b border-border">
+      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg flex items-center justify-center">
-                <Scissors className="w-4 h-4 sm:w-6 sm:h-6 text-primary-foreground" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
+                <Scissors className="w-4 h-4 sm:w-6 sm:h-6 text-black" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-foreground">BarbS</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-white">BarbS</h1>
                 {userBusiness && (
-                  <p className="text-xs text-muted-foreground hidden sm:block">{userBusiness.name}</p>
+                  <p className="text-xs text-slate-400 hidden sm:block">{userBusiness.name}</p>
                 )}
               </div>
             </div>
@@ -254,20 +254,23 @@ const Index = () => {
                     <>
                       <Button 
                         onClick={() => navigate('/dashboard')}
-                        variant="outline"
+                        variant="outline" 
+                        className="border-slate-600 text-white hover:bg-slate-800"
                       >
                         <BarChart3 className="w-4 h-4 mr-2" />
                         Dashboard
                       </Button>
                       <Button 
                         onClick={() => setShowAppointmentModal(true)}
+                        className="bg-amber-500 hover:bg-amber-600 text-black"
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         New Appointment
                       </Button>
                       <Button 
                         onClick={() => setShowClientModal(true)}
-                        variant="outline"
+                        variant="outline" 
+                        className="border-slate-600 text-white hover:bg-slate-800"
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Add Client
@@ -276,6 +279,7 @@ const Index = () => {
                   ) : (
                     <Button 
                       onClick={() => setShowBusinessModal(true)}
+                      className="bg-amber-500 hover:bg-amber-600 text-black"
                     >
                       <Building className="w-4 h-4 mr-2" />
                       Register Business
@@ -283,7 +287,8 @@ const Index = () => {
                   )}
                   <Button 
                     onClick={handleSignOut}
-                    variant="outline"
+                    variant="outline" 
+                    className="border-slate-600 text-white hover:bg-slate-800"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
                     Sign Out
@@ -292,6 +297,7 @@ const Index = () => {
               ) : (
                 <Button 
                   onClick={() => setShowAuthModal(true)}
+                  className="bg-amber-500 hover:bg-amber-600 text-black"
                 >
                   Sign In / Sign Up
                 </Button>
@@ -307,31 +313,31 @@ const Index = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {!isAuthenticated ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
-              <Scissors className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Scissors className="w-8 h-8 sm:w-10 sm:h-10 text-black" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">Welcome to BarbS</h2>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Welcome to BarbS</h2>
+            <p className="text-slate-400 mb-8 max-w-2xl mx-auto px-4">
               The ultimate booking platform for barbershops, salons, and beauty professionals. 
               Manage your business, accept bookings, and grow your clientele.
             </p>
             <Button 
               onClick={() => setShowAuthModal(true)}
-              className="text-lg px-8 py-3"
+              className="bg-amber-500 hover:bg-amber-600 text-black text-lg px-8 py-3"
             >
               Get Started
             </Button>
           </div>
         ) : !userBusiness ? (
           <div className="text-center py-12">
-            <Building className="w-16 h-16 sm:w-20 sm:h-20 text-primary mx-auto mb-6" />
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">Set Up Your Business</h2>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto px-4">
+            <Building className="w-16 h-16 sm:w-20 sm:h-20 text-amber-400 mx-auto mb-6" />
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Set Up Your Business</h2>
+            <p className="text-slate-400 mb-8 max-w-2xl mx-auto px-4">
               Complete your business registration with our step-by-step process to start accepting bookings.
             </p>
             <Button 
               onClick={() => setShowBusinessModal(true)}
-              className="text-lg px-8 py-3"
+              className="bg-amber-500 hover:bg-amber-600 text-black text-lg px-8 py-3"
             >
               <Building className="w-5 h-5 mr-2" />
               Complete Registration
@@ -341,48 +347,48 @@ const Index = () => {
           <>
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-              <Card className="bg-card border-border hover:bg-card/80 transition-colors">
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-muted-foreground text-xs sm:text-sm font-medium">Today's Appointments</p>
-                      <p className="text-xl sm:text-3xl font-bold text-foreground mt-1 sm:mt-2">{stats.todayAppointments}</p>
+                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Today's Appointments</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.todayAppointments}</p>
                     </div>
                     <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-border hover:bg-card/80 transition-colors">
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-muted-foreground text-xs sm:text-sm font-medium">Total Clients</p>
-                      <p className="text-xl sm:text-3xl font-bold text-foreground mt-1 sm:mt-2">{stats.totalClients}</p>
+                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Total Clients</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.totalClients}</p>
                     </div>
                     <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-border hover:bg-card/80 transition-colors">
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-muted-foreground text-xs sm:text-sm font-medium">This Week</p>
-                      <p className="text-xl sm:text-3xl font-bold text-foreground mt-1 sm:mt-2">{stats.weeklyAppointments}</p>
+                      <p className="text-slate-400 text-xs sm:text-sm font-medium">This Week</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{stats.weeklyAppointments}</p>
                     </div>
                     <Scissors className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-border hover:bg-card/80 transition-colors">
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
                 <CardContent className="p-3 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-muted-foreground text-xs sm:text-sm font-medium">Revenue Today</p>
-                      <p className="text-xl sm:text-3xl font-bold text-foreground mt-1 sm:mt-2">${stats.todayRevenue}</p>
+                      <p className="text-slate-400 text-xs sm:text-sm font-medium">Revenue Today</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">${stats.todayRevenue}</p>
                     </div>
                     <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" />
                   </div>
@@ -392,10 +398,10 @@ const Index = () => {
 
             {/* Quick Actions */}
             <div className="mb-6 sm:mb-8">
-              <Card className="bg-card border-border">
+              <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader className="pb-3 sm:pb-6">
-                  <CardTitle className="text-foreground text-lg sm:text-xl">Quick Actions</CardTitle>
-                  <CardDescription className="text-muted-foreground text-sm sm:text-base">
+                  <CardTitle className="text-white text-lg sm:text-xl">Quick Actions</CardTitle>
+                  <CardDescription className="text-slate-400 text-sm sm:text-base">
                     Access your most used features or visit the full dashboard
                   </CardDescription>
                 </CardHeader>
@@ -403,7 +409,7 @@ const Index = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     <Button 
                       onClick={() => navigate('/dashboard')}
-                      className="h-12 sm:h-16 text-sm sm:text-lg"
+                      className="bg-amber-500 hover:bg-amber-600 text-black h-12 sm:h-16 text-sm sm:text-lg"
                     >
                       <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Full Dashboard
@@ -411,7 +417,7 @@ const Index = () => {
                     <Button 
                       onClick={() => setShowAppointmentModal(true)}
                       variant="outline"
-                      className="h-12 sm:h-16 text-sm sm:text-lg"
+                      className="border-slate-600 text-white hover:bg-slate-700 h-12 sm:h-16 text-sm sm:text-lg"
                     >
                       <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Book Appointment
@@ -419,7 +425,7 @@ const Index = () => {
                     <Button 
                       onClick={() => setShowClientModal(true)}
                       variant="outline"
-                      className="h-12 sm:h-16 text-sm sm:text-lg"
+                      className="border-slate-600 text-white hover:bg-slate-700 h-12 sm:h-16 text-sm sm:text-lg"
                     >
                       <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Add Client
@@ -431,13 +437,13 @@ const Index = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {/* Today's Appointments */}
-              <Card className="bg-card border-border">
+              <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-foreground flex items-center text-lg sm:text-xl">
-                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-primary" />
+                  <CardTitle className="text-white flex items-center text-lg sm:text-xl">
+                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-amber-400" />
                     Today's Appointments
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground text-sm">
+                  <CardDescription className="text-slate-400 text-sm">
                     {todayAppointments.length} appointments scheduled
                   </CardDescription>
                 </CardHeader>
@@ -447,13 +453,13 @@ const Index = () => {
                       {todayAppointments.slice(0, 3).map((appointment) => (
                         <div
                           key={appointment.id}
-                          className="flex items-center justify-between p-3 sm:p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
+                          className="flex items-center justify-between p-3 sm:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors"
                         >
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-foreground text-sm sm:text-base truncate">{appointment.customer_name}</p>
-                            <p className="text-xs sm:text-sm text-muted-foreground truncate">{appointment.services?.name || 'Service'}</p>
+                            <p className="font-medium text-white text-sm sm:text-base truncate">{appointment.customer_name}</p>
+                            <p className="text-xs sm:text-sm text-slate-400 truncate">{appointment.services?.name || 'Service'}</p>
                           </div>
-                          <Badge variant="outline" className="border-primary text-primary text-xs sm:text-sm ml-2 flex-shrink-0">
+                          <Badge variant="outline" className="border-amber-400 text-amber-400 text-xs sm:text-sm ml-2 flex-shrink-0">
                             {appointment.start_time}
                           </Badge>
                         </div>
@@ -462,7 +468,7 @@ const Index = () => {
                         <Button
                           onClick={() => navigate('/dashboard')}
                           variant="outline"
-                          className="w-full text-sm sm:text-base"
+                          className="w-full border-slate-600 text-white hover:bg-slate-700 text-sm sm:text-base"
                         >
                           View All ({todayAppointments.length})
                         </Button>
@@ -470,11 +476,11 @@ const Index = () => {
                     </div>
                   ) : (
                     <div className="text-center py-6 sm:py-8">
-                      <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-muted-foreground text-sm sm:text-base">No appointments for today</p>
+                      <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 mx-auto mb-4" />
+                      <p className="text-slate-400 text-sm sm:text-base">No appointments for today</p>
                       <Button
                         onClick={() => setShowAppointmentModal(true)}
-                        className="mt-4 text-sm sm:text-base"
+                        className="mt-4 bg-amber-500 hover:bg-amber-600 text-black text-sm sm:text-base"
                       >
                         Schedule First Appointment
                       </Button>
@@ -484,25 +490,25 @@ const Index = () => {
               </Card>
 
               {/* Recent Clients */}
-              <Card className="bg-card border-border">
+              <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-foreground flex items-center text-lg sm:text-xl">
-                    <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-primary" />
+                  <CardTitle className="text-white flex items-center text-lg sm:text-xl">
+                    <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-amber-400" />
                     Recent Clients
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground text-sm">
+                  <CardDescription className="text-slate-400 text-sm">
                     Your client database
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3 sm:space-y-4">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                       <Input
                         placeholder="Search clients..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 text-sm sm:text-base"
+                        className="pl-10 bg-slate-700/50 border-slate-600 text-white placeholder-slate-400 text-sm sm:text-base"
                       />
                     </div>
                     {filteredClients.length > 0 ? (
@@ -510,13 +516,13 @@ const Index = () => {
                         {filteredClients.slice(0, 4).map((client) => (
                           <div
                             key={client.id}
-                            className="flex items-center justify-between p-2 sm:p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors cursor-pointer"
+                            className="flex items-center justify-between p-2 sm:p-3 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors cursor-pointer"
                           >
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-foreground text-sm sm:text-base truncate">{client.name}</p>
-                              <p className="text-xs sm:text-sm text-muted-foreground truncate">{client.phone}</p>
+                              <p className="font-medium text-white text-sm sm:text-base truncate">{client.name}</p>
+                              <p className="text-xs sm:text-sm text-slate-400 truncate">{client.phone}</p>
                             </div>
-                            <Badge variant="secondary" className="text-xs flex-shrink-0 ml-2">
+                            <Badge variant="secondary" className="bg-slate-600 text-slate-300 text-xs flex-shrink-0 ml-2">
                               Recent
                             </Badge>
                           </div>
@@ -524,21 +530,21 @@ const Index = () => {
                         <Button
                           onClick={() => navigate('/dashboard')}
                           variant="outline"
-                          className="w-full text-sm sm:text-base"
+                          className="w-full border-slate-600 text-white hover:bg-slate-700 text-sm sm:text-base"
                         >
                           View All Clients
                         </Button>
                       </div>
                     ) : (
                       <div className="text-center py-6 sm:py-8">
-                        <Users className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-4" />
-                        <p className="text-muted-foreground text-sm sm:text-base">
+                        <Users className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 mx-auto mb-4" />
+                        <p className="text-slate-400 text-sm sm:text-base">
                           {searchTerm ? "No clients match your search" : "No clients yet"}
                         </p>
                         {!searchTerm && (
                           <Button
                             onClick={() => setShowClientModal(true)}
-                            className="mt-4 text-sm sm:text-base"
+                            className="mt-4 bg-amber-500 hover:bg-amber-600 text-black text-sm sm:text-base"
                           >
                             Add First Client
                           </Button>
