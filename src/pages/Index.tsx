@@ -289,7 +289,7 @@ const Index = () => {
                 <Scissors className="w-4 h-4 sm:w-6 sm:h-6 text-black" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white">BarbS</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-white">BarbS</h1>
                 {userBusiness && (
                   <p className="text-xs text-slate-400 hidden sm:block">{userBusiness.name}</p>
                 )}
