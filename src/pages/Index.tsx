@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu } from "lucide-react";
+import bizflowLogo from "@/assets/bizflow-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -285,11 +286,13 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center" style={{ background: '#39FF14' }}>
-                <Scissors className="w-4 h-4 sm:w-6 sm:h-6 text-black" />
-              </div>
+              <img 
+                src={bizflowLogo} 
+                alt="BizFlow Logo" 
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg"
+              />
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-white">BarbS</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-white">BizFlow</h1>
                 {userBusiness && (
                   <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block">{userBusiness.name}</p>
                 )}
@@ -378,13 +381,15 @@ const Index = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 relative z-10">
         {!isAuthenticated ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: '#39FF14' }}>
-              <Scissors className="w-8 h-8 sm:w-10 sm:h-10 text-black" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Welcome to BarbS</h2>
+            <img 
+              src={bizflowLogo} 
+              alt="BizFlow Logo" 
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg mx-auto mb-6"
+            />
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Welcome to BizFlow</h2>
             <p className="text-slate-400 mb-8 max-w-2xl mx-auto px-4">
-              The ultimate booking platform for barbershops, salons, and beauty professionals. 
-              Manage your business, accept bookings, and grow your clientele.
+              The complete business management platform for service-based businesses. 
+              Manage appointments, track analytics, and grow your business efficiently.
             </p>
             <Button 
               onClick={() => setShowAuthModal(true)}
