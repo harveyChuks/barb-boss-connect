@@ -126,9 +126,9 @@ const StatisticsOverview = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(6)].map((_, i) => (
-          <Card key={i} className="bg-slate-50 border-slate-200 animate-pulse">
+          <Card key={i} className="bg-slate-800/50 border-slate-700 animate-pulse">
             <CardContent className="p-6">
-              <div className="h-16 bg-slate-200 rounded"></div>
+              <div className="h-16 bg-slate-700 rounded"></div>
             </CardContent>
           </Card>
         ))}
@@ -139,12 +139,12 @@ const StatisticsOverview = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {statCards.map((stat, index) => (
-        <Card key={index} className="bg-slate-50 border-slate-200 hover:bg-slate-100 transition-colors">
+        <Card key={index} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-600 text-sm font-medium">{stat.title}</p>
-                <p className="text-3xl font-bold text-slate-800 mt-2">{stat.value}</p>
+                <p className="text-slate-400 text-sm font-medium">{stat.title}</p>
+                <p className="text-3xl font-bold text-white mt-2">{stat.value}</p>
                 <p className="text-xs text-slate-500 mt-1">{stat.description}</p>
               </div>
               <stat.icon className={`w-8 h-8 ${stat.color}`} />

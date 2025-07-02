@@ -191,12 +191,12 @@ const BookingsManagement = () => {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-8 bg-slate-200 rounded animate-pulse"></div>
+        <div className="h-8 bg-slate-700 rounded animate-pulse"></div>
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
-            <Card key={i} className="bg-slate-50 border-slate-200 animate-pulse">
+            <Card key={i} className="bg-slate-800/50 border-slate-700 animate-pulse">
               <CardContent className="p-6">
-                <div className="h-20 bg-slate-200 rounded"></div>
+                <div className="h-20 bg-slate-700 rounded"></div>
               </CardContent>
             </Card>
           ))}
@@ -208,12 +208,12 @@ const BookingsManagement = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Bookings Management</h2>
-        <p className="text-slate-600">View and manage all your appointments</p>
+        <h2 className="text-2xl font-bold text-white">Bookings Management</h2>
+        <p className="text-slate-400">View and manage all your appointments</p>
       </div>
 
       {/* Filters */}
-      <Card className="bg-slate-50 border-slate-200">
+      <Card className="bg-slate-800/50 border-slate-700">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
@@ -222,15 +222,15 @@ const BookingsManagement = () => {
                 placeholder="Search appointments..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-white border-slate-300 text-slate-800"
+                className="pl-10 bg-slate-700 border-slate-600 text-white"
               />
             </div>
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="bg-white border-slate-300 text-slate-800">
+              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
-              <SelectContent className="bg-white border-slate-300">
+              <SelectContent className="bg-slate-700 border-slate-600">
                 <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="confirmed">Confirmed</SelectItem>
@@ -241,10 +241,10 @@ const BookingsManagement = () => {
             </Select>
 
             <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger className="bg-white border-slate-300 text-slate-800">
+              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                 <SelectValue placeholder="Filter by date" />
               </SelectTrigger>
-              <SelectContent className="bg-white border-slate-300">
+              <SelectContent className="bg-slate-700 border-slate-600">
                 <SelectItem value="all">All Dates</SelectItem>
                 <SelectItem value="today">Today</SelectItem>
                 <SelectItem value="upcoming">Upcoming</SelectItem>
@@ -252,7 +252,7 @@ const BookingsManagement = () => {
               </SelectContent>
             </Select>
 
-            <div className="text-sm text-slate-600 flex items-center">
+            <div className="text-sm text-slate-400 flex items-center">
               <Filter className="w-4 h-4 mr-2" />
               {filteredAppointments.length} of {appointments.length} appointments
             </div>
@@ -263,21 +263,21 @@ const BookingsManagement = () => {
       {/* Appointments List */}
       <div className="space-y-4">
         {filteredAppointments.map((appointment) => (
-          <Card key={appointment.id} className="bg-slate-50 border-slate-200 hover:bg-slate-100 transition-colors">
+          <Card key={appointment.id} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
             <CardContent className="p-6">
               <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
                       <User className="w-4 h-4 text-slate-400" />
-                      <span className="font-semibold text-slate-800">{appointment.customer_name}</span>
+                      <span className="font-semibold text-white">{appointment.customer_name}</span>
                     </div>
                     <Badge className={getStatusBadgeColor(appointment.status)}>
                       {appointment.status}
                     </Badge>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-slate-600">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-slate-300">
                     <div className="flex items-center space-x-2">
                       <Calendar className="w-4 h-4 text-slate-400" />
                       <span>{formatDate(appointment.appointment_date)}</span>
@@ -297,7 +297,7 @@ const BookingsManagement = () => {
                       {appointment.services.name} - ${appointment.services.price}
                     </div>
                     {appointment.customer_email && (
-                      <div className="flex items-center space-x-2 text-sm text-slate-500">
+                      <div className="flex items-center space-x-2 text-sm text-slate-400">
                         <Mail className="w-3 h-3" />
                         <span>{appointment.customer_email}</span>
                       </div>
@@ -305,7 +305,7 @@ const BookingsManagement = () => {
                   </div>
 
                   {appointment.notes && (
-                    <div className="text-sm text-slate-600">
+                    <div className="text-sm text-slate-400">
                       <strong>Notes:</strong> {appointment.notes}
                     </div>
                   )}
@@ -316,10 +316,10 @@ const BookingsManagement = () => {
                     value={appointment.status}
                     onValueChange={(value: AppointmentStatus) => updateAppointmentStatus(appointment.id, value)}
                   >
-                    <SelectTrigger className="bg-white border-slate-300 text-slate-800 min-w-[120px]">
+                    <SelectTrigger className="bg-slate-700 border-slate-600 text-white min-w-[120px]">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-white border-slate-300">
+                    <SelectContent className="bg-slate-700 border-slate-600">
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="confirmed">Confirmed</SelectItem>
                       <SelectItem value="completed">Completed</SelectItem>
@@ -335,10 +335,10 @@ const BookingsManagement = () => {
       </div>
 
       {filteredAppointments.length === 0 && !loading && (
-        <Card className="bg-slate-50 border-slate-200">
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardContent className="p-12 text-center">
             <Calendar className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-            <p className="text-slate-600 mb-2">No appointments found</p>
+            <p className="text-slate-400 mb-2">No appointments found</p>
             <p className="text-sm text-slate-500">
               {searchTerm || statusFilter !== "all" || dateFilter !== "all"
                 ? "Try adjusting your filters"
