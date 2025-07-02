@@ -1,144 +1,94 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Camera, Trash2, Edit3, Save, X } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Plus, Camera, Trash2, Image } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { uploadImage } from "@/utils/imageUpload";
-
-interface WorkPicture {
-  id: string;
-  image_url: string;
-  description: string | null;
-  service_type: string | null;
-  created_at: string;
-}
 
 const WorkPicturesManagement = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [pictures, setPictures] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showAddDialog, setShowAddDialog] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [business, setBusiness] = useState(null);
-  const [workPictures, setWorkPictures] = useState<WorkPicture[]>([]);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ description: "", service_type: "" });
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Mock pictures for initial display
-  const mockPictures = [
-    {
-      id: 'mock-1',
-      image_url: 'https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=400&h=400&fit=crop',
-      description: 'Modern fade haircut with clean lines',
-      service_type: 'Haircut',
-      created_at: new Date().toISOString()
-    },
-    {
-      id: 'mock-2', 
-      image_url: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=400&fit=crop',
-      description: 'Classic beard trim and styling',
-      service_type: 'Beard Styling',
-      created_at: new Date().toISOString()
-    },
-    {
-      id: 'mock-3',
-      image_url: 'https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=400&h=400&fit=crop',
-      description: 'Professional business cut',
-      service_type: 'Haircut',
-      created_at: new Date().toISOString()
-    },
-    {
-      id: 'mock-4',
-      image_url: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400&h=400&fit=crop',
-      description: 'Creative hair color and styling',
-      service_type: 'Hair Color',
-      created_at: new Date().toISOString()
-    }
-  ];
+  const [formData, setFormData] = useState({
+    description: '',
+    service_type: '',
+    image_url: ''
+  });
 
   useEffect(() => {
-    fetchBusinessAndPictures();
+    fetchPictures();
   }, [user]);
 
-  const fetchBusinessAndPictures = async () => {
+  const fetchPictures = async () => {
     if (!user) return;
 
-    setLoading(true);
     try {
-      const { data: businessData, error: businessError } = await supabase
+      // Get user's business first
+      const { data: business } = await supabase
         .from('businesses')
-        .select('*')
+        .select('id')
         .eq('owner_id', user.id)
         .single();
 
-      if (businessError) throw businessError;
-      setBusiness(businessData);
+      if (!business) return;
 
-      const { data: picturesData, error: picturesError } = await supabase
+      const { data, error } = await supabase
         .from('work_pictures')
         .select('*')
-        .eq('business_id', businessData.id)
+        .eq('business_id', business.id)
         .order('created_at', { ascending: false });
 
-      if (picturesError) throw picturesError;
-
-      // If no real pictures, show mock data
-      if (!picturesData || picturesData.length === 0) {
-        setWorkPictures(mockPictures);
-      } else {
-        setWorkPictures(picturesData);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      // Show mock data on error
-      setWorkPictures(mockPictures);
-    } finally {
-      setLoading(false);
+      if (error) throw error;
+      setPictures(data || []);
+    } catch (error: any) {
+      console.error('Error fetching pictures:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load pictures",
+        variant: "destructive",
+      });
     }
   };
 
-  const handleImageUpload = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !business || !user) return;
+    if (!file) return;
 
     setUploading(true);
     try {
-      const imageUrl = await uploadImage(file, 'work-pictures', `${user.id}/${business.id}/${Date.now()}`);
-      
-      const { data, error } = await supabase
-        .from('work_pictures')
-        .insert({
-          business_id: business.id,
-          image_url: imageUrl,
-          description: 'New work sample',
-          service_type: 'General'
-        })
-        .select()
-        .single();
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `work-pictures/${fileName}`;
 
-      if (error) throw error;
+      const { error: uploadError } = await supabase.storage
+        .from('work-pictures')
+        .upload(filePath, file);
 
-      setWorkPictures(prev => [data, ...prev.filter(p => !p.id.startsWith('mock-'))]);
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('work-pictures')
+        .getPublicUrl(filePath);
+
+      setFormData(prev => ({ ...prev, image_url: publicUrl }));
       
       toast({
-        title: "Image Uploaded",
-        description: "Your work picture has been added successfully.",
+        title: "Success",
+        description: "Image uploaded successfully",
       });
     } catch (error: any) {
+      console.error('Error uploading file:', error);
       toast({
-        title: "Upload Failed",
-        description: error.message,
+        title: "Error",
+        description: "Failed to upload image",
         variant: "destructive",
       });
     } finally {
@@ -146,55 +96,51 @@ const WorkPicturesManagement = () => {
     }
   };
 
-  const handleEdit = (picture: WorkPicture) => {
-    setEditingId(picture.id);
-    setEditForm({
-      description: picture.description || "",
-      service_type: picture.service_type || ""
-    });
-  };
+  const handleSave = async () => {
+    if (!user || !formData.image_url) return;
 
-  const handleSaveEdit = async (pictureId: string) => {
-    if (!business || pictureId.startsWith('mock-')) return;
-
+    setLoading(true);
     try {
+      // Get user's business first
+      const { data: business } = await supabase
+        .from('businesses')
+        .select('id')
+        .eq('owner_id', user.id)
+        .single();
+
+      if (!business) throw new Error('Business not found');
+
       const { error } = await supabase
         .from('work_pictures')
-        .update({
-          description: editForm.description,
-          service_type: editForm.service_type
-        })
-        .eq('id', pictureId);
+        .insert([{
+          ...formData,
+          business_id: business.id
+        }]);
 
       if (error) throw error;
 
-      setWorkPictures(prev => prev.map(p => 
-        p.id === pictureId 
-          ? { ...p, description: editForm.description, service_type: editForm.service_type }
-          : p
-      ));
-
-      setEditingId(null);
       toast({
-        title: "Updated",
-        description: "Work picture details updated successfully.",
+        title: "Success",
+        description: "Picture added successfully",
       });
+
+      resetForm();
+      fetchPictures();
     } catch (error: any) {
+      console.error('Error saving picture:', error);
       toast({
         title: "Error",
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDelete = async (pictureId: string) => {
-    if (pictureId.startsWith('mock-')) {
-      setWorkPictures(prev => prev.filter(p => p.id !== pictureId));
-      return;
-    }
-
+  const handleDelete = async (pictureId: string, imageUrl: string) => {
     try {
+      // Delete from database
       const { error } = await supabase
         .from('work_pictures')
         .delete()
@@ -202,13 +148,21 @@ const WorkPicturesManagement = () => {
 
       if (error) throw error;
 
-      setWorkPictures(prev => prev.filter(p => p.id !== pictureId));
-      
+      // Delete from storage
+      const filePath = imageUrl.split('/').pop();
+      if (filePath) {
+        await supabase.storage
+          .from('work-pictures')
+          .remove([`work-pictures/${filePath}`]);
+      }
+
       toast({
-        title: "Deleted",
-        description: "Work picture removed successfully.",
+        title: "Success",
+        description: "Picture deleted successfully",
       });
+      fetchPictures();
     } catch (error: any) {
+      console.error('Error deleting picture:', error);
       toast({
         title: "Error",
         description: error.message,
@@ -217,162 +171,143 @@ const WorkPicturesManagement = () => {
     }
   };
 
-  if (!business) {
-    return (
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardContent className="p-6">
-          <p className="text-slate-400">No business profile found. Please register your business first.</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const resetForm = () => {
+    setFormData({
+      description: '',
+      service_type: '',
+      image_url: ''
+    });
+    setShowAddDialog(false);
+  };
 
   return (
     <div className="space-y-6">
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-white">Work Portfolio</CardTitle>
-              <CardDescription className="text-slate-400">
-                Showcase your best work to attract clients
-              </CardDescription>
-            </div>
-            <Button
-              onClick={handleImageUpload}
-              disabled={uploading}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            >
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800">Work Portfolio</h2>
+          <p className="text-slate-600">Showcase your best work to attract new clients</p>
+        </div>
+        <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+          <DialogTrigger asChild>
+            <Button className="bg-amber-500 hover:bg-amber-600 text-black">
               <Plus className="w-4 h-4 mr-2" />
-              {uploading ? "Uploading..." : "Add Picture"}
+              Add Picture
             </Button>
-          </div>
-        </CardHeader>
-        
-        <CardContent>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="image/*"
-            className="hidden"
-          />
-          
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="bg-slate-700/50 rounded-lg h-64 animate-pulse"></div>
-              ))}
+          </DialogTrigger>
+          <DialogContent className="bg-slate-50 border-slate-200">
+            <DialogHeader>
+              <DialogTitle className="text-slate-800">Add Work Picture</DialogTitle>
+              <DialogDescription className="text-slate-600">
+                Upload a picture of your work to showcase your skills
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="image" className="text-slate-700">Upload Image</Label>
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  disabled={uploading}
+                  className="bg-white border-slate-300 text-slate-800"
+                />
+                {uploading && <p className="text-sm text-slate-600">Uploading...</p>}
+                {formData.image_url && (
+                  <div className="mt-2">
+                    <img 
+                      src={formData.image_url} 
+                      alt="Preview" 
+                      className="w-full h-32 object-cover rounded-md border border-slate-300"
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="service_type" className="text-slate-700">Service Type</Label>
+                <Input
+                  id="service_type"
+                  value={formData.service_type}
+                  onChange={(e) => setFormData(prev => ({ ...prev, service_type: e.target.value }))}
+                  className="bg-white border-slate-300 text-slate-800 placeholder-slate-400"
+                  placeholder="e.g., Haircut, Beard Trim, Styling"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-slate-700">Description</Label>
+                <Input
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  className="bg-white border-slate-300 text-slate-800 placeholder-slate-400"
+                  placeholder="Brief description of the work"
+                />
+              </div>
+              <div className="flex space-x-2 pt-4">
+                <Button 
+                  onClick={handleSave} 
+                  disabled={loading || !formData.image_url}
+                  className="bg-amber-500 hover:bg-amber-600 text-black"
+                >
+                  {loading ? "Adding..." : "Add Picture"}
+                </Button>
+                <Button variant="outline" onClick={resetForm} className="border-slate-300 text-slate-700 hover:bg-slate-100">
+                  Cancel
+                </Button>
+              </div>
             </div>
-          ) : workPictures.length === 0 ? (
-            <div className="text-center py-12">
-              <Camera className="w-12 h-12 text-slate-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-white mb-2">No Work Pictures</h3>
-              <p className="text-slate-400 mb-4">Start building your portfolio by adding pictures of your work.</p>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Pictures Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {pictures.map((picture: any) => (
+          <Card key={picture.id} className="bg-slate-50 border-slate-200 hover:bg-slate-100 transition-colors overflow-hidden">
+            <div className="relative">
+              <img 
+                src={picture.image_url} 
+                alt={picture.description || 'Work picture'}
+                className="w-full h-48 object-cover"
+              />
               <Button
-                onClick={handleImageUpload}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                variant="ghost"
+                size="sm"
+                onClick={() => handleDelete(picture.id, picture.image_url)}
+                className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white"
               >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Your First Picture
+                <Trash2 className="w-4 h-4" />
               </Button>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {workPictures.map((picture) => (
-                <Card key={picture.id} className="bg-slate-700/50 border-slate-600 overflow-hidden">
-                  <div className="relative aspect-square">
-                    <img
-                      src={picture.image_url}
-                      alt={picture.description || "Work sample"}
-                      className="w-full h-full object-cover"
-                    />
-                    {picture.id.startsWith('mock-') && (
-                      <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">
-                        Sample
-                      </Badge>
-                    )}
-                    <div className="absolute top-2 right-2 flex space-x-1">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => handleEdit(picture)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Edit3 className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDelete(picture.id)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
+            <CardContent className="p-4">
+              <div className="space-y-2">
+                {picture.service_type && (
+                  <div className="inline-block px-2 py-1 bg-slate-200 text-slate-700 text-xs rounded-full">
+                    {picture.service_type}
                   </div>
-                  
-                  <CardContent className="p-3">
-                    {editingId === picture.id ? (
-                      <div className="space-y-2">
-                        <div>
-                          <Label htmlFor="description" className="text-xs">Description</Label>
-                          <Textarea
-                            id="description"
-                            value={editForm.description}
-                            onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
-                            className="bg-slate-800 border-slate-600 text-white text-sm"
-                            rows={2}
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="service_type" className="text-xs">Service Type</Label>
-                          <Input
-                            id="service_type"
-                            value={editForm.service_type}
-                            onChange={(e) => setEditForm(prev => ({ ...prev, service_type: e.target.value }))}
-                            className="bg-slate-800 border-slate-600 text-white text-sm"
-                          />
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button
-                            size="sm"
-                            onClick={() => handleSaveEdit(picture.id)}
-                            className="bg-green-600 hover:bg-green-700 text-white flex-1"
-                          >
-                            <Save className="w-3 h-3 mr-1" />
-                            Save
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setEditingId(null)}
-                            className="border-slate-600 text-white hover:bg-slate-700 flex-1"
-                          >
-                            <X className="w-3 h-3 mr-1" />
-                            Cancel
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div>
-                        <p className="text-white text-sm font-medium mb-1">
-                          {picture.description || "No description"}
-                        </p>
-                        {picture.service_type && (
-                          <Badge variant="secondary" className="text-xs">
-                            {picture.service_type}
-                          </Badge>
-                        )}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                )}
+                {picture.description && (
+                  <p className="text-slate-600 text-sm">{picture.description}</p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {pictures.length === 0 && (
+        <Card className="bg-slate-50 border-slate-200">
+          <CardContent className="text-center py-12">
+            <Image className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">No pictures yet</h3>
+            <p className="text-slate-600 mb-4">Start building your portfolio by adding pictures of your work</p>
+            <Button onClick={() => setShowAddDialog(true)} className="bg-amber-500 hover:bg-amber-600 text-black">
+              <Camera className="w-4 h-4 mr-2" />
+              Add Your First Picture
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
