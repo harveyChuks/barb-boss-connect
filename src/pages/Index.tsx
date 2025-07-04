@@ -288,7 +288,7 @@ const Index = () => {
               <img 
                 src="/lovable-uploads/01067bbc-a94f-469f-91e9-0bb8773e8b82.png" 
                 alt="BizFlow Logo" 
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
               />
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-white">BizFlow</h1>
@@ -383,7 +383,7 @@ const Index = () => {
             <img 
               src="/lovable-uploads/01067bbc-a94f-469f-91e9-0bb8773e8b82.png" 
               alt="BizFlow Logo" 
-              className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg mx-auto mb-6"
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg mx-auto mb-6"
             />
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Welcome to BizFlow</h2>
             <p className="text-slate-400 mb-8 max-w-2xl mx-auto px-4">
