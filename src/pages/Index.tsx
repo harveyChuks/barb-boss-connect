@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from "react";
 import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu } from "lucide-react";
-import bizflowLogo from "@/assets/bizflow-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -287,7 +286,7 @@ const Index = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
               <img 
-                src={bizflowLogo} 
+                src="/lovable-uploads/01067bbc-a94f-469f-91e9-0bb8773e8b82.png" 
                 alt="BizFlow Logo" 
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg"
               />
@@ -382,7 +381,7 @@ const Index = () => {
         {!isAuthenticated ? (
           <div className="text-center py-12">
             <img 
-              src={bizflowLogo} 
+              src="/lovable-uploads/01067bbc-a94f-469f-91e9-0bb8773e8b82.png" 
               alt="BizFlow Logo" 
               className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg mx-auto mb-6"
             />
