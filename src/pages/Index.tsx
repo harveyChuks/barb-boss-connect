@@ -286,7 +286,7 @@ const Index = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
               <img 
-                src="/lovable-uploads/01067bbc-a94f-469f-91e9-0bb8773e8b82.png" 
+                src="/lovable-uploads/832662cc-c9cf-4cab-85f2-fa2e91511908.png" 
                 alt="BizFlow Logo" 
                 className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
               />
@@ -381,7 +381,7 @@ const Index = () => {
         {!isAuthenticated ? (
           <div className="text-center py-12">
             <img 
-              src="/lovable-uploads/01067bbc-a94f-469f-91e9-0bb8773e8b82.png" 
+              src="/lovable-uploads/832662cc-c9cf-4cab-85f2-fa2e91511908.png" 
               alt="BizFlow Logo" 
               className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg mx-auto mb-6"
             />
