@@ -10,6 +10,7 @@ import ClientModal from "@/components/ClientModal";
 import AppointmentModal from "@/components/AppointmentModal";
 import AuthModal from "@/components/auth/AuthModal";
 import MultiStepRegistrationModal from "@/components/business/MultiStepRegistrationModal";
+import LandingPage from "@/components/LandingPage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -379,31 +380,7 @@ const Index = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 relative z-10">
         {!isAuthenticated ? (
-          <div className="text-center py-12">
-            <img 
-              src="/lovable-uploads/bce9e11a-cca6-47fb-9dc5-04383b2359db.png" 
-              alt="BizFlow Logo" 
-              className="w-32 h-32 sm:w-40 sm:h-40 rounded-lg mx-auto mb-6"
-            />
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Welcome to BizFlow</h2>
-            <p className="text-slate-400 mb-8 max-w-2xl mx-auto px-4">
-              The complete business management platform for service-based businesses. 
-              Manage appointments, track analytics, and grow your business efficiently.
-            </p>
-            <Button 
-              onClick={() => setShowAuthModal(true)}
-              className="text-lg px-8 py-3"
-              style={{ backgroundColor: '#39FF14', color: 'black' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#32e612';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#39FF14';
-              }}
-            >
-              Get Started
-            </Button>
-          </div>
+          <LandingPage onGetStarted={() => setShowAuthModal(true)} />
         ) : !userBusiness ? (
           <div className="text-center py-12">
             <Building className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6" style={{ color: '#39FF14' }} />
