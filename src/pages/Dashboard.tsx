@@ -1,8 +1,8 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { BarChart3, User, Scissors, Calendar, Settings, ArrowLeft, Users, Camera, TrendingUp, MessageCircle, CreditCard, Globe, Smartphone } from "lucide-react";
+import { BarChart3, User, Scissors, Calendar, Settings, ArrowLeft, Users, Camera, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StatisticsOverview from "@/components/StatisticsOverview";
 import ProfileManagement from "@/components/ProfileManagement";
@@ -13,39 +13,10 @@ import StaffManagement from "@/components/StaffManagement";
 import CalendarView from "@/components/CalendarView";
 import WorkPicturesManagement from "@/components/WorkPicturesManagement";
 import ReportsAnalytics from "@/components/ReportsAnalytics";
-import WhatsAppIntegration from "@/components/WhatsAppIntegration";
-import LocalPaymentsIntegration from "@/components/LocalPaymentsIntegration";
-import MultiLanguageSupport from "@/components/MultiLanguageSupport";
-import MobileOptimization from "@/components/MobileOptimization";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [businessId, setBusinessId] = useState<string>("");
-
-  useEffect(() => {
-    const fetchBusinessId = async () => {
-      if (!user) return;
-      
-      try {
-        const { data, error } = await supabase
-          .from('businesses')
-          .select('id')
-          .eq('owner_id', user.id)
-          .single();
-        
-        if (error) throw error;
-        if (data) setBusinessId(data.id);
-      } catch (error) {
-        console.error('Error fetching business ID:', error);
-      }
-    };
-
-    fetchBusinessId();
-  }, [user]);
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6">
@@ -70,7 +41,7 @@ const Dashboard = () => {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
           <div className="overflow-x-auto">
-            <TabsList className="grid grid-cols-13 bg-card border-border min-w-max w-full">
+            <TabsList className="grid grid-cols-9 bg-card border-border min-w-max w-full">
               <TabsTrigger value="overview" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
                 <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Overview</span>
@@ -102,22 +73,6 @@ const Dashboard = () => {
               <TabsTrigger value="calendar" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Calendar</span>
-              </TabsTrigger>
-              <TabsTrigger value="whatsapp" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
-                <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">WhatsApp</span>
-              </TabsTrigger>
-              <TabsTrigger value="payments" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
-                <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Payments</span>
-              </TabsTrigger>
-              <TabsTrigger value="languages" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
-                <Globe className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Languages</span>
-              </TabsTrigger>
-              <TabsTrigger value="mobile" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
-                <Smartphone className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Mobile</span>
               </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
                 <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -156,22 +111,6 @@ const Dashboard = () => {
 
           <TabsContent value="calendar">
             <CalendarView />
-          </TabsContent>
-
-          <TabsContent value="whatsapp">
-            <WhatsAppIntegration businessId={businessId || ""} />
-          </TabsContent>
-
-          <TabsContent value="payments">
-            <LocalPaymentsIntegration businessId={businessId || ""} />
-          </TabsContent>
-
-          <TabsContent value="languages">
-            <MultiLanguageSupport businessId={businessId || ""} />
-          </TabsContent>
-
-          <TabsContent value="mobile">
-            <MobileOptimization businessId={businessId || ""} />
           </TabsContent>
 
           <TabsContent value="settings">
