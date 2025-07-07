@@ -61,9 +61,9 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 text-center bg-gradient-to-r from-white/80 to-slate-100/50">
+      <section className="relative py-20 px-4 text-center bg-slate-50">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <img 
