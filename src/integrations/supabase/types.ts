@@ -286,12 +286,17 @@ export type Database = {
           id: string
           instagram: string | null
           is_active: boolean | null
+          language_settings: Json | null
           logo_url: string | null
           name: string
           owner_id: string
+          payment_settings: Json | null
           phone: string | null
           updated_at: string | null
           website: string | null
+          whatsapp_enabled: boolean | null
+          whatsapp_number: string | null
+          whatsapp_settings: Json | null
         }
         Insert: {
           address?: string | null
@@ -304,12 +309,17 @@ export type Database = {
           id?: string
           instagram?: string | null
           is_active?: boolean | null
+          language_settings?: Json | null
           logo_url?: string | null
           name: string
           owner_id: string
+          payment_settings?: Json | null
           phone?: string | null
           updated_at?: string | null
           website?: string | null
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
+          whatsapp_settings?: Json | null
         }
         Update: {
           address?: string | null
@@ -322,12 +332,17 @@ export type Database = {
           id?: string
           instagram?: string | null
           is_active?: boolean | null
+          language_settings?: Json | null
           logo_url?: string | null
           name?: string
           owner_id?: string
+          payment_settings?: Json | null
           phone?: string | null
           updated_at?: string | null
           website?: string | null
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
+          whatsapp_settings?: Json | null
         }
         Relationships: []
       }

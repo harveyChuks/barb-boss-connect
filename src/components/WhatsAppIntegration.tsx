@@ -46,7 +46,7 @@ const WhatsAppIntegration = ({ businessId }: WhatsAppIntegrationProps) => {
           ...prev,
           whatsapp_number: data.whatsapp_number || "",
           whatsapp_enabled: data.whatsapp_enabled || false,
-          ...(data.whatsapp_settings || {})
+          ...(typeof data.whatsapp_settings === 'object' ? data.whatsapp_settings : {})
         }));
       }
     } catch (error) {
@@ -209,7 +209,7 @@ const WhatsAppIntegration = ({ businessId }: WhatsAppIntegrationProps) => {
           <div className="space-y-4">
             <h3 className="text-foreground font-medium">Message Templates</h3>
             <p className="text-sm text-muted-foreground">
-              Customize your automated messages. Use these variables: {{customer_name}}, {{service_name}}, {{date}}, {{time}}, {{booking_link}}
+              Use these variables: customer_name, service_name, date, time, booking_link
             </p>
             
             <div className="space-y-4">

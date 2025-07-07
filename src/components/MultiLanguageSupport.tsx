@@ -176,13 +176,14 @@ const MultiLanguageSupport = ({ businessId }: MultiLanguageSupportProps) => {
 
       if (error) throw error;
 
-      if (data?.language_settings) {
+      if (data?.language_settings && typeof data.language_settings === 'object') {
+        const languageSettings = data.language_settings as any;
         setSettings(prev => ({
           ...prev,
-          ...data.language_settings,
+          ...languageSettings,
           translations: {
             ...defaultTranslations,
-            ...data.language_settings.translations
+            ...(languageSettings.translations || {})
           }
         }));
       } else {

@@ -121,7 +121,7 @@ const LocalPaymentsIntegration = ({ businessId }: LocalPaymentsIntegrationProps)
       if (data?.payment_settings) {
         setSettings(prev => ({
           ...prev,
-          ...data.payment_settings
+          ...(typeof data.payment_settings === 'object' ? data.payment_settings : {})
         }));
       }
     } catch (error) {
