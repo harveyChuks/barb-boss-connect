@@ -3,19 +3,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Shield, Bell, CreditCard, Users, Calendar } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import BusinessHoursManagement from "./BusinessHoursManagement";
 import ThemeSettings from "./ThemeSettings";
 import WhatsAppIntegration from "./WhatsAppIntegration";
 import LocalPaymentsIntegration from "./LocalPaymentsIntegration";
 import OfflineCapabilities from "./OfflineCapabilities";
+import LanguageSelector from "./LanguageSelector";
 
 const SettingsSection = () => {
+  const { t } = useLanguage();
+  
   const settingsCategories = [
     {
-      title: "Account Settings",
+      title: t('settings.account'),
       description: "Manage your account preferences and security",
       icon: Shield,
-      status: "Coming Soon",
+      status: t('settings.comingSoon'),
       items: [
         "Change password",
         "Two-factor authentication",
@@ -24,10 +28,10 @@ const SettingsSection = () => {
       ]
     },
     {
-      title: "Notification Settings",
+      title: t('settings.notifications'),
       description: "Configure how you receive notifications",
       icon: Bell,
-      status: "Coming Soon",
+      status: t('settings.comingSoon'),
       items: [
         "Email notifications",
         "SMS alerts",
@@ -36,10 +40,10 @@ const SettingsSection = () => {
       ]
     },
     {
-      title: "Billing & Payments",
+      title: t('settings.billing'),
       description: "Manage your subscription and payment methods",
       icon: CreditCard,
-      status: "Coming Soon",
+      status: t('settings.comingSoon'),
       items: [
         "Subscription plan",
         "Payment methods",
@@ -48,10 +52,10 @@ const SettingsSection = () => {
       ]
     },
     {
-      title: "Staff Management",
+      title: t('settings.staff'),
       description: "Manage team members and permissions",
       icon: Users,
-      status: "Coming Soon",
+      status: t('settings.comingSoon'),
       items: [
         "Add staff members",
         "Role permissions",
@@ -60,10 +64,10 @@ const SettingsSection = () => {
       ]
     },
     {
-      title: "Advanced Settings",
+      title: t('settings.advanced'),
       description: "API access and advanced configurations",
       icon: Settings,
-      status: "Coming Soon",
+      status: t('settings.comingSoon'),
       items: [
         "API keys",
         "Webhook settings",
@@ -76,9 +80,12 @@ const SettingsSection = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">Settings</h2>
-        <p className="text-muted-foreground">Manage your account and business preferences</p>
+        <h2 className="text-2xl font-bold text-foreground">{t('settings.title')}</h2>
+        <p className="text-muted-foreground">{t('settings.subtitle')}</p>
       </div>
+
+      {/* Language Settings - Active Feature */}
+      <LanguageSelector />
 
       {/* Theme Settings - Active Feature */}
       <ThemeSettings />
@@ -125,13 +132,13 @@ const SettingsSection = () => {
                   </li>
                 ))}
               </ul>
-              <Button
-                variant="outline"
-                className="w-full mt-4 border-border text-muted-foreground hover:bg-muted"
-                disabled
-              >
-                Configure
-              </Button>
+                <Button
+                  variant="outline"
+                  className="w-full mt-4 border-border text-muted-foreground hover:bg-muted"
+                  disabled
+                >
+                  Configure
+                </Button>
             </CardContent>
           </Card>
         ))}
@@ -140,10 +147,9 @@ const SettingsSection = () => {
       <Card className="bg-card border-border">
         <CardContent className="p-6 text-center">
           <Settings className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-foreground mb-2">More Settings Coming Soon</h3>
+          <h3 className="text-xl font-semibold text-foreground mb-2">{t('settings.moreFeatures')}</h3>
           <p className="text-muted-foreground mb-4 max-w-2xl mx-auto">
-            We're working on bringing you more comprehensive settings to customize your BarbS experience. 
-            These features will be available in upcoming updates.
+            {t('settings.moreDescription')}
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             <Badge variant="outline" className="border-blue-400 text-blue-400">Enhanced Security</Badge>
