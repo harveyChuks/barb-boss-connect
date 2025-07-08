@@ -634,6 +634,30 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                     rows={3}
                   />
                 </div>
+
+                {/* Deposit Payment Section */}
+                {formData.service_id && services.find(s => s.id === formData.service_id)?.price && (
+                  <div className="space-y-3 p-4 bg-slate-700/30 rounded-lg border border-slate-600">
+                    <h3 className="text-white font-semibold text-sm">Payment Options</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-slate-300">Service Price:</span>
+                        <span className="text-white font-medium">
+                          ${services.find(s => s.id === formData.service_id)?.price}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-slate-300">Required Deposit (50%):</span>
+                        <span className="text-primary font-semibold">
+                          ${((services.find(s => s.id === formData.service_id)?.price || 0) * 0.5).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-xs text-slate-400">
+                      A 50% deposit is required to secure your appointment. You can pay the remaining balance during your visit.
+                    </div>
+                  </div>
+                )}
                 
                 <Button
                   onClick={handleSubmit}
@@ -647,7 +671,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   }
                   className="w-full bg-primary hover:bg-primary/90 text-black font-semibold"
                 >
-                  {submitting ? "Booking..." : "Book Appointment"}
+                  {submitting ? "Booking..." : formData.service_id && services.find(s => s.id === formData.service_id)?.price ? "Book Appointment & Pay Deposit" : "Book Appointment"}
                 </Button>
               </CardContent>
             </Card>

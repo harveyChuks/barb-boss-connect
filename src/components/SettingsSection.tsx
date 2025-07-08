@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Settings, Shield, Bell, CreditCard, Users, Calendar } from "lucide-react";
 import BusinessHoursManagement from "./BusinessHoursManagement";
 import ThemeSettings from "./ThemeSettings";
+import WhatsAppIntegration from "./WhatsAppIntegration";
+import LocalPaymentsIntegration from "./LocalPaymentsIntegration";
+import OfflineCapabilities from "./OfflineCapabilities";
 
 const SettingsSection = () => {
   const settingsCategories = [
@@ -82,6 +85,15 @@ const SettingsSection = () => {
 
       {/* Business Hours Management - Active Feature */}
       <BusinessHoursManagement />
+
+      {/* WhatsApp Integration - Active Feature */}
+      <WhatsAppIntegration />
+
+      {/* Local Payments Integration - Active Feature */}
+      <LocalPaymentsIntegration />
+
+      {/* Offline Capabilities - Active Feature */}
+      <OfflineCapabilities />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {settingsCategories.map((category, index) => (
