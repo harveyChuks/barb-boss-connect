@@ -279,6 +279,8 @@ export type Database = {
           address: string | null
           booking_link: string | null
           business_type: Database["public"]["Enums"]["business_type"]
+          city: string | null
+          country: string | null
           cover_image_url: string | null
           created_at: string | null
           description: string | null
@@ -287,12 +289,16 @@ export type Database = {
           instagram: string | null
           is_active: boolean | null
           language_settings: Json | null
+          latitude: number | null
           logo_url: string | null
+          longitude: number | null
           name: string
           offline_settings: Json | null
           owner_id: string
           payment_settings: Json | null
           phone: string | null
+          postal_code: string | null
+          state: string | null
           updated_at: string | null
           website: string | null
           whatsapp_enabled: boolean | null
@@ -303,6 +309,8 @@ export type Database = {
           address?: string | null
           booking_link?: string | null
           business_type: Database["public"]["Enums"]["business_type"]
+          city?: string | null
+          country?: string | null
           cover_image_url?: string | null
           created_at?: string | null
           description?: string | null
@@ -311,12 +319,16 @@ export type Database = {
           instagram?: string | null
           is_active?: boolean | null
           language_settings?: Json | null
+          latitude?: number | null
           logo_url?: string | null
+          longitude?: number | null
           name: string
           offline_settings?: Json | null
           owner_id: string
           payment_settings?: Json | null
           phone?: string | null
+          postal_code?: string | null
+          state?: string | null
           updated_at?: string | null
           website?: string | null
           whatsapp_enabled?: boolean | null
@@ -327,6 +339,8 @@ export type Database = {
           address?: string | null
           booking_link?: string | null
           business_type?: Database["public"]["Enums"]["business_type"]
+          city?: string | null
+          country?: string | null
           cover_image_url?: string | null
           created_at?: string | null
           description?: string | null
@@ -335,12 +349,16 @@ export type Database = {
           instagram?: string | null
           is_active?: boolean | null
           language_settings?: Json | null
+          latitude?: number | null
           logo_url?: string | null
+          longitude?: number | null
           name?: string
           offline_settings?: Json | null
           owner_id?: string
           payment_settings?: Json | null
           phone?: string | null
+          postal_code?: string | null
+          state?: string | null
           updated_at?: string | null
           website?: string | null
           whatsapp_enabled?: boolean | null
@@ -622,6 +640,10 @@ export type Database = {
         Args: { service_price: number }
         Returns: number
       }
+      calculate_distance: {
+        Args: { lat1: number; lon1: number; lat2: number; lon2: number }
+        Returns: number
+      }
       check_appointment_conflict: {
         Args: {
           p_business_id: string
@@ -632,6 +654,26 @@ export type Database = {
           p_exclude_appointment_id?: string
         }
         Returns: boolean
+      }
+      find_nearby_businesses_with_slots: {
+        Args: {
+          user_lat: number
+          user_lon: number
+          search_radius?: number
+          search_date?: string
+        }
+        Returns: {
+          business_id: string
+          business_name: string
+          business_type: string
+          address: string
+          phone: string
+          latitude: number
+          longitude: number
+          distance_km: number
+          available_slots: number
+          logo_url: string
+        }[]
       }
       get_available_time_slots: {
         Args: {
