@@ -32,7 +32,8 @@ const Index = () => {
     todayAppointments: 0,
     totalClients: 0,
     weeklyAppointments: 0,
-    todayRevenue: 0
+    todayRevenue: 0,
+    monthlyRevenue: 0
   });
   const [loading, setLoading] = useState(false);
 
@@ -64,14 +65,16 @@ const Index = () => {
 
     setLoading(true);
     try {
-      // Fetch today's appointments
       const today = new Date().toISOString().split('T')[0];
+      
+      // Fetch today's appointments with service details
       const { data: appointments } = await supabase
         .from('appointments')
         .select(`
           *,
           services (
-            name
+            name,
+            price
           )
         `)
         .eq('business_id', userBusiness.id)
@@ -79,35 +82,86 @@ const Index = () => {
 
       setTodayAppointments(appointments || []);
 
-      // Fetch recent clients
+      // Fetch recent clients from customers who have appointments with this business
       const { data: clients } = await supabase
         .from('customers')
-        .select('*')
+        .select(`
+          *,
+          appointments!inner (
+            business_id
+          )
+        `)
+        .eq('appointments.business_id', userBusiness.id)
+        .order('created_at', { ascending: false })
         .limit(4);
 
       setRecentClients(clients || []);
 
-      // Calculate stats
-      const totalClients = await supabase
-        .from('customers')
-        .select('*', { count: 'exact', head: true });
+      // Calculate total clients for this business
+      const { count: totalClientsCount } = await supabase
+        .from('appointments')
+        .select('customer_id', { count: 'exact', head: true })
+        .eq('business_id', userBusiness.id);
+
+      // Get unique customer count for this business
+      const { data: uniqueCustomers } = await supabase
+        .from('appointments')
+        .select('customer_id')
+        .eq('business_id', userBusiness.id);
+      
+      const uniqueCustomerCount = new Set(uniqueCustomers?.map(a => a.customer_id)).size;
 
       // Calculate weekly appointments (last 7 days)
       const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-      const weeklyAppointments = await supabase
+      const { count: weeklyCount } = await supabase
         .from('appointments')
         .select('*', { count: 'exact', head: true })
         .eq('business_id', userBusiness.id)
-        .gte('appointment_date', sevenDaysAgo);
+        .gte('appointment_date', sevenDaysAgo)
+        .neq('status', 'cancelled');
 
-      // Calculate today's revenue (mock data for now)
-      const todayRevenue = 480;
+      // Calculate today's revenue from completed appointments
+      const { data: todayCompletedAppointments } = await supabase
+        .from('appointments')
+        .select(`
+          services (
+            price
+          )
+        `)
+        .eq('business_id', userBusiness.id)
+        .eq('appointment_date', today)
+        .eq('status', 'completed');
+
+      const todayRevenue = todayCompletedAppointments?.reduce((total, appointment) => {
+        return total + (appointment.services?.price || 0);
+      }, 0) || 0;
+
+      // Calculate this month's revenue
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      const startOfMonthStr = startOfMonth.toISOString().split('T')[0];
+      
+      const { data: monthlyCompletedAppointments } = await supabase
+        .from('appointments')
+        .select(`
+          services (
+            price
+          )
+        `)
+        .eq('business_id', userBusiness.id)
+        .gte('appointment_date', startOfMonthStr)
+        .eq('status', 'completed');
+
+      const monthlyRevenue = monthlyCompletedAppointments?.reduce((total, appointment) => {
+        return total + (appointment.services?.price || 0);
+      }, 0) || 0;
 
       setStats({
         todayAppointments: appointments?.length || 0,
-        totalClients: totalClients.count || 0,
-        weeklyAppointments: weeklyAppointments.count || 0,
-        todayRevenue: todayRevenue || 0
+        totalClients: uniqueCustomerCount,
+        weeklyAppointments: weeklyCount || 0,
+        todayRevenue: todayRevenue,
+        monthlyRevenue: monthlyRevenue
       });
     } catch (error: any) {
       console.error('Error fetching dashboard data:', error);
@@ -130,6 +184,28 @@ const Index = () => {
   useEffect(() => {
     if (userBusiness) {
       fetchDashboardData();
+
+      // Set up real-time subscription for appointments
+      const channel = supabase
+        .channel('appointments-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'appointments',
+            filter: `business_id=eq.${userBusiness.id}`
+          },
+          () => {
+            // Refetch dashboard data when appointments change
+            fetchDashboardData();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [userBusiness]);
 
