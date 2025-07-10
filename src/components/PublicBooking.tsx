@@ -198,10 +198,20 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       endTime.setMinutes(endTime.getMinutes() + selectedService.duration_minutes);
       const endTimeString = endTime.toTimeString().slice(0, 5);
 
+      // Get available service point for this time slot
+      const { data: servicePointId } = await supabase
+        .rpc('assign_service_point', {
+          p_business_id: business.id,
+          p_appointment_date: format(selectedDate, 'yyyy-MM-dd'),
+          p_start_time: startTime,
+          p_end_time: endTimeString
+        });
+
       const appointmentData = {
         business_id: business.id,
         service_id: formData.service_id,
         staff_id: formData.staff_id || null,
+        service_point_id: servicePointId,
         customer_name: formData.customer_name,
         customer_phone: formData.customer_phone,
         customer_email: formData.customer_email || null,
