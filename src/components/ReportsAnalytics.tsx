@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CalendarDays, DollarSign, Users, TrendingUp, TrendingDown, Calendar, Clock, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { format, subDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek } from "date-fns";
@@ -41,6 +42,7 @@ interface OverviewStats {
 }
 
 const ReportsAnalytics = () => {
+  const { user } = useAuth();
   const [dateRange, setDateRange] = useState("30");
   const [loading, setLoading] = useState(true);
   const [overviewStats, setOverviewStats] = useState<OverviewStats | null>(null);
@@ -52,20 +54,22 @@ const ReportsAnalytics = () => {
   const colors = ['#39FF14', '#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f'];
 
   const fetchAnalyticsData = async () => {
+    if (!user) return;
+    
     setLoading(true);
     try {
       const days = parseInt(dateRange);
       const endDate = new Date();
       const startDate = subDays(endDate, days);
 
-      // Get business ID (in real app, this would come from auth context)
-      const { data: businesses } = await supabase
+      // Get current user's business
+      const { data: business } = await supabase
         .from('businesses')
         .select('id')
-        .limit(1)
+        .eq('owner_id', user.id)
         .single();
 
-      if (!businesses) {
+      if (!business) {
         toast({
           title: "Error",
           description: "No business found. Please set up your business first.",
@@ -74,7 +78,7 @@ const ReportsAnalytics = () => {
         return;
       }
 
-      const businessId = businesses.id;
+      const businessId = business.id;
 
       // Fetch appointments with related data
       const { data: appointments, error } = await supabase
@@ -227,7 +231,28 @@ const ReportsAnalytics = () => {
 
   useEffect(() => {
     fetchAnalyticsData();
-  }, [dateRange]);
+
+    // Set up real-time subscription for appointments
+    const channel = supabase
+      .channel('reports-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'appointments'
+        },
+        () => {
+          // Refetch analytics when appointments change
+          fetchAnalyticsData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [dateRange, user]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
