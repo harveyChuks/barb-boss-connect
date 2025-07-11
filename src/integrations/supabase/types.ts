@@ -751,6 +751,10 @@ export type Database = {
         Args: { p_business_id: string }
         Returns: undefined
       }
+      initialize_default_service_point: {
+        Args: { p_business_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       appointment_status:
