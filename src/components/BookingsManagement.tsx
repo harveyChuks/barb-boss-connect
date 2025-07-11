@@ -23,13 +23,9 @@ interface Appointment {
   end_time: string;
   status: AppointmentStatus;
   notes: string;
-  service_point_id?: string;
   services: {
     name: string;
     price: number;
-  };
-  service_points?: {
-    name: string;
   };
 }
 
@@ -64,7 +60,7 @@ const BookingsManagement = () => {
 
       if (!business) return;
 
-      // Get appointments with service details and service points
+      // Get appointments with service details
       const { data: appointmentsData, error } = await supabase
         .from('appointments')
         .select(`
@@ -72,9 +68,6 @@ const BookingsManagement = () => {
           services (
             name,
             price
-          ),
-          service_points (
-            name
           )
         `)
         .eq('business_id', business.id)
@@ -302,11 +295,6 @@ const BookingsManagement = () => {
                   <div className="flex items-center justify-between">
                     <div className="text-primary font-semibold">
                       {appointment.services.name} - ${appointment.services.price}
-                      {appointment.service_points?.name && (
-                        <span className="text-xs text-muted-foreground ml-2">
-                          • {appointment.service_points.name}
-                        </span>
-                      )}
                     </div>
                     {appointment.customer_email && (
                       <div className="flex items-center space-x-2 text-sm text-muted-foreground">

@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Settings, Shield, Bell, CreditCard, Users, Calendar } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import BusinessHoursManagement from "./BusinessHoursManagement";
-import ServicePointManagement from "./ServicePointManagement";
 import ThemeSettings from "./ThemeSettings";
 import WhatsAppIntegration from "./WhatsAppIntegration";
 import LocalPaymentsIntegration from "./LocalPaymentsIntegration";
@@ -93,9 +92,6 @@ const SettingsSection = () => {
 
       {/* Business Hours Management - Active Feature */}
       <BusinessHoursManagement />
-
-      {/* Service Point Management - Active Feature */}
-      <ServicePointManagement />
 
       {/* WhatsApp Integration - Active Feature */}
       <WhatsAppIntegration />

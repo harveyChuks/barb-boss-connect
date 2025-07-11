@@ -94,7 +94,6 @@ export type Database = {
           payment_intent_id: string | null
           requires_deposit: boolean | null
           service_id: string
-          service_point_id: string | null
           staff_id: string | null
           start_time: string
           status: Database["public"]["Enums"]["appointment_status"] | null
@@ -120,7 +119,6 @@ export type Database = {
           payment_intent_id?: string | null
           requires_deposit?: boolean | null
           service_id: string
-          service_point_id?: string | null
           staff_id?: string | null
           start_time: string
           status?: Database["public"]["Enums"]["appointment_status"] | null
@@ -146,7 +144,6 @@ export type Database = {
           payment_intent_id?: string | null
           requires_deposit?: boolean | null
           service_id?: string
-          service_point_id?: string | null
           staff_id?: string | null
           start_time?: string
           status?: Database["public"]["Enums"]["appointment_status"] | null
@@ -179,13 +176,6 @@ export type Database = {
             columns: ["staff_id"]
             isOneToOne: false
             referencedRelation: "staff"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_appointments_service_point"
-            columns: ["service_point_id"]
-            isOneToOne: false
-            referencedRelation: "service_points"
             referencedColumns: ["id"]
           },
         ]
@@ -524,47 +514,6 @@ export type Database = {
           },
         ]
       }
-      service_points: {
-        Row: {
-          business_id: string
-          created_at: string
-          description: string | null
-          id: string
-          is_active: boolean
-          max_concurrent_slots: number
-          name: string
-          updated_at: string
-        }
-        Insert: {
-          business_id: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          is_active?: boolean
-          max_concurrent_slots?: number
-          name: string
-          updated_at?: string
-        }
-        Update: {
-          business_id?: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          is_active?: boolean
-          max_concurrent_slots?: number
-          name?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_service_points_business"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       services: {
         Row: {
           business_id: string
@@ -687,15 +636,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      assign_service_point: {
-        Args: {
-          p_business_id: string
-          p_appointment_date: string
-          p_start_time: string
-          p_end_time: string
-        }
-        Returns: string
-      }
       calculate_deposit_amount: {
         Args: { service_price: number }
         Returns: number
@@ -748,10 +688,6 @@ export type Database = {
         }[]
       }
       initialize_default_business_hours: {
-        Args: { p_business_id: string }
-        Returns: undefined
-      }
-      initialize_default_service_point: {
         Args: { p_business_id: string }
         Returns: undefined
       }
