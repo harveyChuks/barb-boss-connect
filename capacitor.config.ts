@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.3ced5a3644484bb2bf68babad8a3d633',
+  appId: 'com.barboss.connect',
   appName: 'barb-boss-connect',
   webDir: 'dist',
   server: {
