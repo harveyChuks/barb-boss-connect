@@ -71,3 +71,39 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Mobile Development with Capacitor
+
+This project is set up to work with Capacitor for iOS and Android development. To connect to Xcode and run on iOS:
+
+1. **Build and connect to Xcode in one step:**
+   ```sh
+   # Make the script executable
+   chmod +x connect-ios.sh
+   
+   # Run the script
+   ./connect-ios.sh
+   ```
+
+2. **Or follow these manual steps:**
+   ```sh
+   # Build the web app
+   npm run build
+   
+   # Sync with Capacitor
+   npx cap sync
+   
+   # Open in Xcode
+   npx cap open ios
+   ```
+
+3. **In Xcode:**
+   - Select a development team in the Signing & Capabilities section
+   - Connect your iOS device or select a simulator
+   - Press the Play button to build and run
+
+Remember that each time you make changes to your web code, you need to rebuild and sync:
+```sh
+npm run build
+npx cap sync
+```
