@@ -50,9 +50,14 @@ const ProfileManagement = () => {
   }, [business]);
 
   const generateQRCode = async () => {
-    if (!business?.booking_link) return;
+    if (!business?.booking_link) {
+      console.log('No booking link available for QR code generation');
+      return;
+    }
     
     const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    console.log('Generating QR code for URL:', bookingUrl);
+    
     try {
       const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
         width: 256,
@@ -62,9 +67,15 @@ const ProfileManagement = () => {
           light: '#FFFFFF'
         }
       });
+      console.log('QR code generated successfully');
       setQrCodeDataUrl(qrDataUrl);
     } catch (error) {
       console.error('Error generating QR code:', error);
+      toast({
+        title: "QR Code Error",
+        description: "Failed to generate QR code. Please try refreshing the page.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -295,40 +306,63 @@ const ProfileManagement = () => {
             </div>
 
             {/* QR Code Section */}
-            {qrCodeDataUrl && (
-              <div className="flex flex-col md:flex-row gap-6 items-start">
-                <div className="flex flex-col items-center space-y-3">
-                  <div className="bg-white p-4 rounded-lg">
+            <div className="flex flex-col md:flex-row gap-6 items-start">
+              <div className="flex flex-col items-center space-y-3">
+                {qrCodeDataUrl ? (
+                  <div className="bg-white p-4 rounded-lg shadow-sm border">
                     <img 
                       src={qrCodeDataUrl} 
                       alt="Booking QR Code" 
                       className="w-32 h-32"
                     />
                   </div>
+                ) : (
+                  <div className="bg-muted p-4 rounded-lg border border-dashed border-border w-32 h-32 flex flex-col items-center justify-center">
+                    <QrCode className="w-8 h-8 text-muted-foreground mb-2" />
+                    <span className="text-xs text-muted-foreground text-center">Generating QR Code...</span>
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  {qrCodeDataUrl && (
+                    <Button
+                      onClick={downloadQRCode}
+                      variant="outline"
+                      size="sm"
+                      className="border-border text-foreground hover:bg-muted"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download
+                    </Button>
+                  )}
                   <Button
-                    onClick={downloadQRCode}
+                    onClick={generateQRCode}
                     variant="outline"
                     size="sm"
                     className="border-border text-foreground hover:bg-muted"
                   >
-                    <Download className="w-4 h-4 mr-2" />
-                    Download QR
+                    <QrCode className="w-4 h-4 mr-2" />
+                    {qrCodeDataUrl ? 'Regenerate' : 'Generate'}
                   </Button>
                 </div>
-                <div className="flex-1 space-y-2">
-                  <h4 className="text-foreground font-medium flex items-center">
-                    <QrCode className="w-4 h-4 mr-2 text-primary" />
-                    QR Code Instructions
-                  </h4>
-                  <ul className="text-muted-foreground text-sm space-y-1">
-                    <li>• Print and display in your business</li>
-                    <li>• Share on social media</li>
-                    <li>• Include in business cards or flyers</li>
-                    <li>• Clients can scan to book instantly</li>
-                  </ul>
+              </div>
+              <div className="flex-1 space-y-2">
+                <h4 className="text-foreground font-medium flex items-center">
+                  <QrCode className="w-4 h-4 mr-2 text-primary" />
+                  QR Code Instructions
+                </h4>
+                <ul className="text-muted-foreground text-sm space-y-1">
+                  <li>• Print and display in your business</li>
+                  <li>• Share on social media</li>
+                  <li>• Include in business cards or flyers</li>
+                  <li>• Clients can scan to book instantly</li>
+                </ul>
+                <div className="mt-4 p-3 bg-muted rounded-md">
+                  <p className="text-xs text-muted-foreground">
+                    QR Code URL: <span className="font-mono">{bookingUrl}</span>
+                  </p>
                 </div>
               </div>
-            )}
+            </div>
           </CardContent>
         </Card>
       )}
