@@ -58,7 +58,9 @@ const ProfileManagement = () => {
     // Encode the booking link to handle special characters like apostrophes
     const encodedBookingLink = encodeURIComponent(business.booking_link);
     const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
-    console.log('Generating QR code for URL:', bookingUrl);
+    console.log('Original booking_link from database:', business.booking_link);
+    console.log('Encoded booking_link:', encodedBookingLink);
+    console.log('Final QR code URL:', bookingUrl);
     
     try {
       const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
