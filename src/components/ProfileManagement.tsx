@@ -55,7 +55,9 @@ const ProfileManagement = () => {
       return;
     }
     
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    // Encode the booking link to handle special characters like apostrophes
+    const encodedBookingLink = encodeURIComponent(business.booking_link);
+    const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
     console.log('Generating QR code for URL:', bookingUrl);
     
     try {
@@ -181,7 +183,8 @@ const ProfileManagement = () => {
   const copyBookingLink = async () => {
     if (!business?.booking_link) return;
     
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    const encodedBookingLink = encodeURIComponent(business.booking_link);
+    const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
     try {
       await navigator.clipboard.writeText(bookingUrl);
       setCopiedLink(true);
@@ -201,7 +204,8 @@ const ProfileManagement = () => {
 
   const openBookingPage = () => {
     if (!business?.booking_link) return;
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    const encodedBookingLink = encodeURIComponent(business.booking_link);
+    const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
     window.open(bookingUrl, '_blank');
   };
 
@@ -254,7 +258,7 @@ const ProfileManagement = () => {
     );
   }
 
-  const bookingUrl = business.booking_link ? `${window.location.origin}/book/${business.booking_link}` : '';
+  const bookingUrl = business.booking_link ? `${window.location.origin}/book/${encodeURIComponent(business.booking_link)}` : '';
 
   return (
     <div className="space-y-6">
@@ -358,7 +362,7 @@ const ProfileManagement = () => {
                 </ul>
                 <div className="mt-4 p-3 bg-muted rounded-md">
                   <p className="text-xs text-muted-foreground">
-                    QR Code URL: <span className="font-mono">{bookingUrl}</span>
+                    QR Code URL: <span className="font-mono">{business.booking_link ? `${window.location.origin}/book/${encodeURIComponent(business.booking_link)}` : ''}</span>
                   </p>
                 </div>
               </div>
