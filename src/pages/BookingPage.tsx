@@ -5,14 +5,9 @@ import PublicBooking from "@/components/PublicBooking";
 const BookingPage = () => {
   const { businessLink } = useParams<{ businessLink: string }>();
 
-  console.log('BookingPage - Raw businessLink from URL:', businessLink);
-  
-  // Decode the business link in case it contains encoded characters
-  const decodedBusinessLink = businessLink ? decodeURIComponent(businessLink) : null;
-  
-  console.log('BookingPage - Decoded businessLink:', decodedBusinessLink);
+  console.log('BookingPage - businessLink from URL:', businessLink);
 
-  if (!decodedBusinessLink) {
+  if (!businessLink) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-white text-center">
@@ -23,7 +18,7 @@ const BookingPage = () => {
     );
   }
 
-  return <PublicBooking businessLink={decodedBusinessLink} />;
+  return <PublicBooking businessLink={businessLink} />;
 };
 
 export default BookingPage;
