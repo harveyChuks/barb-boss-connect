@@ -52,7 +52,13 @@ const ProfileManagement = () => {
   const generateQRCode = async () => {
     if (!business?.booking_link) return;
     
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    // Use the deployed URL instead of preview URL
+    // Replace with your actual deployed domain
+    const deployedDomain = window.location.hostname.includes('lovableproject.com') 
+      ? 'https://your-app.lovable.app' // Replace with your actual deployed URL
+      : window.location.origin;
+    
+    const bookingUrl = `${deployedDomain}/book/${business.booking_link}`;
     try {
       const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
         width: 256,
@@ -170,7 +176,12 @@ const ProfileManagement = () => {
   const copyBookingLink = async () => {
     if (!business?.booking_link) return;
     
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    // Use the deployed URL instead of preview URL
+    const deployedDomain = window.location.hostname.includes('lovableproject.com') 
+      ? 'https://your-app.lovable.app' // Replace with your actual deployed URL
+      : window.location.origin;
+    
+    const bookingUrl = `${deployedDomain}/book/${business.booking_link}`;
     try {
       await navigator.clipboard.writeText(bookingUrl);
       setCopiedLink(true);
@@ -190,7 +201,10 @@ const ProfileManagement = () => {
 
   const openBookingPage = () => {
     if (!business?.booking_link) return;
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    const deployedDomain = window.location.hostname.includes('lovableproject.com') 
+      ? 'https://your-app.lovable.app' // Replace with your actual deployed URL
+      : window.location.origin;
+    const bookingUrl = `${deployedDomain}/book/${business.booking_link}`;
     window.open(bookingUrl, '_blank');
   };
 
@@ -243,7 +257,10 @@ const ProfileManagement = () => {
     );
   }
 
-  const bookingUrl = business.booking_link ? `${window.location.origin}/book/${business.booking_link}` : '';
+  const deployedDomain = window.location.hostname.includes('lovableproject.com') 
+    ? 'https://your-app.lovable.app' // Replace with your actual deployed URL
+    : window.location.origin;
+  const bookingUrl = business.booking_link ? `${deployedDomain}/book/${business.booking_link}` : '';
 
   return (
     <div className="space-y-6">
