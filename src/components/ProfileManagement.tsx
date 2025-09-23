@@ -60,26 +60,71 @@ const ProfileManagement = () => {
     
     // Use the exact URL that works
     const bookingUrl = `https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app/book/${business.booking_link}`;
-    console.log('Original booking_link from database:', business.booking_link);
-    console.log('Final QR code URL:', bookingUrl);
-    console.log('Generating QR code with URL:', bookingUrl);
+    
+    // Extensive debugging
+    console.log('=== QR CODE GENERATION DEBUG ===');
+    console.log('Business booking_link:', business.booking_link);
+    console.log('Constructed URL:', bookingUrl);
+    console.log('URL length:', bookingUrl.length);
+    console.log('URL encoding test:', encodeURI(bookingUrl));
+    console.log('Current window location:', window.location.href);
+    console.log('QR Library version check - QRCode object:', typeof QRCode);
+    
+    // Test the URL accessibility
+    try {
+      const testResponse = await fetch(bookingUrl, { method: 'HEAD', mode: 'no-cors' });
+      console.log('URL accessibility test passed');
+    } catch (error) {
+      console.log('URL accessibility test failed:', error);
+    }
     
     try {
-      const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
+      // Try different QR code options to see if encoding is the issue
+      console.log('Attempting QR code generation...');
+      
+      const qrOptions = {
         width: 256,
         margin: 2,
         color: {
           dark: '#000000',
           light: '#FFFFFF'
-        }
-      });
-      console.log('QR code generated successfully for URL:', bookingUrl);
+        },
+        errorCorrectionLevel: 'M' as const
+      };
+      
+      console.log('QR options:', qrOptions);
+      
+      const qrDataUrl = await QRCode.toDataURL(bookingUrl, qrOptions);
+      
+      // Additional debugging - check the generated data URL
+      console.log('QR code data URL generated');
+      console.log('Data URL prefix:', qrDataUrl.substring(0, 50));
+      console.log('Data URL length:', qrDataUrl.length);
+      
+      // Try to decode what's actually in the QR code by creating a test element
+      const testImg = new Image();
+      testImg.onload = () => {
+        console.log('QR code image loaded successfully - dimensions:', testImg.width, 'x', testImg.height);
+      };
+      testImg.onerror = () => {
+        console.error('Failed to load generated QR code image');
+      };
+      testImg.src = qrDataUrl;
+      
       setQrCodeDataUrl(qrDataUrl);
-    } catch (error) {
-      console.error('Error generating QR code:', error);
+      console.log('✅ QR code generation completed successfully');
+      console.log('=== END QR DEBUG ===');
+      
+    } catch (error: any) {
+      console.error('❌ QR code generation failed:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
       toast({
         title: "QR Code Error",
-        description: "Failed to generate QR code. Please try refreshing the page.",
+        description: `Failed to generate QR code: ${error.message}`,
         variant: "destructive",
       });
     } finally {
