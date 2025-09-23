@@ -18,12 +18,17 @@ interface Business {
   name: string;
   description: string | null;
   business_type: string;
-  phone: string | null;
-  email: string | null;
   address: string | null;
   website: string | null;
   instagram: string | null;
   logo_url: string | null;
+  cover_image_url: string | null;
+  booking_link: string;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  is_active: boolean;
+  created_at: string;
 }
 
 interface Service {
@@ -118,22 +123,22 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
   const fetchBusinessData = async () => {
     try {
-      // Get business by booking link
+      // Get business by booking link using secure function
       const { data: businessData, error: businessError } = await supabase
-        .from('businesses')
-        .select('*')
-        .eq('booking_link', businessLink)
-        .eq('is_active', true)
-        .single();
+        .rpc('get_business_public_data', { business_booking_link: businessLink });
 
-      if (businessError) throw businessError;
-      setBusiness(businessData);
+      if (businessError || !businessData || businessData.length === 0) {
+        throw new Error('Business not found');
+      }
+      
+      const business = businessData[0];
+      setBusiness(business);
 
       // Get services
       const { data: servicesData, error: servicesError } = await supabase
         .from('services')
         .select('*')
-        .eq('business_id', businessData.id)
+        .eq('business_id', business.id)
         .eq('is_active', true)
         .order('name');
 
@@ -144,7 +149,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const { data: staffData, error: staffError } = await supabase
         .from('staff')
         .select('*')
-        .eq('business_id', businessData.id)
+        .eq('business_id', business.id)
         .eq('is_active', true)
         .order('name');
 
@@ -155,7 +160,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const { data: workPicturesData, error: workPicturesError } = await supabase
         .from('work_pictures')
         .select('*')
-        .eq('business_id', businessData.id)
+        .eq('business_id', business.id)
         .order('created_at', { ascending: false });
 
       if (workPicturesError) {
@@ -313,22 +318,24 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   <p className="text-slate-300 mb-4">{business.description}</p>
                 )}
                 <div className="flex flex-wrap gap-4 text-slate-400">
-                  {business.phone && (
-                    <div className="flex items-center">
-                      <Phone className="w-4 h-4 mr-2" />
-                      {business.phone}
-                    </div>
-                  )}
-                  {business.email && (
-                    <div className="flex items-center">
-                      <Mail className="w-4 h-4 mr-2" />
-                      {business.email}
-                    </div>
-                  )}
                   {business.address && (
                     <div className="flex items-center">
                       <MapPin className="w-4 h-4 mr-2" />
                       {business.address}
+                    </div>
+                  )}
+                  {business.website && (
+                    <div className="flex items-center">
+                      <a href={business.website} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+                        🌐 Website
+                      </a>
+                    </div>
+                  )}
+                  {business.instagram && (
+                    <div className="flex items-center">
+                      <a href={`https://instagram.com/${business.instagram}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+                        📸 Instagram
+                      </a>
                     </div>
                   )}
                 </div>
