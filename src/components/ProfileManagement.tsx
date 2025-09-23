@@ -55,21 +55,20 @@ const ProfileManagement = () => {
       return;
     }
     
-    // Use published domain instead of preview URL
-    const publishedDomain = "https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app";
+    // Dynamically determine the correct domain
+    const currentOrigin = window.location.origin;
+    const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
+    
+    // If we're on preview, use the published domain pattern, otherwise use current origin
+    const publishedDomain = isPreviewDomain 
+      ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
+      : currentOrigin;
+    
     const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
     console.log('Original booking_link from database:', business.booking_link);
     console.log('Final QR code URL:', bookingUrl);
-    console.log('Using published domain:', publishedDomain);
-    
-    // Test the URL by trying to navigate to it
-    console.log('Testing URL accessibility...');
-    try {
-      const testResponse = await fetch(bookingUrl, { method: 'HEAD' });
-      console.log('URL test response status:', testResponse.status);
-    } catch (error) {
-      console.log('URL test error:', error);
-    }
+    console.log('Current origin:', currentOrigin);
+    console.log('Using domain:', publishedDomain);
     
     try {
       const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
@@ -194,8 +193,12 @@ const ProfileManagement = () => {
   const copyBookingLink = async () => {
     if (!business?.booking_link) return;
     
-    // Use published domain for booking link
-    const publishedDomain = "https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app";
+    // Dynamically determine the correct domain
+    const currentOrigin = window.location.origin;
+    const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
+    const publishedDomain = isPreviewDomain 
+      ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
+      : currentOrigin;
     const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
     try {
       await navigator.clipboard.writeText(bookingUrl);
@@ -216,8 +219,12 @@ const ProfileManagement = () => {
 
   const openBookingPage = () => {
     if (!business?.booking_link) return;
-    // Use published domain for booking page
-    const publishedDomain = "https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app";
+    // Dynamically determine the correct domain
+    const currentOrigin = window.location.origin;
+    const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
+    const publishedDomain = isPreviewDomain 
+      ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
+      : currentOrigin;
     const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
     window.open(bookingUrl, '_blank');
   };
@@ -271,8 +278,12 @@ const ProfileManagement = () => {
     );
   }
 
-  // Use published domain for display URL
-  const publishedDomain = "https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app";
+  // Dynamically determine the correct domain for display
+  const currentOrigin = window.location.origin;
+  const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
+  const publishedDomain = isPreviewDomain 
+    ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
+    : currentOrigin;
   const bookingUrl = business.booking_link ? `${publishedDomain}/book/${business.booking_link}` : '';
 
   return (
@@ -377,7 +388,7 @@ const ProfileManagement = () => {
                 </ul>
                 <div className="mt-4 p-3 bg-muted rounded-md">
                   <p className="text-xs text-muted-foreground">
-                    QR Code URL: <span className="font-mono">{business.booking_link ? `${publishedDomain}/book/${business.booking_link}` : ''}</span>
+                    QR Code URL: <span className="font-mono">{bookingUrl}</span>
                   </p>
                 </div>
               </div>
