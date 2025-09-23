@@ -758,11 +758,13 @@ export type Database = {
           cover_image_url: string
           created_at: string
           description: string
+          email: string
           id: string
           instagram: string
           is_active: boolean
           logo_url: string
           name: string
+          phone: string
           state: string
           website: string
         }[]

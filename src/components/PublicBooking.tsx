@@ -134,7 +134,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const { data: servicesData, error: servicesError } = await supabase
         .from('services')
         .select('*')
-        .eq('business_id', businessData.id)
+        .eq('business_id', business.id)
         .eq('is_active', true)
         .order('name');
 
@@ -145,7 +145,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const { data: staffData, error: staffError } = await supabase
         .from('staff')
         .select('*')
-        .eq('business_id', businessData.id)
+        .eq('business_id', business.id)
         .eq('is_active', true)
         .order('name');
 
@@ -156,7 +156,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const { data: workPicturesData, error: workPicturesError } = await supabase
         .from('work_pictures')
         .select('*')
-        .eq('business_id', businessData.id)
+        .eq('business_id', business.id)
         .order('created_at', { ascending: false });
 
       if (workPicturesError) {
