@@ -118,8 +118,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
   const fetchBusinessData = async () => {
     try {
-      console.log('PublicBooking - Looking for business with booking_link:', businessLink);
-      
       // Get business by booking link
       const { data: businessData, error: businessError } = await supabase
         .from('businesses')
@@ -127,8 +125,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         .eq('booking_link', businessLink)
         .eq('is_active', true)
         .single();
-
-      console.log('PublicBooking - Database query result:', { businessData, businessError });
 
       if (businessError) throw businessError;
       setBusiness(businessData);

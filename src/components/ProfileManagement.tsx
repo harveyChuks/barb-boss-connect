@@ -55,20 +55,10 @@ const ProfileManagement = () => {
       return;
     }
     
-    // Dynamically determine the correct domain
-    const currentOrigin = window.location.origin;
-    const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
-    
-    // If we're on preview, use the published domain pattern, otherwise use current origin
-    const publishedDomain = isPreviewDomain 
-      ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
-      : currentOrigin;
-    
-    const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
-    console.log('Original booking_link from database:', business.booking_link);
-    console.log('Final QR code URL:', bookingUrl);
-    console.log('Current origin:', currentOrigin);
-    console.log('Using domain:', publishedDomain);
+    // Encode the booking link to handle special characters like apostrophes
+    const encodedBookingLink = encodeURIComponent(business.booking_link);
+    const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
+    console.log('Generating QR code for URL:', bookingUrl);
     
     try {
       const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
@@ -193,13 +183,8 @@ const ProfileManagement = () => {
   const copyBookingLink = async () => {
     if (!business?.booking_link) return;
     
-    // Dynamically determine the correct domain
-    const currentOrigin = window.location.origin;
-    const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
-    const publishedDomain = isPreviewDomain 
-      ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
-      : currentOrigin;
-    const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
+    const encodedBookingLink = encodeURIComponent(business.booking_link);
+    const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
     try {
       await navigator.clipboard.writeText(bookingUrl);
       setCopiedLink(true);
@@ -219,13 +204,8 @@ const ProfileManagement = () => {
 
   const openBookingPage = () => {
     if (!business?.booking_link) return;
-    // Dynamically determine the correct domain
-    const currentOrigin = window.location.origin;
-    const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
-    const publishedDomain = isPreviewDomain 
-      ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
-      : currentOrigin;
-    const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
+    const encodedBookingLink = encodeURIComponent(business.booking_link);
+    const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
     window.open(bookingUrl, '_blank');
   };
 
@@ -278,13 +258,7 @@ const ProfileManagement = () => {
     );
   }
 
-  // Dynamically determine the correct domain for display
-  const currentOrigin = window.location.origin;
-  const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
-  const publishedDomain = isPreviewDomain 
-    ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
-    : currentOrigin;
-  const bookingUrl = business.booking_link ? `${publishedDomain}/book/${business.booking_link}` : '';
+  const bookingUrl = business.booking_link ? `${window.location.origin}/book/${encodeURIComponent(business.booking_link)}` : '';
 
   return (
     <div className="space-y-6">
@@ -388,7 +362,7 @@ const ProfileManagement = () => {
                 </ul>
                 <div className="mt-4 p-3 bg-muted rounded-md">
                   <p className="text-xs text-muted-foreground">
-                    QR Code URL: <span className="font-mono">{bookingUrl}</span>
+                    QR Code URL: <span className="font-mono">{business.booking_link ? `${window.location.origin}/book/${encodeURIComponent(business.booking_link)}` : ''}</span>
                   </p>
                 </div>
               </div>

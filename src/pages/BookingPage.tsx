@@ -5,12 +5,10 @@ import PublicBooking from "@/components/PublicBooking";
 const BookingPage = () => {
   const { businessLink } = useParams<{ businessLink: string }>();
 
-  console.log('BookingPage - businessLink from URL:', businessLink);
-  console.log('BookingPage - Current URL:', window.location.href);
-  console.log('BookingPage - Current pathname:', window.location.pathname);
+  // Decode the business link in case it contains encoded characters
+  const decodedBusinessLink = businessLink ? decodeURIComponent(businessLink) : null;
 
-  if (!businessLink) {
-    console.log('BookingPage - No businessLink found in URL params');
+  if (!decodedBusinessLink) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-white text-center">
@@ -21,8 +19,7 @@ const BookingPage = () => {
     );
   }
 
-  console.log('BookingPage - Rendering PublicBooking with businessLink:', businessLink);
-  return <PublicBooking businessLink={businessLink} />;
+  return <PublicBooking businessLink={decodedBusinessLink} />;
 };
 
 export default BookingPage;
