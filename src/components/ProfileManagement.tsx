@@ -55,13 +55,7 @@ const ProfileManagement = () => {
       return;
     }
     
-    // Use the current origin, but replace lovableproject.com with the actual domain if in preview
-    const currentOrigin = window.location.origin;
-    const isLovableProject = currentOrigin.includes('lovableproject.com');
-    const bookingUrl = isLovableProject 
-      ? `https://bizflow.app/book/${business.booking_link}`
-      : `${currentOrigin}/book/${business.booking_link}`;
-    
+    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
     console.log('Original booking_link from database:', business.booking_link);
     console.log('Final QR code URL:', bookingUrl);
     
@@ -365,11 +359,7 @@ const ProfileManagement = () => {
                 </ul>
                 <div className="mt-4 p-3 bg-muted rounded-md">
                   <p className="text-xs text-muted-foreground">
-                    QR Code URL: <span className="font-mono">{business.booking_link ? 
-                      (window.location.origin.includes('lovableproject.com') 
-                        ? `https://bizflow.app/book/${business.booking_link}`
-                        : `${window.location.origin}/book/${business.booking_link}`) 
-                      : ''}</span>
+                    QR Code URL: <span className="font-mono">{business.booking_link ? `${window.location.origin}/book/${business.booking_link}` : ''}</span>
                   </p>
                 </div>
               </div>
