@@ -135,6 +135,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       setBusiness(business);
 
       // Get services
+      console.log('Fetching services for business ID:', business.id);
       const { data: servicesData, error: servicesError } = await supabase
         .from('services')
         .select('*')
@@ -142,7 +143,12 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         .eq('is_active', true)
         .order('name');
 
-      if (servicesError) throw servicesError;
+      console.log('Services fetch result:', { servicesData, servicesError });
+      if (servicesError) {
+        console.error('Services error:', servicesError);
+        throw servicesError;
+      }
+      console.log('Setting services:', servicesData || []);
       setServices(servicesData || []);
 
       // Get staff
@@ -173,6 +179,11 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       }
     } catch (error) {
       console.error('Error fetching business data:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        businessLink
+      });
       toast({
         title: "Business Not Found",
         description: "The business you're looking for doesn't exist or is no longer active.",
