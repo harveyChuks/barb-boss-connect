@@ -7,13 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Camera, Save, Copy, ExternalLink, Check, QrCode, Download } from "lucide-react";
+import { Camera, Save, Copy, ExternalLink, Check } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Database } from "@/integrations/supabase/types";
 import { uploadImage } from "@/utils/imageUpload";
-import QRCode from "qrcode";
 
 type BusinessType = Database["public"]["Enums"]["business_type"];
 
@@ -24,7 +23,6 @@ const ProfileManagement = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [business, setBusiness] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [qrCodeDataUrl, setQrCodeDataUrl] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -42,60 +40,6 @@ const ProfileManagement = () => {
     fetchBusinessProfile();
   }, [user]);
 
-  // Generate QR code when business data is available
-  useEffect(() => {
-    if (business?.booking_link) {
-      generateQRCode();
-    }
-  }, [business]);
-
-  const generateQRCode = async () => {
-    if (!business?.booking_link) {
-      console.log('No booking link available for QR code generation');
-      return;
-    }
-    
-    // Encode the booking link to handle special characters like apostrophes
-    const encodedBookingLink = encodeURIComponent(business.booking_link);
-    const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
-    console.log('Generating QR code for URL:', bookingUrl);
-    
-    try {
-      const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
-        width: 256,
-        margin: 2,
-        color: {
-          dark: '#000000',
-          light: '#FFFFFF'
-        }
-      });
-      console.log('QR code generated successfully');
-      setQrCodeDataUrl(qrDataUrl);
-    } catch (error) {
-      console.error('Error generating QR code:', error);
-      toast({
-        title: "QR Code Error",
-        description: "Failed to generate QR code. Please try refreshing the page.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const downloadQRCode = () => {
-    if (!qrCodeDataUrl || !business?.name) return;
-    
-    const link = document.createElement('a');
-    link.download = `${business.name}-booking-qr.png`;
-    link.href = qrCodeDataUrl;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    toast({
-      title: "QR Code Downloaded",
-      description: "Your booking QR code has been downloaded successfully.",
-    });
-  };
 
   const fetchBusinessProfile = async () => {
     if (!user) return;
@@ -266,13 +210,12 @@ const ProfileManagement = () => {
       {business.booking_link && (
         <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-foreground">Your Booking Link & QR Code</CardTitle>
+            <CardTitle className="text-foreground">Your Booking Link</CardTitle>
             <CardDescription className="text-muted-foreground">
-              Share this link or QR code with clients so they can book appointments online
+              Share this link with clients so they can book appointments online
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Link Section */}
+          <CardContent className="space-y-4">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <Input
@@ -306,65 +249,6 @@ const ProfileManagement = () => {
                   <ExternalLink className="w-4 h-4 mr-2" />
                   Preview
                 </Button>
-              </div>
-            </div>
-
-            {/* QR Code Section */}
-            <div className="flex flex-col md:flex-row gap-6 items-start">
-              <div className="flex flex-col items-center space-y-3">
-                {qrCodeDataUrl ? (
-                  <div className="bg-white p-4 rounded-lg shadow-sm border">
-                    <img 
-                      src={qrCodeDataUrl} 
-                      alt="Booking QR Code" 
-                      className="w-32 h-32"
-                    />
-                  </div>
-                ) : (
-                  <div className="bg-muted p-4 rounded-lg border border-dashed border-border w-32 h-32 flex flex-col items-center justify-center">
-                    <QrCode className="w-8 h-8 text-muted-foreground mb-2" />
-                    <span className="text-xs text-muted-foreground text-center">Generating QR Code...</span>
-                  </div>
-                )}
-                <div className="flex gap-2">
-                  {qrCodeDataUrl && (
-                    <Button
-                      onClick={downloadQRCode}
-                      variant="outline"
-                      size="sm"
-                      className="border-border text-foreground hover:bg-muted"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
-                  )}
-                  <Button
-                    onClick={generateQRCode}
-                    variant="outline"
-                    size="sm"
-                    className="border-border text-foreground hover:bg-muted"
-                  >
-                    <QrCode className="w-4 h-4 mr-2" />
-                    {qrCodeDataUrl ? 'Regenerate' : 'Generate'}
-                  </Button>
-                </div>
-              </div>
-              <div className="flex-1 space-y-2">
-                <h4 className="text-foreground font-medium flex items-center">
-                  <QrCode className="w-4 h-4 mr-2 text-primary" />
-                  QR Code Instructions
-                </h4>
-                <ul className="text-muted-foreground text-sm space-y-1">
-                  <li>• Print and display in your business</li>
-                  <li>• Share on social media</li>
-                  <li>• Include in business cards or flyers</li>
-                  <li>• Clients can scan to book instantly</li>
-                </ul>
-                <div className="mt-4 p-3 bg-muted rounded-md">
-                  <p className="text-xs text-muted-foreground">
-                    QR Code URL: <span className="font-mono">{business.booking_link ? `${window.location.origin}/book/${encodeURIComponent(business.booking_link)}` : ''}</span>
-                  </p>
-                </div>
               </div>
             </div>
           </CardContent>
