@@ -6,8 +6,11 @@ const BookingPage = () => {
   const { businessLink } = useParams<{ businessLink: string }>();
 
   console.log('BookingPage - businessLink from URL:', businessLink);
+  console.log('BookingPage - Current URL:', window.location.href);
+  console.log('BookingPage - Current pathname:', window.location.pathname);
 
   if (!businessLink) {
+    console.log('BookingPage - No businessLink found in URL params');
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-white text-center">
@@ -18,6 +21,7 @@ const BookingPage = () => {
     );
   }
 
+  console.log('BookingPage - Rendering PublicBooking with businessLink:', businessLink);
   return <PublicBooking businessLink={businessLink} />;
 };
 

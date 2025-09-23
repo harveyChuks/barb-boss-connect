@@ -58,6 +58,16 @@ const ProfileManagement = () => {
     const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
     console.log('Original booking_link from database:', business.booking_link);
     console.log('Final QR code URL:', bookingUrl);
+    console.log('Current window.location.origin:', window.location.origin);
+    
+    // Test the URL by trying to navigate to it
+    console.log('Testing URL accessibility...');
+    try {
+      const testResponse = await fetch(bookingUrl, { method: 'HEAD' });
+      console.log('URL test response status:', testResponse.status);
+    } catch (error) {
+      console.log('URL test error:', error);
+    }
     
     try {
       const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
