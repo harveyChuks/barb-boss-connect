@@ -56,10 +56,11 @@ const ProfileManagement = () => {
       return;
     }
     
-    // Encode the booking link to handle special characters like apostrophes
-    const encodedBookingLink = encodeURIComponent(business.booking_link);
-    const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
-    console.log('Generating QR code for URL:', bookingUrl);
+    // Use the same URL generation logic as the copy link function
+    const bookingUrl = generateBookingUrl(business.booking_link);
+    console.log('Generating QR code for business:', business.name);
+    console.log('Business booking link:', business.booking_link);
+    console.log('Generated booking URL:', bookingUrl);
     
     try {
       const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
@@ -68,10 +69,14 @@ const ProfileManagement = () => {
         color: {
           dark: '#000000',
           light: '#FFFFFF'
-        }
+        },
+        errorCorrectionLevel: 'M'
       });
       console.log('QR code generated successfully');
       setQrCodeDataUrl(qrDataUrl);
+      
+      // Test the URL by attempting to validate it
+      testBookingUrl(bookingUrl);
     } catch (error) {
       console.error('Error generating QR code:', error);
       toast({
@@ -79,6 +84,44 @@ const ProfileManagement = () => {
         description: "Failed to generate QR code. Please try refreshing the page.",
         variant: "destructive",
       });
+    }
+  };
+
+  // Helper function to generate consistent booking URLs
+  const generateBookingUrl = (bookingLink: string) => {
+    // Don't double-encode - the booking link should be used as-is
+    return `${window.location.origin}/book/${bookingLink}`;
+  };
+
+  // Test function to validate the booking URL
+  const testBookingUrl = async (url: string) => {
+    try {
+      const urlParts = url.split('/book/');
+      if (urlParts.length !== 2) {
+        console.error('Invalid booking URL format:', url);
+        return;
+      }
+      
+      const businessLinkFromUrl = urlParts[1];
+      console.log('Testing business link from URL:', businessLinkFromUrl);
+      
+      // Test the RPC call that PublicBooking will use
+      const { data, error } = await supabase
+        .rpc('get_business_public_data', { business_booking_link: businessLinkFromUrl });
+        
+      if (error || !data || data.length === 0) {
+        console.error('QR Code URL test failed - business not found with link:', businessLinkFromUrl);
+        console.error('RPC Error:', error);
+        toast({
+          title: "QR Code Warning",
+          description: `Generated QR code may not work properly. Business link "${businessLinkFromUrl}" not found in database.`,
+          variant: "destructive",
+        });
+      } else {
+        console.log('QR Code URL test successful - business found:', data[0].name);
+      }
+    } catch (error) {
+      console.error('Error testing booking URL:', error);
     }
   };
 
@@ -184,8 +227,10 @@ const ProfileManagement = () => {
   const copyBookingLink = async () => {
     if (!business?.booking_link) return;
     
-    const encodedBookingLink = encodeURIComponent(business.booking_link);
-    const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
+    // Use the same URL generation logic as QR code
+    const bookingUrl = generateBookingUrl(business.booking_link);
+    console.log('Copying booking URL:', bookingUrl);
+    
     try {
       await navigator.clipboard.writeText(bookingUrl);
       setCopiedLink(true);
@@ -205,8 +250,8 @@ const ProfileManagement = () => {
 
   const openBookingPage = () => {
     if (!business?.booking_link) return;
-    const encodedBookingLink = encodeURIComponent(business.booking_link);
-    const bookingUrl = `${window.location.origin}/book/${encodedBookingLink}`;
+    const bookingUrl = generateBookingUrl(business.booking_link);
+    console.log('Opening booking page:', bookingUrl);
     window.open(bookingUrl, '_blank');
   };
 
@@ -259,7 +304,7 @@ const ProfileManagement = () => {
     );
   }
 
-  const bookingUrl = business.booking_link ? `${window.location.origin}/book/${encodeURIComponent(business.booking_link)}` : '';
+  const bookingUrl = business.booking_link ? generateBookingUrl(business.booking_link) : '';
 
   return (
     <div className="space-y-6">
@@ -363,7 +408,10 @@ const ProfileManagement = () => {
                 </ul>
                 <div className="mt-4 p-3 bg-muted rounded-md">
                   <p className="text-xs text-muted-foreground">
-                    QR Code URL: <span className="font-mono">{business.booking_link ? `${window.location.origin}/book/${encodeURIComponent(business.booking_link)}` : ''}</span>
+                    QR Code URL: <span className="font-mono">{business.booking_link ? generateBookingUrl(business.booking_link) : ''}</span>
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Business Link: <span className="font-mono">{business.booking_link || 'Not set'}</span>
                   </p>
                 </div>
               </div>
