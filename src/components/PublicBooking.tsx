@@ -135,7 +135,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       setBusiness(business);
 
       // Get services
-      console.log('Fetching services for business ID:', business.id);
       const { data: servicesData, error: servicesError } = await supabase
         .from('services')
         .select('*')
@@ -143,12 +142,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         .eq('is_active', true)
         .order('name');
 
-      console.log('Services fetch result:', { servicesData, servicesError });
-      if (servicesError) {
-        console.error('Services error:', servicesError);
-        throw servicesError;
-      }
-      console.log('Setting services:', servicesData || []);
+      if (servicesError) throw servicesError;
       setServices(servicesData || []);
 
       // Get staff
