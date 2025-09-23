@@ -60,6 +60,7 @@ interface PublicBookingProps {
 }
 
 const PublicBooking = ({ businessLink }: PublicBookingProps) => {
+  console.log('PublicBooking: Component initializing with businessLink:', businessLink);
   const { toast } = useToast();
   const [business, setBusiness] = useState<Business | null>(null);
   const [services, setServices] = useState<Service[]>([]);
@@ -118,23 +119,31 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   ];
 
   useEffect(() => {
+    console.log('PublicBooking: useEffect called with businessLink:', businessLink);
     fetchBusinessData();
   }, [businessLink]);
 
   const fetchBusinessData = async () => {
+    console.log('PublicBooking: fetchBusinessData started for:', businessLink);
     try {
       // Get business by booking link using secure function
+      console.log('PublicBooking: Calling get_business_public_data with:', businessLink);
       const { data: businessData, error: businessError } = await supabase
         .rpc('get_business_public_data', { business_booking_link: businessLink });
 
+      console.log('PublicBooking: Business data response:', { businessData, businessError });
+      
       if (businessError || !businessData || businessData.length === 0) {
+        console.error('PublicBooking: Business not found error');
         throw new Error('Business not found');
       }
       
       const business = businessData[0];
+      console.log('PublicBooking: Setting business data:', business);
       setBusiness(business);
 
       // Get services
+      console.log('PublicBooking: Fetching services for business_id:', business.id);
       const { data: servicesData, error: servicesError } = await supabase
         .from('services')
         .select('*')
@@ -142,7 +151,13 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         .eq('is_active', true)
         .order('name');
 
-      if (servicesError) throw servicesError;
+      console.log('PublicBooking: Services response:', { servicesData, servicesError });
+      
+      if (servicesError) {
+        console.error('PublicBooking: Services error:', servicesError);
+        throw servicesError;
+      }
+      console.log('PublicBooking: Setting services:', servicesData || []);
       setServices(servicesData || []);
 
       // Get staff
@@ -172,11 +187,13 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         setWorkPictures(workPicturesData?.length > 0 ? workPicturesData : mockPictures);
       }
     } catch (error) {
-      console.error('Error fetching business data:', error);
-      console.error('Error details:', {
-        message: error.message,
-        stack: error.stack,
-        businessLink
+      console.error('PublicBooking: Error in fetchBusinessData:', error);
+      console.error('PublicBooking: Error details:', {
+        message: error?.message || 'Unknown error',
+        stack: error?.stack || 'No stack trace',
+        businessLink,
+        errorType: typeof error,
+        errorObject: error
       });
       toast({
         title: "Business Not Found",
@@ -186,6 +203,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       // Show mock pictures even on error
       setWorkPictures(mockPictures);
     } finally {
+      console.log('PublicBooking: fetchBusinessData completed, setting loading to false');
       setLoading(false);
     }
   };
