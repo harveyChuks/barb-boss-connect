@@ -69,7 +69,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     customer_name: "",
     customer_phone: "",
     customer_email: "",
-    service_id: "",
+    selected_services: [] as string[], // Changed to array for multiple services
     staff_id: "",
     notes: ""
   });
@@ -185,43 +185,69 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async () => {
-    if (!business || !selectedDate || !selectedTime) return;
+  const handleServiceToggle = (serviceId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      selected_services: prev.selected_services.includes(serviceId)
+        ? prev.selected_services.filter(id => id !== serviceId)
+        : [...prev.selected_services, serviceId]
+    }));
+  };
 
-    const selectedService = services.find(s => s.id === formData.service_id);
-    if (!selectedService) return;
+  const handleSubmit = async () => {
+    if (!business || !selectedDate || !selectedTime || formData.selected_services.length === 0) return;
+
+    const selectedServices = services.filter(s => formData.selected_services.includes(s.id));
+    if (selectedServices.length === 0) return;
 
     setSubmitting(true);
     try {
-      // Calculate end time
+      // Calculate total duration for all selected services
+      const totalDuration = selectedServices.reduce((sum, service) => sum + service.duration_minutes, 0);
+      
+      // Calculate end time based on total duration
       const startTime = selectedTime;
       const endTime = new Date(`2000-01-01T${selectedTime}:00`);
-      endTime.setMinutes(endTime.getMinutes() + selectedService.duration_minutes);
+      endTime.setMinutes(endTime.getMinutes() + totalDuration);
       const endTimeString = endTime.toTimeString().slice(0, 5);
 
-      const appointmentData = {
-        business_id: business.id,
-        service_id: formData.service_id,
-        staff_id: formData.staff_id || null,
-        customer_name: formData.customer_name,
-        customer_phone: formData.customer_phone,
-        customer_email: formData.customer_email || null,
-        appointment_date: format(selectedDate, 'yyyy-MM-dd'),
-        start_time: startTime,
-        end_time: endTimeString,
-        notes: formData.notes || null,
-        status: 'pending' as const
-      };
+      // Create separate appointments for each service (this ensures proper tracking and pricing)
+      const appointmentPromises = selectedServices.map(async (service, index) => {
+        // Calculate start time for each subsequent service
+        const serviceStartTime = new Date(`2000-01-01T${selectedTime}:00`);
+        const previousDuration = selectedServices.slice(0, index).reduce((sum, s) => sum + s.duration_minutes, 0);
+        serviceStartTime.setMinutes(serviceStartTime.getMinutes() + previousDuration);
+        
+        const serviceEndTime = new Date(serviceStartTime);
+        serviceEndTime.setMinutes(serviceEndTime.getMinutes() + service.duration_minutes);
 
-      const { error } = await supabase
-        .from('appointments')
-        .insert(appointmentData);
+        const appointmentData = {
+          business_id: business.id,
+          service_id: service.id,
+          staff_id: formData.staff_id || null,
+          customer_name: formData.customer_name,
+          customer_phone: formData.customer_phone,
+          customer_email: formData.customer_email || null,
+          appointment_date: format(selectedDate, 'yyyy-MM-dd'),
+          start_time: serviceStartTime.toTimeString().slice(0, 5),
+          end_time: serviceEndTime.toTimeString().slice(0, 5),
+          notes: formData.notes || null,
+          status: 'pending' as const
+        };
 
-      if (error) throw error;
+        return supabase.from('appointments').insert(appointmentData);
+      });
+
+      const results = await Promise.all(appointmentPromises);
+      const hasError = results.some(result => result.error);
+
+      if (hasError) {
+        throw new Error("Failed to book one or more services");
+      }
 
       toast({
         title: "Booking Confirmed!",
-        description: "Your appointment has been booked successfully. We'll contact you soon to confirm.",
+        description: `Your appointment${selectedServices.length > 1 ? 's' : ''} for ${selectedServices.map(s => s.name).join(', ')} have been booked successfully. We'll contact you soon to confirm.`,
       });
 
       // Reset form
@@ -229,7 +255,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         customer_name: "",
         customer_phone: "",
         customer_email: "",
-        service_id: "",
+        selected_services: [],
         staff_id: "",
         notes: ""
       });
@@ -385,21 +411,37 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
           <div className="space-y-6">
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white">Our Services</CardTitle>
+                <CardTitle className="text-white">Choose Your Services</CardTitle>
+                <CardDescription className="text-slate-400">
+                  Select one or more services for your appointment
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {services.map((service) => (
                   <div
                     key={service.id}
                     className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                      formData.service_id === service.id
+                      formData.selected_services.includes(service.id)
                         ? 'border-primary bg-primary/10'
                         : 'border-slate-600 hover:border-slate-500'
                     }`}
-                    onClick={() => handleInputChange('service_id', service.id)}
+                    onClick={() => handleServiceToggle(service.id)}
                   >
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-white">{service.name}</h3>
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                          formData.selected_services.includes(service.id)
+                            ? 'border-primary bg-primary'
+                            : 'border-slate-400'
+                        }`}>
+                          {formData.selected_services.includes(service.id) && (
+                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+                        <h3 className="font-semibold text-white">{service.name}</h3>
+                      </div>
                       <div className="text-right">
                         {service.price && (
                           <div className="text-primary font-semibold">${service.price}</div>
@@ -411,7 +453,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                       </div>
                     </div>
                     {service.description && (
-                      <p className="text-slate-400 text-sm">{service.description}</p>
+                      <p className="text-slate-400 text-sm ml-8">{service.description}</p>
                     )}
                   </div>
                 ))}
@@ -637,22 +679,46 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                 </div>
 
                 {/* Deposit Payment Section */}
-                {formData.service_id && services.find(s => s.id === formData.service_id)?.price && (
+                {formData.selected_services.length > 0 && (
                   <div className="space-y-3 p-4 bg-slate-700/30 rounded-lg border border-slate-600">
-                    <h3 className="text-white font-semibold text-sm">Payment Options</h3>
+                    <h3 className="text-white font-semibold text-sm">Payment Information</h3>
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-300">Service Price:</span>
-                        <span className="text-white font-medium">
-                          ${services.find(s => s.id === formData.service_id)?.price}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-300">Required Deposit (50%):</span>
-                        <span className="text-primary font-semibold">
-                          ${((services.find(s => s.id === formData.service_id)?.price || 0) * 0.5).toFixed(2)}
-                        </span>
-                      </div>
+                      {formData.selected_services.map(serviceId => {
+                        const service = services.find(s => s.id === serviceId);
+                        if (!service?.price) return null;
+                        return (
+                          <div key={serviceId} className="flex items-center justify-between text-sm">
+                            <span className="text-slate-300">{service.name}:</span>
+                            <span className="text-white font-medium">${service.price}</span>
+                          </div>
+                        );
+                      })}
+                      {(() => {
+                        const selectedServices = services.filter(s => formData.selected_services.includes(s.id));
+                        const totalPrice = selectedServices.reduce((sum, service) => sum + (service.price || 0), 0);
+                        const totalDuration = selectedServices.reduce((sum, service) => sum + service.duration_minutes, 0);
+                        
+                        if (totalPrice > 0) {
+                          return (
+                            <>
+                              <hr className="border-slate-600" />
+                              <div className="flex items-center justify-between text-sm">
+                                <span className="text-slate-300">Total Price:</span>
+                                <span className="text-white font-medium">${totalPrice}</span>
+                              </div>
+                              <div className="flex items-center justify-between text-sm">
+                                <span className="text-slate-300">Total Duration:</span>
+                                <span className="text-white font-medium">{totalDuration} minutes</span>
+                              </div>
+                              <div className="flex items-center justify-between text-sm">
+                                <span className="text-slate-300">Required Deposit (50%):</span>
+                                <span className="text-primary font-semibold">${(totalPrice * 0.5).toFixed(2)}</span>
+                              </div>
+                            </>
+                          );
+                        }
+                        return null;
+                      })()}
                     </div>
                     <div className="text-xs text-slate-400">
                       A 50% deposit is required to secure your appointment. You can pay the remaining balance during your visit.
@@ -666,13 +732,20 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                     submitting || 
                     !formData.customer_name || 
                     !formData.customer_phone || 
-                    !formData.service_id || 
+                    formData.selected_services.length === 0 || 
                     !selectedDate || 
                     !selectedTime
                   }
                   className="w-full bg-primary hover:bg-primary/90 text-black font-semibold"
                 >
-                  {submitting ? "Booking..." : formData.service_id && services.find(s => s.id === formData.service_id)?.price ? "Book Appointment & Pay Deposit" : "Book Appointment"}
+                  {submitting 
+                    ? "Booking..." 
+                    : (() => {
+                        const selectedServices = services.filter(s => formData.selected_services.includes(s.id));
+                        const hasPrice = selectedServices.some(s => s.price);
+                        return hasPrice ? "Book Appointment & Pay Deposit" : "Book Appointment";
+                      })()
+                  }
                 </Button>
               </CardContent>
             </Card>
