@@ -55,10 +55,12 @@ const ProfileManagement = () => {
       return;
     }
     
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    // Use published domain instead of preview URL
+    const publishedDomain = "https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app";
+    const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
     console.log('Original booking_link from database:', business.booking_link);
     console.log('Final QR code URL:', bookingUrl);
-    console.log('Current window.location.origin:', window.location.origin);
+    console.log('Using published domain:', publishedDomain);
     
     // Test the URL by trying to navigate to it
     console.log('Testing URL accessibility...');
@@ -192,7 +194,9 @@ const ProfileManagement = () => {
   const copyBookingLink = async () => {
     if (!business?.booking_link) return;
     
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    // Use published domain for booking link
+    const publishedDomain = "https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app";
+    const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
     try {
       await navigator.clipboard.writeText(bookingUrl);
       setCopiedLink(true);
@@ -212,7 +216,9 @@ const ProfileManagement = () => {
 
   const openBookingPage = () => {
     if (!business?.booking_link) return;
-    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
+    // Use published domain for booking page
+    const publishedDomain = "https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app";
+    const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
     window.open(bookingUrl, '_blank');
   };
 
@@ -265,7 +271,9 @@ const ProfileManagement = () => {
     );
   }
 
-  const bookingUrl = business.booking_link ? `${window.location.origin}/book/${business.booking_link}` : '';
+  // Use published domain for display URL
+  const publishedDomain = "https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app";
+  const bookingUrl = business.booking_link ? `${publishedDomain}/book/${business.booking_link}` : '';
 
   return (
     <div className="space-y-6">
@@ -369,7 +377,7 @@ const ProfileManagement = () => {
                 </ul>
                 <div className="mt-4 p-3 bg-muted rounded-md">
                   <p className="text-xs text-muted-foreground">
-                    QR Code URL: <span className="font-mono">{business.booking_link ? `${window.location.origin}/book/${business.booking_link}` : ''}</span>
+                    QR Code URL: <span className="font-mono">{business.booking_link ? `${publishedDomain}/book/${business.booking_link}` : ''}</span>
                   </p>
                 </div>
               </div>
