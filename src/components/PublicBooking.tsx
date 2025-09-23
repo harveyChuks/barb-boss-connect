@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight, Globe, Instagram } from "lucide-react";
+import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format, addDays, isAfter, isBefore, startOfDay, addMonths, subMonths, startOfMonth, endOfMonth, eachWeekOfInterval, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isSameDay } from "date-fns";
@@ -18,17 +18,12 @@ interface Business {
   name: string;
   description: string | null;
   business_type: string;
+  phone: string | null;
+  email: string | null;
   address: string | null;
   website: string | null;
   instagram: string | null;
   logo_url: string | null;
-  cover_image_url: string | null;
-  booking_link: string;
-  city: string | null;
-  state: string | null;
-  country: string | null;
-  is_active: boolean;
-  created_at: string;
 }
 
 interface Service {
@@ -125,29 +120,24 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     try {
       console.log('PublicBooking - Looking for business with booking_link:', businessLink);
       
-      // Use the secure function to get only safe public business data
+      // Get business by booking link
       const { data: businessData, error: businessError } = await supabase
-        .rpc('get_business_public_data', { 
-          business_booking_link: businessLink 
-        });
+        .from('businesses')
+        .select('*')
+        .eq('booking_link', businessLink)
+        .eq('is_active', true)
+        .single();
 
       console.log('PublicBooking - Database query result:', { businessData, businessError });
 
       if (businessError) throw businessError;
-      
-      // The function returns an array, so get the first item
-      const business = businessData?.[0];
-      if (!business) {
-        throw new Error('Business not found');
-      }
-      
-      setBusiness(business);
+      setBusiness(businessData);
 
       // Get services
       const { data: servicesData, error: servicesError } = await supabase
         .from('services')
         .select('*')
-        .eq('business_id', business.id)
+        .eq('business_id', businessData.id)
         .eq('is_active', true)
         .order('name');
 
@@ -158,7 +148,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const { data: staffData, error: staffError } = await supabase
         .from('staff')
         .select('*')
-        .eq('business_id', business.id)
+        .eq('business_id', businessData.id)
         .eq('is_active', true)
         .order('name');
 
@@ -169,7 +159,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const { data: workPicturesData, error: workPicturesError } = await supabase
         .from('work_pictures')
         .select('*')
-        .eq('business_id', business.id)
+        .eq('business_id', businessData.id)
         .order('created_at', { ascending: false });
 
       if (workPicturesError) {
@@ -327,26 +317,22 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   <p className="text-slate-300 mb-4">{business.description}</p>
                 )}
                 <div className="flex flex-wrap gap-4 text-slate-400">
+                  {business.phone && (
+                    <div className="flex items-center">
+                      <Phone className="w-4 h-4 mr-2" />
+                      {business.phone}
+                    </div>
+                  )}
+                  {business.email && (
+                    <div className="flex items-center">
+                      <Mail className="w-4 h-4 mr-2" />
+                      {business.email}
+                    </div>
+                  )}
                   {business.address && (
                     <div className="flex items-center">
                       <MapPin className="w-4 h-4 mr-2" />
                       {business.address}
-                    </div>
-                  )}
-                  {business.website && (
-                    <div className="flex items-center">
-                      <Globe className="w-4 h-4 mr-2" />
-                      <a href={business.website} target="_blank" rel="noopener noreferrer" className="hover:text-white">
-                        Website
-                      </a>
-                    </div>
-                  )}
-                  {business.instagram && (
-                    <div className="flex items-center">
-                      <Instagram className="w-4 h-4 mr-2" />
-                      <a href={`https://instagram.com/${business.instagram}`} target="_blank" rel="noopener noreferrer" className="hover:text-white">
-                        @{business.instagram}
-                      </a>
                     </div>
                   )}
                 </div>

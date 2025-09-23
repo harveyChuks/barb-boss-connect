@@ -747,26 +747,6 @@ export type Database = {
           slot_time: string
         }[]
       }
-      get_business_public_data: {
-        Args: { business_booking_link: string }
-        Returns: {
-          address: string
-          booking_link: string
-          business_type: string
-          city: string
-          country: string
-          cover_image_url: string
-          created_at: string
-          description: string
-          id: string
-          instagram: string
-          is_active: boolean
-          logo_url: string
-          name: string
-          state: string
-          website: string
-        }[]
-      }
       initialize_default_business_hours: {
         Args: { p_business_id: string }
         Returns: undefined
