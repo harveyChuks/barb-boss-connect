@@ -49,19 +49,10 @@ const ProfileManagement = () => {
     }
   }, [business]);
 
-
   const generateQRCode = async () => {
-    if (!business?.booking_link) {
-      console.log('No booking link available for QR code generation');
-      return;
-    }
+    if (!business?.booking_link) return;
     
-    // Use the same URL generation logic as the copy link function
-    const bookingUrl = generateBookingUrl(business.booking_link);
-    console.log('Generating QR code for business:', business.name);
-    console.log('Business booking link:', business.booking_link);
-    console.log('Generated booking URL:', bookingUrl);
-    
+    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
     try {
       const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
         width: 256,
@@ -69,59 +60,11 @@ const ProfileManagement = () => {
         color: {
           dark: '#000000',
           light: '#FFFFFF'
-        },
-        errorCorrectionLevel: 'M'
+        }
       });
-      console.log('QR code generated successfully');
       setQrCodeDataUrl(qrDataUrl);
-      
-      // Test the URL by attempting to validate it
-      testBookingUrl(bookingUrl);
     } catch (error) {
       console.error('Error generating QR code:', error);
-      toast({
-        title: "QR Code Error",
-        description: "Failed to generate QR code. Please try refreshing the page.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Helper function to generate consistent booking URLs
-  const generateBookingUrl = (bookingLink: string) => {
-    // Don't double-encode - the booking link should be used as-is
-    return `${window.location.origin}/book/${bookingLink}`;
-  };
-
-  // Test function to validate the booking URL
-  const testBookingUrl = async (url: string) => {
-    try {
-      const urlParts = url.split('/book/');
-      if (urlParts.length !== 2) {
-        console.error('Invalid booking URL format:', url);
-        return;
-      }
-      
-      const businessLinkFromUrl = urlParts[1];
-      console.log('Testing business link from URL:', businessLinkFromUrl);
-      
-      // Test the RPC call that PublicBooking will use
-      const { data, error } = await supabase
-        .rpc('get_business_public_data', { business_booking_link: businessLinkFromUrl });
-        
-      if (error || !data || data.length === 0) {
-        console.error('QR Code URL test failed - business not found with link:', businessLinkFromUrl);
-        console.error('RPC Error:', error);
-        toast({
-          title: "QR Code Warning",
-          description: `Generated QR code may not work properly. Business link "${businessLinkFromUrl}" not found in database.`,
-          variant: "destructive",
-        });
-      } else {
-        console.log('QR Code URL test successful - business found:', data[0].name);
-      }
-    } catch (error) {
-      console.error('Error testing booking URL:', error);
     }
   };
 
@@ -227,10 +170,7 @@ const ProfileManagement = () => {
   const copyBookingLink = async () => {
     if (!business?.booking_link) return;
     
-    // Use the same URL generation logic as QR code
-    const bookingUrl = generateBookingUrl(business.booking_link);
-    console.log('Copying booking URL:', bookingUrl);
-    
+    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
     try {
       await navigator.clipboard.writeText(bookingUrl);
       setCopiedLink(true);
@@ -250,8 +190,7 @@ const ProfileManagement = () => {
 
   const openBookingPage = () => {
     if (!business?.booking_link) return;
-    const bookingUrl = generateBookingUrl(business.booking_link);
-    console.log('Opening booking page:', bookingUrl);
+    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
     window.open(bookingUrl, '_blank');
   };
 
@@ -304,7 +243,7 @@ const ProfileManagement = () => {
     );
   }
 
-  const bookingUrl = business.booking_link ? generateBookingUrl(business.booking_link) : '';
+  const bookingUrl = business.booking_link ? `${window.location.origin}/book/${business.booking_link}` : '';
 
   return (
     <div className="space-y-6">
@@ -356,66 +295,40 @@ const ProfileManagement = () => {
             </div>
 
             {/* QR Code Section */}
-            <div className="flex flex-col md:flex-row gap-6 items-start">
-              <div className="flex flex-col items-center space-y-3">
-                {qrCodeDataUrl ? (
-                  <div className="bg-white p-4 rounded-lg shadow-sm border">
+            {qrCodeDataUrl && (
+              <div className="flex flex-col md:flex-row gap-6 items-start">
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="bg-white p-4 rounded-lg">
                     <img 
                       src={qrCodeDataUrl} 
                       alt="Booking QR Code" 
                       className="w-32 h-32"
                     />
                   </div>
-                ) : (
-                  <div className="bg-muted p-4 rounded-lg border border-dashed border-border w-32 h-32 flex flex-col items-center justify-center">
-                    <QrCode className="w-8 h-8 text-muted-foreground mb-2" />
-                    <span className="text-xs text-muted-foreground text-center">Generating QR Code...</span>
-                  </div>
-                )}
-                <div className="flex gap-2">
-                  {qrCodeDataUrl && (
-                    <Button
-                      onClick={downloadQRCode}
-                      variant="outline"
-                      size="sm"
-                      className="border-border text-foreground hover:bg-muted"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
-                  )}
                   <Button
-                    onClick={generateQRCode}
+                    onClick={downloadQRCode}
                     variant="outline"
                     size="sm"
                     className="border-border text-foreground hover:bg-muted"
                   >
-                    <QrCode className="w-4 h-4 mr-2" />
-                    {qrCodeDataUrl ? 'Regenerate' : 'Generate'}
+                    <Download className="w-4 h-4 mr-2" />
+                    Download QR
                   </Button>
                 </div>
-              </div>
-              <div className="flex-1 space-y-2">
-                <h4 className="text-foreground font-medium flex items-center">
-                  <QrCode className="w-4 h-4 mr-2 text-primary" />
-                  QR Code Instructions
-                </h4>
-                <ul className="text-muted-foreground text-sm space-y-1">
-                  <li>• Print and display in your business</li>
-                  <li>• Share on social media</li>
-                  <li>• Include in business cards or flyers</li>
-                  <li>• Clients can scan to book instantly</li>
-                </ul>
-                <div className="mt-4 p-3 bg-muted rounded-md">
-                  <p className="text-xs text-muted-foreground">
-                    QR Code URL: <span className="font-mono">{business.booking_link ? generateBookingUrl(business.booking_link) : ''}</span>
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Business Link: <span className="font-mono">{business.booking_link || 'Not set'}</span>
-                  </p>
+                <div className="flex-1 space-y-2">
+                  <h4 className="text-foreground font-medium flex items-center">
+                    <QrCode className="w-4 h-4 mr-2 text-primary" />
+                    QR Code Instructions
+                  </h4>
+                  <ul className="text-muted-foreground text-sm space-y-1">
+                    <li>• Print and display in your business</li>
+                    <li>• Share on social media</li>
+                    <li>• Include in business cards or flyers</li>
+                    <li>• Clients can scan to book instantly</li>
+                  </ul>
                 </div>
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
       )}

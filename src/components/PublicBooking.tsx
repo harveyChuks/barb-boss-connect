@@ -18,17 +18,12 @@ interface Business {
   name: string;
   description: string | null;
   business_type: string;
+  phone: string | null;
+  email: string | null;
   address: string | null;
   website: string | null;
   instagram: string | null;
   logo_url: string | null;
-  cover_image_url: string | null;
-  booking_link: string;
-  city: string | null;
-  state: string | null;
-  country: string | null;
-  is_active: boolean;
-  created_at: string;
 }
 
 interface Service {
@@ -60,7 +55,6 @@ interface PublicBookingProps {
 }
 
 const PublicBooking = ({ businessLink }: PublicBookingProps) => {
-  console.log('PublicBooking: Component initializing with businessLink:', businessLink);
   const { toast } = useToast();
   const [business, setBusiness] = useState<Business | null>(null);
   const [services, setServices] = useState<Service[]>([]);
@@ -119,52 +113,38 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   ];
 
   useEffect(() => {
-    console.log('PublicBooking: useEffect called with businessLink:', businessLink);
     fetchBusinessData();
   }, [businessLink]);
 
   const fetchBusinessData = async () => {
-    console.log('PublicBooking: fetchBusinessData started for:', businessLink);
     try {
-      // Get business by booking link using secure function
-      console.log('PublicBooking: Calling get_business_public_data with:', businessLink);
+      // Get business by booking link
       const { data: businessData, error: businessError } = await supabase
-        .rpc('get_business_public_data', { business_booking_link: businessLink });
+        .from('businesses')
+        .select('*')
+        .eq('booking_link', businessLink)
+        .eq('is_active', true)
+        .single();
 
-      console.log('PublicBooking: Business data response:', { businessData, businessError });
-      
-      if (businessError || !businessData || businessData.length === 0) {
-        console.error('PublicBooking: Business not found error');
-        throw new Error('Business not found');
-      }
-      
-      const business = businessData[0];
-      console.log('PublicBooking: Setting business data:', business);
-      setBusiness(business);
+      if (businessError) throw businessError;
+      setBusiness(businessData);
 
       // Get services
-      console.log('PublicBooking: Fetching services for business_id:', business.id);
       const { data: servicesData, error: servicesError } = await supabase
         .from('services')
         .select('*')
-        .eq('business_id', business.id)
+        .eq('business_id', businessData.id)
         .eq('is_active', true)
         .order('name');
 
-      console.log('PublicBooking: Services response:', { servicesData, servicesError });
-      
-      if (servicesError) {
-        console.error('PublicBooking: Services error:', servicesError);
-        throw servicesError;
-      }
-      console.log('PublicBooking: Setting services:', servicesData || []);
+      if (servicesError) throw servicesError;
       setServices(servicesData || []);
 
       // Get staff
       const { data: staffData, error: staffError } = await supabase
         .from('staff')
         .select('*')
-        .eq('business_id', business.id)
+        .eq('business_id', businessData.id)
         .eq('is_active', true)
         .order('name');
 
@@ -175,7 +155,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const { data: workPicturesData, error: workPicturesError } = await supabase
         .from('work_pictures')
         .select('*')
-        .eq('business_id', business.id)
+        .eq('business_id', businessData.id)
         .order('created_at', { ascending: false });
 
       if (workPicturesError) {
@@ -187,14 +167,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         setWorkPictures(workPicturesData?.length > 0 ? workPicturesData : mockPictures);
       }
     } catch (error) {
-      console.error('PublicBooking: Error in fetchBusinessData:', error);
-      console.error('PublicBooking: Error details:', {
-        message: error?.message || 'Unknown error',
-        stack: error?.stack || 'No stack trace',
-        businessLink,
-        errorType: typeof error,
-        errorObject: error
-      });
+      console.error('Error fetching business data:', error);
       toast({
         title: "Business Not Found",
         description: "The business you're looking for doesn't exist or is no longer active.",
@@ -203,7 +176,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       // Show mock pictures even on error
       setWorkPictures(mockPictures);
     } finally {
-      console.log('PublicBooking: fetchBusinessData completed, setting loading to false');
       setLoading(false);
     }
   };
@@ -341,24 +313,22 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   <p className="text-slate-300 mb-4">{business.description}</p>
                 )}
                 <div className="flex flex-wrap gap-4 text-slate-400">
+                  {business.phone && (
+                    <div className="flex items-center">
+                      <Phone className="w-4 h-4 mr-2" />
+                      {business.phone}
+                    </div>
+                  )}
+                  {business.email && (
+                    <div className="flex items-center">
+                      <Mail className="w-4 h-4 mr-2" />
+                      {business.email}
+                    </div>
+                  )}
                   {business.address && (
                     <div className="flex items-center">
                       <MapPin className="w-4 h-4 mr-2" />
                       {business.address}
-                    </div>
-                  )}
-                  {business.website && (
-                    <div className="flex items-center">
-                      <a href={business.website} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
-                        🌐 Website
-                      </a>
-                    </div>
-                  )}
-                  {business.instagram && (
-                    <div className="flex items-center">
-                      <a href={`https://instagram.com/${business.instagram}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
-                        📸 Instagram
-                      </a>
                     </div>
                   )}
                 </div>

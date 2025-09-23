@@ -7,10 +7,10 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
+  // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "12.2.3 (519615d)"
   }
   public: {
     Tables: {
@@ -689,10 +689,10 @@ export type Database = {
     Functions: {
       assign_service_point: {
         Args: {
-          p_appointment_date: string
           p_business_id: string
-          p_end_time: string
+          p_appointment_date: string
           p_start_time: string
+          p_end_time: string
         }
         Returns: string
       }
@@ -701,38 +701,38 @@ export type Database = {
         Returns: number
       }
       calculate_distance: {
-        Args: { lat1: number; lat2: number; lon1: number; lon2: number }
+        Args: { lat1: number; lon1: number; lat2: number; lon2: number }
         Returns: number
       }
       check_appointment_conflict: {
         Args: {
-          p_appointment_date: string
           p_business_id: string
-          p_end_time: string
-          p_exclude_appointment_id?: string
-          p_staff_id?: string
+          p_appointment_date: string
           p_start_time: string
+          p_end_time: string
+          p_staff_id?: string
+          p_exclude_appointment_id?: string
         }
         Returns: boolean
       }
       find_nearby_businesses_with_slots: {
         Args: {
-          search_date?: string
-          search_radius?: number
           user_lat: number
           user_lon: number
+          search_radius?: number
+          search_date?: string
         }
         Returns: {
-          address: string
-          available_slots: number
           business_id: string
           business_name: string
           business_type: string
-          distance_km: number
-          latitude: number
-          logo_url: string
-          longitude: number
+          address: string
           phone: string
+          latitude: number
+          longitude: number
+          distance_km: number
+          available_slots: number
+          logo_url: string
         }[]
       }
       get_available_time_slots: {
@@ -743,28 +743,8 @@ export type Database = {
           p_staff_id?: string
         }
         Returns: {
-          is_available: boolean
           slot_time: string
-        }[]
-      }
-      get_business_public_data: {
-        Args: { business_booking_link: string }
-        Returns: {
-          address: string
-          booking_link: string
-          business_type: string
-          city: string
-          country: string
-          cover_image_url: string
-          created_at: string
-          description: string
-          id: string
-          instagram: string
-          is_active: boolean
-          logo_url: string
-          name: string
-          state: string
-          website: string
+          is_available: boolean
         }[]
       }
       initialize_default_business_hours: {
