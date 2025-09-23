@@ -22,6 +22,7 @@ const ProfileManagement = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [isGeneratingQR, setIsGeneratingQR] = useState(false);
   const [business, setBusiness] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState("");
@@ -55,20 +56,13 @@ const ProfileManagement = () => {
       return;
     }
     
-    // Dynamically determine the correct domain
-    const currentOrigin = window.location.origin;
-    const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
+    setIsGeneratingQR(true);
     
-    // If we're on preview, use the published domain pattern, otherwise use current origin
-    const publishedDomain = isPreviewDomain 
-      ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
-      : currentOrigin;
-    
-    const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
+    // Use the exact URL that works
+    const bookingUrl = `https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app/book/${business.booking_link}`;
     console.log('Original booking_link from database:', business.booking_link);
     console.log('Final QR code URL:', bookingUrl);
-    console.log('Current origin:', currentOrigin);
-    console.log('Using domain:', publishedDomain);
+    console.log('Generating QR code with URL:', bookingUrl);
     
     try {
       const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
@@ -79,7 +73,7 @@ const ProfileManagement = () => {
           light: '#FFFFFF'
         }
       });
-      console.log('QR code generated successfully');
+      console.log('QR code generated successfully for URL:', bookingUrl);
       setQrCodeDataUrl(qrDataUrl);
     } catch (error) {
       console.error('Error generating QR code:', error);
@@ -88,6 +82,8 @@ const ProfileManagement = () => {
         description: "Failed to generate QR code. Please try refreshing the page.",
         variant: "destructive",
       });
+    } finally {
+      setIsGeneratingQR(false);
     }
   };
 
@@ -193,13 +189,8 @@ const ProfileManagement = () => {
   const copyBookingLink = async () => {
     if (!business?.booking_link) return;
     
-    // Dynamically determine the correct domain
-    const currentOrigin = window.location.origin;
-    const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
-    const publishedDomain = isPreviewDomain 
-      ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
-      : currentOrigin;
-    const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
+    // Use the exact URL that works
+    const bookingUrl = `https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app/book/${business.booking_link}`;
     try {
       await navigator.clipboard.writeText(bookingUrl);
       setCopiedLink(true);
@@ -219,13 +210,8 @@ const ProfileManagement = () => {
 
   const openBookingPage = () => {
     if (!business?.booking_link) return;
-    // Dynamically determine the correct domain
-    const currentOrigin = window.location.origin;
-    const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
-    const publishedDomain = isPreviewDomain 
-      ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
-      : currentOrigin;
-    const bookingUrl = `${publishedDomain}/book/${business.booking_link}`;
+    // Use the exact URL that works
+    const bookingUrl = `https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app/book/${business.booking_link}`;
     window.open(bookingUrl, '_blank');
   };
 
@@ -278,13 +264,8 @@ const ProfileManagement = () => {
     );
   }
 
-  // Dynamically determine the correct domain for display
-  const currentOrigin = window.location.origin;
-  const isPreviewDomain = currentOrigin.includes('.lovableproject.com');
-  const publishedDomain = isPreviewDomain 
-    ? currentOrigin.replace('.lovableproject.com', '.lovable.app')
-    : currentOrigin;
-  const bookingUrl = business.booking_link ? `${publishedDomain}/book/${business.booking_link}` : '';
+  // Use the exact URL that works for display
+  const bookingUrl = business.booking_link ? `https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovable.app/book/${business.booking_link}` : '';
 
   return (
     <div className="space-y-6">
@@ -368,10 +349,11 @@ const ProfileManagement = () => {
                     onClick={generateQRCode}
                     variant="outline"
                     size="sm"
+                    disabled={isGeneratingQR}
                     className="border-border text-foreground hover:bg-muted"
                   >
                     <QrCode className="w-4 h-4 mr-2" />
-                    {qrCodeDataUrl ? 'Regenerate' : 'Generate'}
+                    {isGeneratingQR ? 'Generating...' : (qrCodeDataUrl ? 'Regenerate' : 'Generate')}
                   </Button>
                 </div>
               </div>
