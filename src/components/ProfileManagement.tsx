@@ -53,9 +53,8 @@ const ProfileManagement = () => {
     if (!business?.booking_link) return;
     
     // Use the deployed URL instead of preview URL
-    // Replace with your actual deployed domain
     const deployedDomain = window.location.hostname.includes('lovableproject.com') 
-      ? 'https://your-app.lovable.app' // Replace with your actual deployed URL
+      ? 'https://barb-boss-connect.lovable.app'
       : window.location.origin;
     
     const bookingUrl = `${deployedDomain}/book/${business.booking_link}`;
@@ -178,7 +177,7 @@ const ProfileManagement = () => {
     
     // Use the deployed URL instead of preview URL
     const deployedDomain = window.location.hostname.includes('lovableproject.com') 
-      ? 'https://your-app.lovable.app' // Replace with your actual deployed URL
+      ? 'https://barb-boss-connect.lovable.app'
       : window.location.origin;
     
     const bookingUrl = `${deployedDomain}/book/${business.booking_link}`;
@@ -202,7 +201,7 @@ const ProfileManagement = () => {
   const openBookingPage = () => {
     if (!business?.booking_link) return;
     const deployedDomain = window.location.hostname.includes('lovableproject.com') 
-      ? 'https://your-app.lovable.app' // Replace with your actual deployed URL
+      ? 'https://barb-boss-connect.lovable.app'
       : window.location.origin;
     const bookingUrl = `${deployedDomain}/book/${business.booking_link}`;
     window.open(bookingUrl, '_blank');
@@ -258,7 +257,7 @@ const ProfileManagement = () => {
   }
 
   const deployedDomain = window.location.hostname.includes('lovableproject.com') 
-    ? 'https://your-app.lovable.app' // Replace with your actual deployed URL
+    ? 'https://barb-boss-connect.lovable.app'
     : window.location.origin;
   const bookingUrl = business.booking_link ? `${deployedDomain}/book/${business.booking_link}` : '';
 
