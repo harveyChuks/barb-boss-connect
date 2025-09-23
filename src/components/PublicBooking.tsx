@@ -118,16 +118,17 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
   const fetchBusinessData = async () => {
     try {
-      // Get business by booking link
+      // Get business by booking link using secure function
       const { data: businessData, error: businessError } = await supabase
-        .from('businesses')
-        .select('*')
-        .eq('booking_link', businessLink)
-        .eq('is_active', true)
-        .single();
+        .rpc('get_business_public_data', { business_booking_link: businessLink });
 
       if (businessError) throw businessError;
-      setBusiness(businessData);
+      if (!businessData || businessData.length === 0) {
+        throw new Error('Business not found');
+      }
+      
+      const business = businessData[0];
+      setBusiness(business);
 
       // Get services
       const { data: servicesData, error: servicesError } = await supabase
