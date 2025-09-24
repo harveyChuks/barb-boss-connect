@@ -1,12 +1,14 @@
 import { ArrowRight, Calendar, Users, BarChart3, Clock, CheckCircle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { usePageVisitTracker } from "@/hooks/usePageVisitTracker";
 
 interface LandingPageProps {
   onGetStarted: () => void;
 }
 
 const LandingPage = ({ onGetStarted }: LandingPageProps) => {
+  usePageVisitTracker(); // Track visits to landing page
   const features = [
     {
       icon: Calendar,

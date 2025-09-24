@@ -502,6 +502,57 @@ export type Database = {
           },
         ]
       }
+      page_visits: {
+        Row: {
+          business_id: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          device_type: string | null
+          id: string
+          ip_address: string | null
+          is_unique_visit: boolean | null
+          page_path: string
+          referrer: string | null
+          session_id: string | null
+          user_agent: string | null
+          visit_date: string
+          visit_timestamp: string
+        }
+        Insert: {
+          business_id?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          ip_address?: string | null
+          is_unique_visit?: boolean | null
+          page_path: string
+          referrer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          visit_date?: string
+          visit_timestamp?: string
+        }
+        Update: {
+          business_id?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          ip_address?: string | null
+          is_unique_visit?: boolean | null
+          page_path?: string
+          referrer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          visit_date?: string
+          visit_timestamp?: string
+        }
+        Relationships: []
+      }
       payment_methods: {
         Row: {
           business_id: string | null

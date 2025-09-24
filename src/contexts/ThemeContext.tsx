@@ -25,15 +25,33 @@ interface ThemeProviderProps {
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [theme, setThemeState] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    return savedTheme || 'dark';
+    try {
+      const savedTheme = localStorage.getItem('theme') as Theme;
+      // Validate the saved theme to prevent invalid values
+      if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
+        return savedTheme;
+      }
+      return 'dark';
+    } catch (error) {
+      console.error('Error reading theme from localStorage:', error);
+      return 'dark';
+    }
   });
 
   useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    localStorage.setItem('theme', theme);
+    try {
+      const root = window.document.documentElement;
+      // Prevent rapid theme switching by debouncing
+      const timer = setTimeout(() => {
+        root.classList.remove('light', 'dark');
+        root.classList.add(theme);
+        localStorage.setItem('theme', theme);
+      }, 10);
+
+      return () => clearTimeout(timer);
+    } catch (error) {
+      console.error('Error applying theme:', error);
+    }
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
