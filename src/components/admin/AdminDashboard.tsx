@@ -11,6 +11,8 @@ import { Building2, Users, DollarSign, TrendingUp, Search, Ban, CheckCircle } fr
 import VisitAnalytics from "@/components/analytics/VisitAnalytics";
 import UserManagement from "@/components/admin/UserManagement";
 import SubscriptionPlanManagement from "@/components/admin/SubscriptionPlanManagement";
+import { FinancialDashboard } from "@/components/admin/FinancialDashboard";
+import { SystemSettings } from "@/components/admin/SystemSettings";
 
 const AdminDashboard = () => {
   const [businesses, setBusinesses] = useState([]);
@@ -215,6 +217,8 @@ const AdminDashboard = () => {
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="plans">Plans</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="financial">Financial</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="businesses">
@@ -356,6 +360,14 @@ const AdminDashboard = () => {
 
           <TabsContent value="analytics">
             <VisitAnalytics />
+          </TabsContent>
+
+          <TabsContent value="financial">
+            <FinancialDashboard />
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <SystemSettings />
           </TabsContent>
         </Tabs>
       </div>
