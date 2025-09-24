@@ -161,7 +161,7 @@ export const FinancialDashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">${revenueData?.total_revenue.toFixed(2) || '0.00'}</div>
             <p className="text-xs text-muted-foreground">
-              +12% from last month
+              Monthly revenue
             </p>
           </CardContent>
         </Card>
@@ -174,7 +174,7 @@ export const FinancialDashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">${revenueData?.monthly_revenue.toFixed(2) || '0.00'}</div>
             <p className="text-xs text-muted-foreground">
-              +8% from last month
+              Current MRR
             </p>
           </CardContent>
         </Card>

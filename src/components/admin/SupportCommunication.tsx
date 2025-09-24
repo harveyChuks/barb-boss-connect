@@ -53,53 +53,9 @@ export const SupportCommunication = () => {
   const fetchSupportData = async () => {
     setLoading(true);
     try {
-      // Mock data for support tickets - in real app, this would come from a support_tickets table
-      const mockTickets: SupportTicket[] = [
-        {
-          id: '1',
-          customer_name: 'John Smith',
-          customer_email: 'john@example.com',
-          subject: 'Payment issue with subscription',
-          message: 'I am having trouble with my monthly payment. The card was declined but I know it has funds.',
-          status: 'open',
-          priority: 'high',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: '2',
-          customer_name: 'Sarah Johnson',
-          customer_email: 'sarah@business.com',
-          subject: 'Feature request - SMS notifications',
-          message: 'Would love to have SMS notifications for appointments in addition to email.',
-          status: 'in_progress',
-          priority: 'medium',
-          created_at: new Date(Date.now() - 86400000).toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      ];
-
-      const mockTemplates: EmailTemplate[] = [
-        {
-          id: '1',
-          name: 'Welcome Email',
-          subject: 'Welcome to BizFlow!',
-          content: 'Hello {{name}}, welcome to our platform! We are excited to have you on board.',
-          type: 'welcome',
-          is_active: true
-        },
-        {
-          id: '2',
-          name: 'Support Response',
-          subject: 'Re: {{ticket_subject}}',
-          content: 'Hi {{customer_name}}, thank you for contacting us. We have received your inquiry and will respond within 24 hours.',
-          type: 'support',
-          is_active: true
-        }
-      ];
-
-      setTickets(mockTickets);
-      setTemplates(mockTemplates);
+      // Support tickets would come from a support_tickets table when implemented
+      setTickets([]);
+      setTemplates([]);
     } catch (error) {
       console.error('Error fetching support data:', error);
       toast({

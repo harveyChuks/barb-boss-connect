@@ -85,81 +85,10 @@ export const ContentModeration = () => {
   const fetchModerationData = async () => {
     setLoading(true);
     try {
-      // Mock data - in real app, this would come from moderation tables
-      const mockReports: ContentReport[] = [
-        {
-          id: '1',
-          reporter_email: 'user@example.com',
-          reported_content_type: 'business',
-          reported_content_id: 'biz-123',
-          reason: 'inappropriate',
-          description: 'Business profile contains inappropriate images',
-          status: 'pending',
-          created_at: new Date().toISOString(),
-          content_preview: 'Hair Salon with inappropriate content...'
-        },
-        {
-          id: '2',
-          reporter_email: 'customer@test.com',
-          reported_content_type: 'review',
-          reported_content_id: 'rev-456',
-          reason: 'spam',
-          description: 'Fake review with promotional content',
-          status: 'reviewing',
-          created_at: new Date(Date.now() - 3600000).toISOString(),
-          content_preview: 'Amazing service! Visit our website for discount...'
-        }
-      ];
-
-      const mockFlaggedContent: FlaggedContent[] = [
-        {
-          id: '1',
-          content_type: 'business_description',
-          content_id: 'biz-789',
-          content_preview: 'Best salon in town with guaranteed results or money back...',
-          business_name: 'Premium Hair Studio',
-          flagged_reason: 'Contains banned phrase: "guaranteed results"',
-          auto_flagged: true,
-          status: 'pending',
-          created_at: new Date(Date.now() - 1800000).toISOString()
-        },
-        {
-          id: '2',
-          content_type: 'review_text',
-          content_id: 'rev-101',
-          content_preview: 'Terrible service, worst experience ever, avoid at all costs...',
-          user_email: 'angry@customer.com',
-          flagged_reason: 'Potential harassment language detected',
-          auto_flagged: true,
-          status: 'pending',
-          created_at: new Date(Date.now() - 7200000).toISOString()
-        }
-      ];
-
-      const mockRules: ModerationRule[] = [
-        {
-          id: '1',
-          name: 'Banned Words Filter',
-          type: 'banned_words',
-          pattern: 'spam,scam,fake,guaranteed,money back',
-          action: 'flag',
-          is_active: true,
-          created_at: new Date(Date.now() - 86400000).toISOString()
-        },
-        {
-          id: '2',
-          name: 'Harassment Detection',
-          type: 'content_filter',
-          pattern: 'terrible|worst|awful|hate',
-          action: 'flag',
-          is_active: true,
-          created_at: new Date(Date.now() - 172800000).toISOString()
-        }
-      ];
-
-      setReports(mockReports);
-      setFlaggedContent(mockFlaggedContent);
-      setModerationRules(mockRules);
+      // Content moderation data would come from content_reports, flagged_content, and moderation_rules tables when implemented
+      setReports([]);
+      setFlaggedContent([]);
+      setModerationRules([]);
 
     } catch (error) {
       console.error('Error fetching moderation data:', error);

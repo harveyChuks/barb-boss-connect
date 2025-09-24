@@ -68,129 +68,10 @@ export const PlatformHealthMonitoring = () => {
     if (!refreshing) setRefreshing(true);
     
     try {
-      // Mock data - in real app, this would come from monitoring APIs
-      const mockMetrics: SystemMetric[] = [
-        {
-          name: 'CPU Usage',
-          value: 45,
-          unit: '%',
-          status: 'healthy',
-          trend: 'stable',
-          history: [42, 44, 43, 45, 47, 45, 44, 45]
-        },
-        {
-          name: 'Memory Usage',
-          value: 68,
-          unit: '%',
-          status: 'warning',
-          trend: 'up',
-          history: [60, 62, 64, 66, 67, 68, 69, 68]
-        },
-        {
-          name: 'Disk Usage',
-          value: 34,
-          unit: '%',
-          status: 'healthy',
-          trend: 'stable',
-          history: [32, 33, 34, 33, 34, 35, 34, 34]
-        },
-        {
-          name: 'Network I/O',
-          value: 23,
-          unit: 'Mbps',
-          status: 'healthy',
-          trend: 'down',
-          history: [28, 26, 25, 24, 23, 22, 23, 23]
-        },
-        {
-          name: 'Database Connections',
-          value: 156,
-          unit: 'active',
-          status: 'healthy',
-          trend: 'stable',
-          history: [150, 152, 154, 155, 156, 157, 156, 156]
-        },
-        {
-          name: 'API Response Time',
-          value: 245,
-          unit: 'ms',
-          status: 'warning',
-          trend: 'up',
-          history: [220, 225, 230, 235, 240, 245, 250, 245]
-        }
-      ];
-
-      const mockServices: ServiceStatus[] = [
-        {
-          name: 'Web Application',
-          status: 'online',
-          uptime: 99.9,
-          last_check: new Date().toISOString(),
-          response_time: 180
-        },
-        {
-          name: 'API Gateway',
-          status: 'online',
-          uptime: 99.8,
-          last_check: new Date().toISOString(),
-          response_time: 95
-        },
-        {
-          name: 'Database',
-          status: 'online',
-          uptime: 100,
-          last_check: new Date().toISOString(),
-          response_time: 45
-        },
-        {
-          name: 'File Storage',
-          status: 'degraded',
-          uptime: 98.5,
-          last_check: new Date().toISOString(),
-          response_time: 320
-        },
-        {
-          name: 'Email Service',
-          status: 'online',
-          uptime: 99.7,
-          last_check: new Date().toISOString(),
-          response_time: 125
-        }
-      ];
-
-      const mockAlerts: PerformanceAlert[] = [
-        {
-          id: '1',
-          type: 'performance',
-          severity: 'medium',
-          message: 'API response time above threshold (>200ms)',
-          service: 'API Gateway',
-          created_at: new Date(Date.now() - 1800000).toISOString(),
-          resolved: false
-        },
-        {
-          id: '2',
-          type: 'uptime',
-          severity: 'high',
-          message: 'File storage service experiencing intermittent failures',
-          service: 'File Storage',
-          created_at: new Date(Date.now() - 3600000).toISOString(),
-          resolved: false
-        },
-        {
-          id: '3',
-          type: 'error',
-          severity: 'low',
-          message: 'Increased 404 error rate on booking endpoints',
-          service: 'Web Application',
-          created_at: new Date(Date.now() - 7200000).toISOString(),
-          resolved: true
-        }
-      ];
-
-      setMetrics(mockMetrics);
-      setServices(mockServices);
-      setAlerts(mockAlerts);
+      // System health metrics would come from monitoring APIs and system_metrics table when implemented
+      setMetrics([]);
+      setServices([]);
+      setAlerts([]);
 
     } catch (error) {
       console.error('Error fetching health data:', error);
@@ -360,7 +241,7 @@ export const PlatformHealthMonitoring = () => {
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">{activeAlerts.length}</div>
             <p className="text-xs text-muted-foreground">
-              {activeAlerts.filter(a => a.severity === 'high' || a.severity === 'critical').length} high priority
+              Monitoring alerts
             </p>
           </CardContent>
         </Card>

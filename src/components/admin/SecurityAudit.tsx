@@ -75,93 +75,10 @@ export const SecurityAudit = () => {
   const fetchSecurityData = async () => {
     setLoading(true);
     try {
-      // Mock data - in a real application, this would come from security audit tables
-      const mockLoginAttempts: LoginAttempt[] = [
-        {
-          id: '1',
-          user_email: 'admin@bizflow.com',
-          ip_address: '192.168.1.100',
-          user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-          success: true,
-          location: 'New York, US',
-          device_type: 'Desktop',
-          timestamp: new Date().toISOString()
-        },
-        {
-          id: '2',
-          user_email: 'user@example.com',
-          ip_address: '203.0.113.45',
-          user_agent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)',
-          success: false,
-          failure_reason: 'Invalid password',
-          location: 'Unknown',
-          device_type: 'Mobile',
-          timestamp: new Date(Date.now() - 300000).toISOString()
-        },
-        {
-          id: '3',
-          user_email: 'suspicious@domain.com',
-          ip_address: '198.51.100.22',
-          user_agent: 'curl/7.68.0',
-          success: false,
-          failure_reason: 'Account not found',
-          location: 'Russia',
-          device_type: 'Bot',
-          timestamp: new Date(Date.now() - 600000).toISOString()
-        }
-      ];
-
-      const mockIncidents: SecurityIncident[] = [
-        {
-          id: '1',
-          incident_type: 'failed_login',
-          severity: 'medium',
-          description: 'Multiple failed login attempts from suspicious IP',
-          affected_user: 'user@example.com',
-          ip_address: '198.51.100.22',
-          status: 'investigating',
-          created_at: new Date(Date.now() - 1800000).toISOString()
-        },
-        {
-          id: '2',
-          incident_type: 'suspicious_activity',
-          severity: 'high',
-          description: 'Unusual API access pattern detected',
-          ip_address: '203.0.113.15',
-          status: 'open',
-          created_at: new Date(Date.now() - 3600000).toISOString()
-        }
-      ];
-
-      const mockAuditLogs: AuditLog[] = [
-        {
-          id: '1',
-          user_id: 'user-123',
-          user_email: 'admin@bizflow.com',
-          action: 'CREATE',
-          resource: 'business',
-          resource_id: 'biz-456',
-          ip_address: '192.168.1.100',
-          user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-          timestamp: new Date().toISOString(),
-          additional_data: { business_name: 'New Salon' }
-        },
-        {
-          id: '2',
-          user_id: 'user-789',
-          user_email: 'user@example.com',
-          action: 'UPDATE',
-          resource: 'appointment',
-          resource_id: 'apt-101',
-          ip_address: '192.168.1.105',
-          user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
-          timestamp: new Date(Date.now() - 900000).toISOString()
-        }
-      ];
-
-      setLoginAttempts(mockLoginAttempts);
-      setIncidents(mockIncidents);
-      setAuditLogs(mockAuditLogs);
+      // Security audit data would come from security_logs, login_attempts, and audit_logs tables when implemented
+      setLoginAttempts([]);
+      setIncidents([]);
+      setAuditLogs([]);
 
     } catch (error) {
       console.error('Error fetching security data:', error);
@@ -313,7 +230,7 @@ export const SecurityAudit = () => {
               {loginAttempts.filter(a => !a.success).length}
             </div>
             <p className="text-xs text-muted-foreground">
-              +2 from last hour
+              Failed attempts
             </p>
           </CardContent>
         </Card>
