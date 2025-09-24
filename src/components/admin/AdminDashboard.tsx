@@ -13,6 +13,8 @@ import UserManagement from "@/components/admin/UserManagement";
 import SubscriptionPlanManagement from "@/components/admin/SubscriptionPlanManagement";
 import { FinancialDashboard } from "@/components/admin/FinancialDashboard";
 import { SystemSettings } from "@/components/admin/SystemSettings";
+import { SupportCommunication } from "@/components/admin/SupportCommunication";
+import { SecurityAudit } from "@/components/admin/SecurityAudit";
 
 const AdminDashboard = () => {
   const [businesses, setBusinesses] = useState([]);
@@ -219,6 +221,8 @@ const AdminDashboard = () => {
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="financial">Financial</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
+            <TabsTrigger value="support">Support</TabsTrigger>
+            <TabsTrigger value="security">Security</TabsTrigger>
           </TabsList>
 
           <TabsContent value="businesses">
@@ -368,6 +372,14 @@ const AdminDashboard = () => {
 
           <TabsContent value="settings">
             <SystemSettings />
+          </TabsContent>
+
+          <TabsContent value="support">
+            <SupportCommunication />
+          </TabsContent>
+
+          <TabsContent value="security">
+            <SecurityAudit />
           </TabsContent>
         </Tabs>
       </div>
