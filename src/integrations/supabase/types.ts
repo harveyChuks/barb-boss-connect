@@ -284,6 +284,66 @@ export type Database = {
           },
         ]
       }
+      business_subscriptions: {
+        Row: {
+          business_id: string
+          created_at: string
+          id: string
+          next_billing_date: string | null
+          payment_method: Json | null
+          plan_id: string
+          status: string
+          subscription_end_date: string | null
+          subscription_start_date: string | null
+          trial_end_date: string | null
+          trial_start_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          id?: string
+          next_billing_date?: string | null
+          payment_method?: Json | null
+          plan_id: string
+          status?: string
+          subscription_end_date?: string | null
+          subscription_start_date?: string | null
+          trial_end_date?: string | null
+          trial_start_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          id?: string
+          next_billing_date?: string | null
+          payment_method?: Json | null
+          plan_id?: string
+          status?: string
+          subscription_end_date?: string | null
+          subscription_start_date?: string | null
+          trial_end_date?: string | null
+          trial_start_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_subscriptions_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: true
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       businesses: {
         Row: {
           address: string | null
@@ -524,6 +584,42 @@ export type Database = {
           },
         ]
       }
+      platform_statistics: {
+        Row: {
+          active_subscriptions: number | null
+          created_at: string
+          date: string
+          expired_subscriptions: number | null
+          id: string
+          monthly_revenue: number | null
+          new_businesses_today: number | null
+          total_businesses: number | null
+          trial_subscriptions: number | null
+        }
+        Insert: {
+          active_subscriptions?: number | null
+          created_at?: string
+          date: string
+          expired_subscriptions?: number | null
+          id?: string
+          monthly_revenue?: number | null
+          new_businesses_today?: number | null
+          total_businesses?: number | null
+          trial_subscriptions?: number | null
+        }
+        Update: {
+          active_subscriptions?: number | null
+          created_at?: string
+          date?: string
+          expired_subscriptions?: number | null
+          id?: string
+          monthly_revenue?: number | null
+          new_businesses_today?: number | null
+          total_businesses?: number | null
+          trial_subscriptions?: number | null
+        }
+        Relationships: []
+      }
       service_points: {
         Row: {
           business_id: string
@@ -647,6 +743,66 @@ export type Database = {
           },
         ]
       }
+      subscription_plans: {
+        Row: {
+          created_at: string
+          description: string | null
+          features: Json
+          id: string
+          is_active: boolean
+          max_appointments_per_month: number | null
+          name: string
+          price_monthly: number
+          price_yearly: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          features?: Json
+          id?: string
+          is_active?: boolean
+          max_appointments_per_month?: number | null
+          name: string
+          price_monthly: number
+          price_yearly?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          features?: Json
+          id?: string
+          is_active?: boolean
+          max_appointments_per_month?: number | null
+          name?: string
+          price_monthly?: number
+          price_yearly?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       work_pictures: {
         Row: {
           business_id: string
@@ -715,6 +871,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      check_business_subscription_status: {
+        Args: { p_business_id: string }
+        Returns: string
+      }
       find_nearby_businesses_with_slots: {
         Args: {
           search_date?: string
@@ -769,6 +929,13 @@ export type Database = {
           website: string
         }[]
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       initialize_default_business_hours: {
         Args: { p_business_id: string }
         Returns: undefined
@@ -779,6 +946,7 @@ export type Database = {
       }
     }
     Enums: {
+      app_role: "admin" | "business_owner"
       appointment_status:
         | "pending"
         | "confirmed"
@@ -919,6 +1087,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "business_owner"],
       appointment_status: [
         "pending",
         "confirmed",

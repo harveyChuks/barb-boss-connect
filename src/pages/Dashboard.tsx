@@ -1,9 +1,12 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { BarChart3, User, Scissors, Calendar, Settings, ArrowLeft, Users, Camera, TrendingUp, MessageCircle, CreditCard, Wifi } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useSubscription } from "@/hooks/useSubscription";
 import StatisticsOverview from "@/components/StatisticsOverview";
 import ProfileManagement from "@/components/ProfileManagement";
 import ServicesManagement from "@/components/ServicesManagement";
@@ -16,10 +19,51 @@ import ReportsAnalytics from "@/components/ReportsAnalytics";
 import WhatsAppIntegration from "@/components/WhatsAppIntegration";
 import LocalPaymentsIntegration from "@/components/LocalPaymentsIntegration";
 import OfflineCapabilities from "@/components/OfflineCapabilities";
+import SubscriptionBlocker from "@/components/SubscriptionBlocker";
+import SubscriptionManager from "@/components/SubscriptionManager";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [userBusiness, setUserBusiness] = useState<any>(null);
+  
+  // Get user business data
+  useEffect(() => {
+    const fetchBusiness = async () => {
+      if (!user) return;
+      
+      const { data } = await supabase
+        .from('businesses')
+        .select('*')
+        .eq('owner_id', user.id)
+        .single();
+        
+      setUserBusiness(data);
+    };
+    
+    fetchBusiness();
+  }, [user]);
+
+  const { subscription, isExpired, loading: subLoading } = useSubscription(userBusiness?.id);
+
+  if (subLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-foreground text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  // Block access if subscription is expired
+  if (isExpired) {
+    return (
+      <SubscriptionBlocker 
+        subscription={subscription}
+        onUpgrade={() => setActiveTab("subscription")}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6">
@@ -44,7 +88,7 @@ const Dashboard = () => {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
           <div className="overflow-x-auto">
-            <TabsList className="grid grid-cols-12 bg-card border-border min-w-max w-full">
+            <TabsList className="grid grid-cols-13 bg-card border-border min-w-max w-full">
               <TabsTrigger value="overview" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
                 <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Overview</span>
@@ -88,6 +132,10 @@ const Dashboard = () => {
               <TabsTrigger value="offline" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
                 <Wifi className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Offline</span>
+              </TabsTrigger>
+              <TabsTrigger value="subscription" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+                <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Subscription</span>
               </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
                 <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -138,6 +186,10 @@ const Dashboard = () => {
 
           <TabsContent value="offline">
             <OfflineCapabilities />
+          </TabsContent>
+
+          <TabsContent value="subscription">
+            <SubscriptionManager businessId={userBusiness?.id} />
           </TabsContent>
 
           <TabsContent value="settings">

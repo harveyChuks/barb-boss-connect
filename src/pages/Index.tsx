@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, MapPin } from "lucide-react";
+import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, MapPin, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,12 +12,14 @@ import AuthModal from "@/components/auth/AuthModal";
 import MultiStepRegistrationModal from "@/components/business/MultiStepRegistrationModal";
 import LandingPage from "@/components/LandingPage";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const { user, loading: authLoading, signOut, isAuthenticated } = useAuth();
+  const { isAdmin } = useUserRole();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [showClientModal, setShowClientModal] = useState(false);
@@ -247,6 +249,16 @@ const Index = () => {
             <MapPin className="w-4 h-4 mr-2" />
             Discover Services
           </Button>
+          {isAdmin && (
+            <Button 
+              onClick={() => navigate('/admin')}
+              variant="outline" 
+              className="justify-start"
+            >
+              <ShieldCheck className="w-4 h-4 mr-2" />
+              Admin Panel
+            </Button>
+          )}
           {isAuthenticated ? (
             <>
               {userBusiness ? (
@@ -385,13 +397,22 @@ const Index = () => {
             
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-4">
+            <Button 
+              onClick={() => navigate('/discovery')}
+              variant="outline"
+            >
+              <MapPin className="w-4 h-4 mr-2" />
+              Discover Services
+            </Button>
+            {isAdmin && (
               <Button 
-                onClick={() => navigate('/discovery')}
+                onClick={() => navigate('/admin')}
                 variant="outline"
               >
-                <MapPin className="w-4 h-4 mr-2" />
-                Discover Services
+                <ShieldCheck className="w-4 h-4 mr-2" />
+                Admin Panel
               </Button>
+            )}
               {isAuthenticated ? (
                 <>
                   {userBusiness ? (

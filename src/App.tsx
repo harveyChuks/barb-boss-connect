@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import BookingPage from "./pages/BookingPage";
 import Discovery from "./pages/Discovery";
 import ResetPassword from "./pages/ResetPassword";
+import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
               <Route path="/discovery" element={<Discovery />} />
               <Route path="/book/:businessLink" element={<BookingPage />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/admin" element={<AdminPanel />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
