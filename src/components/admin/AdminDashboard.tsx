@@ -9,6 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Building2, Users, DollarSign, TrendingUp, Search, Ban, CheckCircle } from "lucide-react";
 import VisitAnalytics from "@/components/analytics/VisitAnalytics";
+import UserManagement from "@/components/admin/UserManagement";
+import SubscriptionPlanManagement from "@/components/admin/SubscriptionPlanManagement";
 
 const AdminDashboard = () => {
   const [businesses, setBusinesses] = useState([]);
@@ -210,6 +212,8 @@ const AdminDashboard = () => {
           <TabsList>
             <TabsTrigger value="businesses">Businesses</TabsTrigger>
             <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
+            <TabsTrigger value="users">Users</TabsTrigger>
+            <TabsTrigger value="plans">Plans</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
 
@@ -340,6 +344,14 @@ const AdminDashboard = () => {
                 </Table>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="users">
+            <UserManagement />
+          </TabsContent>
+
+          <TabsContent value="plans">
+            <SubscriptionPlanManagement />
           </TabsContent>
 
           <TabsContent value="analytics">
