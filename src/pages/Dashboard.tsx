@@ -18,9 +18,7 @@ import WorkPicturesManagement from "@/components/WorkPicturesManagement";
 import ReportsAnalytics from "@/components/ReportsAnalytics";
 import WhatsAppIntegration from "@/components/WhatsAppIntegration";
 import LocalPaymentsIntegration from "@/components/LocalPaymentsIntegration";
-import OfflineCapabilities from "@/components/OfflineCapabilities";
 import SubscriptionBlocker from "@/components/SubscriptionBlocker";
-import SubscriptionManager from "@/components/SubscriptionManager";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -129,14 +127,6 @@ const Dashboard = () => {
                 <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Payments</span>
               </TabsTrigger>
-              <TabsTrigger value="offline" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
-                <Wifi className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Offline</span>
-              </TabsTrigger>
-              <TabsTrigger value="subscription" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
-                <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Subscription</span>
-              </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Settings</span>
@@ -184,13 +174,6 @@ const Dashboard = () => {
             <LocalPaymentsIntegration />
           </TabsContent>
 
-          <TabsContent value="offline">
-            <OfflineCapabilities />
-          </TabsContent>
-
-          <TabsContent value="subscription">
-            <SubscriptionManager businessId={userBusiness?.id} />
-          </TabsContent>
 
           <TabsContent value="settings">
             <SettingsSection />
