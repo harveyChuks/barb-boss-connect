@@ -247,7 +247,7 @@ const ProfileManagement = () => {
         logo_url: formData.logo_url,
         country: formData.country,
         currency: formData.currency
-      };
+      } as any;
 
       const { error } = await supabase
         .from('businesses')
