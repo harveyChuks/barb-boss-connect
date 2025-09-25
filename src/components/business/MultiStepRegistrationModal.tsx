@@ -57,7 +57,11 @@ const MultiStepRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: M
           address: `${businessInfo.streetAddress}, ${businessInfo.city}, ${businessInfo.state} ${businessInfo.zipCode}`,
           phone: personalInfo.phone,
           email: personalInfo.email,
-          owner_id: user.id
+          owner_id: user.id,
+          city: businessInfo.city,
+          state: businessInfo.state,
+          country: businessInfo.country,
+          postal_code: businessInfo.zipCode
         })
         .select()
         .single();

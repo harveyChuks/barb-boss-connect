@@ -23,6 +23,8 @@ interface BusinessInfo {
   state: string;
   zipCode: string;
   businessType: BusinessType;
+  country: string;
+  currency: string;
 }
 
 interface ProfessionalProfile {
@@ -46,7 +48,9 @@ export const useRegistrationForm = () => {
     city: "",
     state: "",
     zipCode: "",
-    businessType: "" as BusinessType
+    businessType: "" as BusinessType,
+    country: "Nigeria",
+    currency: "NGN"
   });
 
   const [professionalProfile, setProfessionalProfile] = useState<ProfessionalProfile>({
@@ -77,7 +81,7 @@ export const useRegistrationForm = () => {
         return personalInfo.fullName && personalInfo.email && personalInfo.phone;
       case 2:
         return businessInfo.businessName && businessInfo.streetAddress && businessInfo.city && 
-               businessInfo.state && businessInfo.zipCode && businessInfo.businessType;
+               businessInfo.state && businessInfo.zipCode && businessInfo.businessType && businessInfo.country;
       case 3:
         return professionalProfile.bio && professionalProfile.yearsExperience;
       case 4:
@@ -90,7 +94,7 @@ export const useRegistrationForm = () => {
   const resetForm = () => {
     setCurrentStep(1);
     setPersonalInfo({ fullName: "", email: "", phone: "" });
-    setBusinessInfo({ businessName: "", streetAddress: "", city: "", state: "", zipCode: "", businessType: "" as BusinessType });
+    setBusinessInfo({ businessName: "", streetAddress: "", city: "", state: "", zipCode: "", businessType: "" as BusinessType, country: "Nigeria", currency: "NGN" });
     setProfessionalProfile({ bio: "", yearsExperience: "", specialties: "" });
     setServices([{ name: "", price: "", duration: 30 }]);
   };

@@ -13,6 +13,8 @@ interface BusinessInfo {
   state: string;
   zipCode: string;
   businessType: BusinessType;
+  country: string;
+  currency: string;
 }
 
 interface BusinessInfoStepProps {
@@ -30,6 +32,16 @@ const BusinessInfoStep = ({ businessInfo, setBusinessInfo }: BusinessInfoStepPro
     { value: "beauty_clinic" as BusinessType, label: "Beauty Clinic" }
   ];
 
+  const countries = [
+    { value: "Nigeria", label: "Nigeria", currency: "NGN" },
+    { value: "Ghana", label: "Ghana", currency: "GHS" },
+    { value: "Kenya", label: "Kenya", currency: "KES" },
+    { value: "South Africa", label: "South Africa", currency: "ZAR" },
+    { value: "United States", label: "United States", currency: "USD" },
+    { value: "United Kingdom", label: "United Kingdom", currency: "GBP" },
+    { value: "Canada", label: "Canada", currency: "CAD" }
+  ];
+
   const states = [
     "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", 
     "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", 
@@ -40,6 +52,15 @@ const BusinessInfoStep = ({ businessInfo, setBusinessInfo }: BusinessInfoStepPro
     "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", 
     "Wisconsin", "Wyoming"
   ];
+
+  const handleCountryChange = (selectedCountry: string) => {
+    const country = countries.find(c => c.value === selectedCountry);
+    setBusinessInfo({ 
+      ...businessInfo, 
+      country: selectedCountry,
+      currency: country?.currency || "USD"
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -125,6 +146,35 @@ const BusinessInfoStep = ({ businessInfo, setBusinessInfo }: BusinessInfoStepPro
               ))}
             </SelectContent>
           </Select>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="country">Country</Label>
+          <Select value={businessInfo.country} onValueChange={handleCountryChange}>
+            <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+              <SelectValue placeholder="Select country" />
+            </SelectTrigger>
+            <SelectContent className="bg-slate-700 border-slate-600 max-h-60">
+              {countries.map((country) => (
+                <SelectItem key={country.value} value={country.value} className="text-white focus:bg-slate-600">
+                  {country.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="currency">Currency</Label>
+          <Input
+            id="currency"
+            value={businessInfo.currency}
+            readOnly
+            className="bg-slate-600 border-slate-600 text-gray-300"
+            placeholder="Auto-selected"
+          />
         </div>
       </div>
     </div>
