@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, DollarSign, Clock } from "lucide-react";
+import { Plus, Edit, Trash2, Clock } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -270,7 +270,6 @@ const ServicesManagement = () => {
             <CardContent>
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
-                  <DollarSign className="w-4 h-4 text-primary" />
                   <span className="text-foreground font-semibold">{formatCurrency(service.price)}</span>
                 </div>
                 <div className="flex items-center space-x-2">
