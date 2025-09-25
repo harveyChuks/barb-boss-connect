@@ -68,6 +68,40 @@ const ServicesManagement = () => {
     }
   };
 
+  // Currency formatting function
+  const formatCurrency = (amount: number) => {
+    const currency = (userBusiness as any)?.currency || 'USD';
+    console.log('Formatting currency for amount:', amount, 'using currency:', currency);
+    
+    const currencySymbols: { [key: string]: string } = {
+      'NGN': '₦',
+      'GHS': '₵', 
+      'KES': 'KSh',
+      'ZAR': 'R',
+      'USD': '$',
+      'GBP': '£',
+      'CAD': 'C$'
+    };
+    
+    const symbol = currencySymbols[currency] || '$';
+    return `${symbol}${amount.toFixed(2)}`;
+  };
+
+  const getCurrencyLabel = () => {
+    const currency = (userBusiness as any)?.currency || 'USD';
+    const currencyLabels: { [key: string]: string } = {
+      'NGN': 'Price (₦)',
+      'GHS': 'Price (₵)', 
+      'KES': 'Price (KSh)',
+      'ZAR': 'Price (R)',
+      'USD': 'Price ($)',
+      'GBP': 'Price (£)',
+      'CAD': 'Price (C$)'
+    };
+    
+    return currencyLabels[currency] || 'Price ($)';
+  };
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -219,7 +253,7 @@ const ServicesManagement = () => {
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
                   <DollarSign className="w-4 h-4 text-primary" />
-                  <span className="text-foreground font-semibold">${service.price}</span>
+                  <span className="text-foreground font-semibold">{formatCurrency(service.price)}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-blue-400" />
@@ -282,7 +316,7 @@ const ServicesManagement = () => {
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="price">Price ($)</Label>
+                <Label htmlFor="price">{getCurrencyLabel()}</Label>
                 <Input
                   id="price"
                   type="number"

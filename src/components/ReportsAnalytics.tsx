@@ -49,6 +49,7 @@ const ReportsAnalytics = () => {
   const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
   const [serviceData, setServiceData] = useState<ServiceData[]>([]);
   const [staffData, setStaffData] = useState<StaffData[]>([]);
+  const [businessData, setBusinessData] = useState<any>(null);
   const { toast } = useToast();
 
   const colors = ['#39FF14', '#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f'];
@@ -65,7 +66,7 @@ const ReportsAnalytics = () => {
       // Get current user's business
       const { data: business } = await supabase
         .from('businesses')
-        .select('id')
+        .select('id, currency')
         .eq('owner_id', user.id)
         .single();
 
@@ -77,6 +78,9 @@ const ReportsAnalytics = () => {
         });
         return;
       }
+
+      console.log('Business data in ReportsAnalytics:', business);
+      setBusinessData(business);
 
       const businessId = business.id;
 
@@ -255,10 +259,21 @@ const ReportsAnalytics = () => {
   }, [dateRange, user]);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
+    const currency = (businessData as any)?.currency || 'USD';
+    console.log('ReportsAnalytics formatting currency:', amount, 'using currency:', currency);
+    
+    const currencySymbols: { [key: string]: string } = {
+      'NGN': '₦',
+      'GHS': '₵', 
+      'KES': 'KSh',
+      'ZAR': 'R',
+      'USD': '$',
+      'GBP': '£',
+      'CAD': 'C$'
+    };
+    
+    const symbol = currencySymbols[currency] || '$';
+    return `${symbol}${amount.toFixed(2)}`;
   };
 
   const chartConfig = {

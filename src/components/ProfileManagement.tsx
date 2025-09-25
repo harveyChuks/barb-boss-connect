@@ -151,6 +151,7 @@ const ProfileManagement = () => {
 
   const handleCountryChange = (selectedCountry: string) => {
     const country = countries.find(c => c.value === selectedCountry);
+    console.log('Country changed to:', selectedCountry, 'Currency:', country?.currency);
     setFormData(prev => ({ 
       ...prev, 
       country: selectedCountry,
@@ -249,6 +250,8 @@ const ProfileManagement = () => {
         currency: formData.currency
       } as any;
 
+      console.log('Saving business data:', updateData);
+
       const { error } = await supabase
         .from('businesses')
         .update(updateData)
@@ -256,11 +259,13 @@ const ProfileManagement = () => {
 
       if (error) throw error;
 
+      console.log('Business profile updated successfully');
       toast({
         title: "Profile Updated",
         description: "Your business profile has been successfully updated.",
       });
     } catch (error: any) {
+      console.error('Error updating business profile:', error);
       toast({
         title: "Error",
         description: error.message,
