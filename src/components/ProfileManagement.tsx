@@ -260,6 +260,10 @@ const ProfileManagement = () => {
       if (error) throw error;
 
       console.log('Business profile updated successfully');
+      
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new CustomEvent('businessProfileUpdated'));
+      
       toast({
         title: "Profile Updated",
         description: "Your business profile has been successfully updated.",

@@ -40,6 +40,24 @@ const ServicesManagement = () => {
     fetchBusinessAndServices();
   }, [user]);
 
+  // Listen for business profile updates
+  useEffect(() => {
+    const handleBusinessUpdate = () => {
+      fetchBusinessAndServices();
+    };
+
+    // Listen for custom business update events
+    window.addEventListener('businessProfileUpdated', handleBusinessUpdate);
+    
+    // Also listen for storage changes (in case multiple tabs are open)
+    window.addEventListener('storage', handleBusinessUpdate);
+
+    return () => {
+      window.removeEventListener('businessProfileUpdated', handleBusinessUpdate);
+      window.removeEventListener('storage', handleBusinessUpdate);
+    };
+  }, []);
+
   const fetchBusinessAndServices = async () => {
     if (!user) return;
 
