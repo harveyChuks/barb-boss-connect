@@ -35,7 +35,9 @@ const ProfileManagement = () => {
     address: "",
     website: "",
     instagram: "",
-    logo_url: ""
+    logo_url: "",
+    country: "Nigeria",
+    currency: "NGN"
   });
 
   useEffect(() => {
@@ -117,7 +119,9 @@ const ProfileManagement = () => {
           address: data.address || "",
           website: data.website || "",
           instagram: data.instagram || "",
-          logo_url: data.logo_url || ""
+          logo_url: data.logo_url || "",
+          country: data.country || "Nigeria",
+          currency: data.currency || "NGN"
         });
       } else {
         console.log('No business found for user');
@@ -133,6 +137,25 @@ const ProfileManagement = () => {
 
   const handleBusinessTypeChange = (value: BusinessType) => {
     setFormData(prev => ({ ...prev, business_type: value }));
+  };
+
+  const countries = [
+    { value: "Nigeria", label: "Nigeria", currency: "NGN" },
+    { value: "Ghana", label: "Ghana", currency: "GHS" },
+    { value: "Kenya", label: "Kenya", currency: "KES" },
+    { value: "South Africa", label: "South Africa", currency: "ZAR" },
+    { value: "United States", label: "United States", currency: "USD" },
+    { value: "United Kingdom", label: "United Kingdom", currency: "GBP" },
+    { value: "Canada", label: "Canada", currency: "CAD" }
+  ];
+
+  const handleCountryChange = (selectedCountry: string) => {
+    const country = countries.find(c => c.value === selectedCountry);
+    setFormData(prev => ({ 
+      ...prev, 
+      country: selectedCountry,
+      currency: country?.currency || "USD"
+    }));
   };
 
   const handleImageUpload = () => {
@@ -221,7 +244,9 @@ const ProfileManagement = () => {
         address: formData.address,
         website: formData.website,
         instagram: formData.instagram,
-        logo_url: formData.logo_url
+        logo_url: formData.logo_url,
+        country: formData.country,
+        currency: formData.currency
       };
 
       const { error } = await supabase
@@ -486,6 +511,35 @@ const ProfileManagement = () => {
                 onChange={(e) => handleInputChange("instagram", e.target.value)}
                 className="bg-input border-border text-foreground"
                 placeholder="@yourbusiness"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="country">Country</Label>
+              <Select value={formData.country} onValueChange={handleCountryChange}>
+                <SelectTrigger className="bg-input border-border text-foreground">
+                  <SelectValue placeholder="Select country" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border-border z-50 max-h-60">
+                  {countries.map((country) => (
+                    <SelectItem key={country.value} value={country.value} className="focus:bg-muted">
+                      {country.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="currency">Currency</Label>
+              <Input
+                id="currency"
+                value={formData.currency}
+                readOnly
+                className="bg-muted border-border text-muted-foreground"
+                placeholder="Auto-selected"
               />
             </div>
           </div>
