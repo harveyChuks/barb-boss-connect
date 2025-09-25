@@ -1,18 +1,41 @@
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Shield, Bell, CreditCard, Users, Calendar } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import BusinessHoursManagement from "./BusinessHoursManagement";
 import ThemeSettings from "./ThemeSettings";
 import WhatsAppIntegration from "./WhatsAppIntegration";
 import LocalPaymentsIntegration from "./LocalPaymentsIntegration";
 import OfflineCapabilities from "./OfflineCapabilities";
+import SubscriptionManager from "./SubscriptionManager";
 import LanguageSelector from "./LanguageSelector";
 
 const SettingsSection = () => {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const [userBusiness, setUserBusiness] = useState<any>(null);
+  
+  // Get user business data
+  useEffect(() => {
+    const fetchBusiness = async () => {
+      if (!user) return;
+      
+      const { data } = await supabase
+        .from('businesses')
+        .select('*')
+        .eq('owner_id', user.id)
+        .single();
+        
+      setUserBusiness(data);
+    };
+    
+    fetchBusiness();
+  }, [user]);
   
   const settingsCategories = [
     {
@@ -101,6 +124,9 @@ const SettingsSection = () => {
 
       {/* Offline Capabilities - Active Feature */}
       <OfflineCapabilities />
+
+      {/* Subscription Management - Active Feature */}
+      <SubscriptionManager businessId={userBusiness?.id} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {settingsCategories.map((category, index) => (
