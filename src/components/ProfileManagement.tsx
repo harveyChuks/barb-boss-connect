@@ -121,7 +121,7 @@ const ProfileManagement = () => {
           instagram: data.instagram || "",
           logo_url: data.logo_url || "",
           country: data.country || "Nigeria",
-          currency: data.currency || "NGN"
+          currency: (data as any).currency || "NGN"
         });
       } else {
         console.log('No business found for user');

@@ -353,6 +353,7 @@ export type Database = {
           country: string | null
           cover_image_url: string | null
           created_at: string | null
+          currency: string | null
           description: string | null
           email: string | null
           id: string
@@ -383,6 +384,7 @@ export type Database = {
           country?: string | null
           cover_image_url?: string | null
           created_at?: string | null
+          currency?: string | null
           description?: string | null
           email?: string | null
           id?: string
@@ -413,6 +415,7 @@ export type Database = {
           country?: string | null
           cover_image_url?: string | null
           created_at?: string | null
+          currency?: string | null
           description?: string | null
           email?: string | null
           id?: string
