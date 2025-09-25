@@ -71,6 +71,9 @@ const Index = () => {
       }
 
       setUserBusiness(data);
+      
+      // Debug log to check currency
+      console.log('Business currency:', data?.currency);
     } catch (error: any) {
       console.error('Error fetching business:', error);
     } finally {
@@ -576,7 +579,7 @@ const Index = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-muted-foreground text-xs sm:text-sm font-medium">Revenue Today</p>
-                      <p className="text-xl sm:text-3xl font-bold text-foreground mt-1 sm:mt-2">{formatCurrency(stats.todayRevenue, userBusiness?.currency)}</p>
+                      <p className="text-xl sm:text-3xl font-bold text-foreground mt-1 sm:mt-2">{formatCurrency(stats.todayRevenue, userBusiness?.currency || 'NGN')}</p>
                     </div>
                     <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" />
                   </div>
