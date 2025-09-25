@@ -5,6 +5,22 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
+// Currency formatting function
+const formatCurrency = (amount: number, currency: string = 'NGN') => {
+  const currencySymbols: { [key: string]: string } = {
+    'NGN': '₦',
+    'USD': '$',
+    'GHS': '₵',
+    'KES': 'KSh',
+    'ZAR': 'R',
+    'GBP': '£',
+    'CAD': 'C$'
+  };
+  
+  const symbol = currencySymbols[currency] || '$';
+  return `${symbol}${amount.toLocaleString()}`;
+};
+
 const StatisticsOverview = () => {
   const { user } = useAuth();
   const [stats, setStats] = useState({
@@ -15,6 +31,7 @@ const StatisticsOverview = () => {
     todayBookings: 0,
     weeklyBookings: 0
   });
+  const [businessCurrency, setBusinessCurrency] = useState('NGN');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -49,11 +66,14 @@ const StatisticsOverview = () => {
       // Get user's business
       const { data: business } = await supabase
         .from('businesses')
-        .select('id')
+        .select('id, currency')
         .eq('owner_id', user.id)
         .single();
 
       if (!business) return;
+      
+      // Set the business currency
+      setBusinessCurrency(business.currency || 'NGN');
 
       // Get unique clients for this business
       const { data: uniqueCustomers } = await supabase
@@ -159,7 +179,7 @@ const StatisticsOverview = () => {
     },
     {
       title: "Monthly Revenue",
-      value: `$${stats.monthlyRevenue.toLocaleString()}`,
+      value: formatCurrency(stats.monthlyRevenue, businessCurrency),
       description: "Revenue this month",
       icon: DollarSign,
       color: "text-[#39FF14]"

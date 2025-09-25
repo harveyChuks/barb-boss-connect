@@ -37,7 +37,8 @@ const ProfileManagement = () => {
     instagram: "",
     logo_url: "",
     country: "Nigeria",
-    currency: "NGN"
+    currency: "NGN",
+    state: ""
   });
 
   useEffect(() => {
@@ -121,7 +122,8 @@ const ProfileManagement = () => {
           instagram: data.instagram || "",
           logo_url: data.logo_url || "",
           country: data.country || "Nigeria",
-          currency: (data as any).currency || "NGN"
+          currency: (data as any).currency || "NGN",
+          state: data.state || ""
         });
       } else {
         console.log('No business found for user');
@@ -147,6 +149,17 @@ const ProfileManagement = () => {
     { value: "United States", label: "United States", currency: "USD" },
     { value: "United Kingdom", label: "United Kingdom", currency: "GBP" },
     { value: "Canada", label: "Canada", currency: "CAD" }
+  ];
+
+  const states = [
+    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", 
+    "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", 
+    "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", 
+    "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", 
+    "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", 
+    "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", 
+    "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", 
+    "Wisconsin", "Wyoming"
   ];
 
   const handleCountryChange = (selectedCountry: string) => {
@@ -247,7 +260,8 @@ const ProfileManagement = () => {
         instagram: formData.instagram,
         logo_url: formData.logo_url,
         country: formData.country,
-        currency: formData.currency
+        currency: formData.currency,
+        state: formData.state
       } as any;
 
       console.log('Saving business data:', updateData);
@@ -498,6 +512,22 @@ const ProfileManagement = () => {
               className="bg-input border-border text-foreground"
               placeholder="Business address"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="state">State/Province</Label>
+            <Select value={formData.state} onValueChange={(value) => handleInputChange("state", value)}>
+              <SelectTrigger className="bg-input border-border text-foreground">
+                <SelectValue placeholder="Select state/province" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border z-50 max-h-60">
+                {states.map((state) => (
+                  <SelectItem key={state} value={state} className="focus:bg-muted">
+                    {state}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

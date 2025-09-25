@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Building2, Users, DollarSign, TrendingUp, Search, Ban, CheckCircle } from "lucide-react";
+import { Building2, Users, DollarSign, TrendingUp, Search, Ban, CheckCircle, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import VisitAnalytics from "@/components/analytics/VisitAnalytics";
 import UserManagement from "@/components/admin/UserManagement";
 import SubscriptionPlanManagement from "@/components/admin/SubscriptionPlanManagement";
@@ -19,6 +20,7 @@ import { ContentModeration } from "@/components/admin/ContentModeration";
 import { PlatformHealthMonitoring } from "@/components/admin/PlatformHealthMonitoring";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [businesses, setBusinesses] = useState([]);
   const [subscriptions, setSubscriptions] = useState([]);
   const [stats, setStats] = useState({
@@ -167,8 +169,21 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-background p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Platform Administration</h1>
-          <p className="text-muted-foreground">Manage businesses, subscriptions, and platform oversight</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Platform Administration</h1>
+              <p className="text-muted-foreground">Manage businesses, subscriptions, and platform oversight</p>
+            </div>
+            <Button
+              onClick={() => navigate('/dashboard')}
+              variant="outline"
+              size="sm"
+              className="border-border text-foreground hover:bg-muted"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Exit Admin
+            </Button>
+          </div>
         </div>
 
         {/* Statistics Cards */}
@@ -209,7 +224,7 @@ const AdminDashboard = () => {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">${stats.monthlyRevenue.toFixed(2)}</div>
+              <div className="text-2xl font-bold text-green-600">₦{stats.monthlyRevenue.toFixed(2)}</div>
             </CardContent>
           </Card>
         </div>
