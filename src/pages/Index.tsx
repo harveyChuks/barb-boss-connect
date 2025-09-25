@@ -17,6 +17,22 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
+// Currency formatting function
+const formatCurrency = (amount: number, currency: string = 'NGN') => {
+  const currencySymbols: { [key: string]: string } = {
+    'NGN': '₦',
+    'USD': '$',
+    'GHS': '₵',
+    'KES': 'KSh',
+    'ZAR': 'R',
+    'GBP': '£',
+    'CAD': 'C$'
+  };
+  
+  const symbol = currencySymbols[currency] || '$';
+  return `${symbol}${amount.toLocaleString()}`;
+};
+
 const Index = () => {
   const { user, loading: authLoading, signOut, isAuthenticated } = useAuth();
   const { isAdmin } = useUserRole();
@@ -560,7 +576,7 @@ const Index = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-muted-foreground text-xs sm:text-sm font-medium">Revenue Today</p>
-                      <p className="text-xl sm:text-3xl font-bold text-foreground mt-1 sm:mt-2">${stats.todayRevenue}</p>
+                      <p className="text-xl sm:text-3xl font-bold text-foreground mt-1 sm:mt-2">{formatCurrency(stats.todayRevenue, userBusiness?.currency)}</p>
                     </div>
                     <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" />
                   </div>
