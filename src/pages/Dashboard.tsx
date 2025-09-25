@@ -87,57 +87,57 @@ const Dashboard = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-          <div className="overflow-x-auto">
-            <TabsList className="grid grid-cols-13 bg-card border-border min-w-max w-full">
-              <TabsTrigger value="overview" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+          <div className="overflow-x-auto pb-2">
+            <TabsList className="flex bg-card border-border min-w-max w-full gap-1">
+              <TabsTrigger value="overview" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Overview</span>
               </TabsTrigger>
-              <TabsTrigger value="reports" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="reports" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Reports</span>
               </TabsTrigger>
-              <TabsTrigger value="profile" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="profile" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <User className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Profile</span>
               </TabsTrigger>
-              <TabsTrigger value="services" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="services" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <Scissors className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Services</span>
               </TabsTrigger>
-              <TabsTrigger value="portfolio" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="portfolio" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <Camera className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Portfolio</span>
               </TabsTrigger>
-              <TabsTrigger value="staff" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="staff" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <Users className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Staff</span>
               </TabsTrigger>
-              <TabsTrigger value="bookings" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="bookings" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Bookings</span>
               </TabsTrigger>
-              <TabsTrigger value="calendar" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="calendar" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Calendar</span>
               </TabsTrigger>
-              <TabsTrigger value="whatsapp" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="whatsapp" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">WhatsApp</span>
               </TabsTrigger>
-              <TabsTrigger value="payments" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="payments" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Payments</span>
               </TabsTrigger>
-              <TabsTrigger value="offline" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="offline" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <Wifi className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Offline</span>
               </TabsTrigger>
-              <TabsTrigger value="subscription" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="subscription" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Subscription</span>
               </TabsTrigger>
-              <TabsTrigger value="settings" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-1 sm:px-3 text-xs sm:text-sm">
+              <TabsTrigger value="settings" className="flex items-center space-x-1 sm:space-x-2 text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap">
                 <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Settings</span>
               </TabsTrigger>
