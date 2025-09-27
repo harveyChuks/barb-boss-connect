@@ -205,11 +205,66 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       // Calculate total duration for all selected services
       const totalDuration = selectedServices.reduce((sum, service) => sum + service.duration_minutes, 0);
       
-      // Calculate end time based on total duration
+      // CRITICAL: Verify slot is still available before booking
+      const { data: slotsData, error: slotsError } = await supabase.rpc('get_available_time_slots', {
+        p_business_id: business.id,
+        p_date: format(selectedDate, 'yyyy-MM-dd'),
+        p_duration_minutes: totalDuration,
+        p_staff_id: formData.staff_id || null
+      });
+
+      if (slotsError) {
+        throw new Error("Failed to verify slot availability");
+      }
+
+      // Check if the selected time slot is still available
+      const slot = slotsData?.find((s: any) => {
+        const slotTime = new Date(`2000-01-01T${s.slot_time}`).toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        });
+        return slotTime === selectedTime;
+      });
+
+      if (!slot?.is_available) {
+        toast({
+          title: "Time Slot No Longer Available",
+          description: "This time slot was just booked by someone else. Please select a different time.",
+          variant: "destructive",
+        });
+        setSubmitting(false);
+        return;
+      }
+
+      // Check for appointment conflicts
       const startTime = selectedTime;
       const endTime = new Date(`2000-01-01T${selectedTime}:00`);
       endTime.setMinutes(endTime.getMinutes() + totalDuration);
       const endTimeString = endTime.toTimeString().slice(0, 5);
+
+      const { data: conflictData, error: conflictError } = await supabase.rpc('check_appointment_conflict', {
+        p_business_id: business.id,
+        p_appointment_date: format(selectedDate, 'yyyy-MM-dd'),
+        p_start_time: startTime,
+        p_end_time: endTimeString,
+        p_staff_id: formData.staff_id || null,
+        p_exclude_appointment_id: null
+      });
+
+      if (conflictError) {
+        throw new Error("Failed to check for appointment conflicts");
+      }
+
+      if (conflictData) {
+        toast({
+          title: "Time Slot Conflict",
+          description: "This time slot conflicts with existing appointments. Please select a different time.",
+          variant: "destructive",
+        });
+        setSubmitting(false);
+        return;
+      }
 
       // Create separate appointments for each service (this ensures proper tracking and pricing)
       const appointmentPromises = selectedServices.map(async (service, index) => {
