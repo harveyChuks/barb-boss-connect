@@ -604,7 +604,7 @@ const Index = () => {
               {isAuthenticated ? (
                 <>
                   {userBusiness ? (
-                    <></>
+                    <MobileMenu />
                   ) : (
                     <Button 
                       onClick={() => setShowBusinessModal(true)}
@@ -640,132 +640,7 @@ const Index = () => {
             {/* Mobile Menu Button - Only for authenticated users with business */}
             {isAuthenticated && userBusiness && (
               <div className="md:hidden">
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="ghost" size="sm" className="text-white">
-                      <Menu className="h-5 w-5" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="right" className="bg-slate-900 border-slate-700">
-                    <div className="flex flex-col pt-8">
-                      <div className="text-white font-semibold mb-4 px-3">Business Management</div>
-                      
-                      <ul className="space-y-2">
-                        <li>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-slate-700"
-                            onClick={() => setActiveSection("overview")}
-                          >
-                            <Home className="w-4 h-4 mr-2" />
-                            Overview
-                          </Button>
-                        </li>
-                        <li>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-slate-700"
-                            onClick={() => setActiveSection("bookings")}
-                          >
-                            <Calendar className="w-4 h-4 mr-2" />
-                            Bookings
-                          </Button>
-                        </li>
-                        <li>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-slate-700"
-                            onClick={() => setActiveSection("calendar")}
-                          >
-                            <Calendar className="w-4 h-4 mr-2" />
-                            Calendar
-                          </Button>
-                        </li>
-                        <li>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-slate-700"
-                            onClick={() => setActiveSection("services")}
-                          >
-                            <Scissors className="w-4 h-4 mr-2" />
-                            Services
-                          </Button>
-                        </li>
-                        <li>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-slate-700"
-                            onClick={() => setActiveSection("staff")}
-                          >
-                            <Users className="w-4 h-4 mr-2" />
-                            Staff
-                          </Button>
-                        </li>
-                        <li>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-slate-700"
-                            onClick={() => setActiveSection("work-pictures")}
-                          >
-                            <Camera className="w-4 h-4 mr-2" />
-                            Work Pictures
-                          </Button>
-                        </li>
-                        <li>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-slate-700"
-                            onClick={() => setActiveSection("analytics")}
-                          >
-                            <BarChart3 className="w-4 h-4 mr-2" />
-                            Analytics
-                          </Button>
-                        </li>
-                        <li>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-slate-700"
-                            onClick={() => setActiveSection("whatsapp")}
-                          >
-                            <MessageCircle className="w-4 h-4 mr-2" />
-                            WhatsApp
-                          </Button>
-                        </li>
-                        <li>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-slate-700"
-                            onClick={() => setActiveSection("payments")}
-                          >
-                            <CreditCard className="w-4 h-4 mr-2" />
-                            Payments
-                          </Button>
-                        </li>
-                        <li>
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-slate-700"
-                            onClick={() => setActiveSection("settings")}
-                          >
-                            <Settings className="w-4 h-4 mr-2" />
-                            Settings
-                          </Button>
-                        </li>
-                      </ul>
-                      
-                      <div className="mt-8 pt-4 border-t border-slate-700">
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start text-red-400 hover:bg-red-900/20"
-                          onClick={handleSignOut}
-                        >
-                          <LogOut className="w-4 h-4 mr-2" />
-                          Sign Out
-                        </Button>
-                      </div>
-                    </div>
-                  </SheetContent>
-                </Sheet>
+                <MobileMenu />
               </div>
             )}
 
