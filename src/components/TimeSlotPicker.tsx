@@ -27,13 +27,22 @@ const TimeSlotPicker = ({
   const [refreshKey, setRefreshKey] = useState(0); // Add refresh key for cache busting
 
   // Debug logging
-  console.log('TimeSlotPicker Debug:', {
+  console.log('🔍 TimeSlotPicker RENDERING:', {
     businessId,
     date,
     timeSlots,
     totalSlots: timeSlots.length,
     availableSlots: timeSlots.filter(slot => slot.is_available).length,
     bookedSlots: timeSlots.filter(slot => !slot.is_available).length
+  });
+
+  // Log each slot individually to see the data structure
+  timeSlots.forEach((slot, index) => {
+    console.log(`🕐 Slot ${index + 1}:`, {
+      slot_time: slot.slot_time,
+      is_available: slot.is_available,
+      formatted_time: formatTime(slot.slot_time)
+    });
   });
 
   // Auto-refresh every 30 seconds to keep availability current
