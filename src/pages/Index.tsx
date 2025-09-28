@@ -456,9 +456,9 @@ const Index = () => {
         <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 md:hidden">
           <div className="grid grid-cols-5 gap-1 p-2">
             <button
-              onClick={() => setActiveSection('overview')}
+              onClick={() => setActiveSection('home')}
               className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
-                activeSection === 'overview' ? 'text-primary' : 'text-muted-foreground'
+                activeSection === 'home' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
               <Home className="w-4 h-4 mb-1" />
@@ -896,14 +896,6 @@ const Index = () => {
             {activeSection === 'overview' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">Business Overview</h1>
                 </div>
                 <StatisticsOverview />
@@ -913,14 +905,6 @@ const Index = () => {
             {activeSection === 'reports' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">Reports & Analytics</h1>
                 </div>
                 <ReportsAnalytics />
@@ -930,14 +914,6 @@ const Index = () => {
             {activeSection === 'profile' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">Business Profile</h1>
                 </div>
                 <ProfileManagement />
@@ -947,14 +923,6 @@ const Index = () => {
             {activeSection === 'services' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">Services Management</h1>
                 </div>
                 <ServicesManagement />
@@ -964,14 +932,6 @@ const Index = () => {
             {activeSection === 'portfolio' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">Portfolio Management</h1>
                 </div>
                 <WorkPicturesManagement />
@@ -981,14 +941,6 @@ const Index = () => {
             {activeSection === 'staff' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">Staff Management</h1>
                 </div>
                 <StaffManagement />
@@ -998,14 +950,6 @@ const Index = () => {
             {activeSection === 'bookings' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">Bookings Management</h1>
                 </div>
                 <BookingsManagement />
@@ -1015,14 +959,6 @@ const Index = () => {
             {activeSection === 'calendar' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">Calendar View</h1>
                 </div>
                 <CalendarView />
@@ -1032,14 +968,6 @@ const Index = () => {
             {activeSection === 'whatsapp' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">WhatsApp Integration</h1>
                 </div>
                 <WhatsAppIntegration />
@@ -1049,14 +977,6 @@ const Index = () => {
             {activeSection === 'payments' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">Local Payments</h1>
                 </div>
                 <LocalPaymentsIntegration />
@@ -1066,14 +986,6 @@ const Index = () => {
             {activeSection === 'settings' && (
               <div>
                 <div className="mb-6">
-                  <Button 
-                    onClick={() => setActiveSection('home')}
-                    variant="outline" 
-                    size="sm"
-                    className="mb-4"
-                  >
-                    ← Back to Home
-                  </Button>
                   <h1 className="text-2xl font-bold text-foreground">Settings</h1>
                 </div>
                 <SettingsSection />
