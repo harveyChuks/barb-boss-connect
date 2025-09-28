@@ -26,24 +26,21 @@ const TimeSlotPicker = ({
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0); // Add refresh key for cache busting
 
-  // Debug logging - show actual data structure
-  console.log('🔍 TimeSlotPicker RENDERING:', {
-    businessId,
-    date,
-    timeSlots,
-    totalSlots: timeSlots.length,
-    availableSlots: timeSlots.filter(slot => slot.is_available).length,
-    bookedSlots: timeSlots.filter(slot => !slot.is_available).length,
-    sampleSlots: timeSlots.slice(0, 3) // Show first 3 slots structure
-  });
-
-  // Log each slot individually to see the data structure
+  // DETAILED DEBUG - Check exact data structure and UI logic
+  console.log('🔍 FULL SLOT DATA:', timeSlots);
+  
   timeSlots.forEach((slot, index) => {
-    console.log(`🕐 Slot ${index + 1}:`, {
+    const isAvailable = slot.is_available;
+    const formattedTime = formatTime(slot.slot_time);
+    
+    console.log(`🕐 Slot ${index + 1} DETAILED:`, {
+      raw_slot: slot,
       slot_time: slot.slot_time,
       is_available: slot.is_available,
-      formatted_time: formatTime(slot.slot_time),
-      will_show_as: slot.is_available ? 'GREEN (available)' : 'RED (booked)'
+      isAvailable_variable: isAvailable,
+      formatted_time: formattedTime,
+      will_render_as: !isAvailable ? 'RED (booked)' : 'GREEN (available)',
+      condition_check: `!${isAvailable} = ${!isAvailable}`
     });
   });
 
