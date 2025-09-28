@@ -191,6 +191,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   };
 
   const handleSubmit = async () => {
+    console.log('=== BOOKING STARTED ===');
     if (!business || !selectedDate || !selectedTime || formData.selected_services.length === 0) return;
 
     const selectedServices = services.filter(s => formData.selected_services.includes(s.id));
