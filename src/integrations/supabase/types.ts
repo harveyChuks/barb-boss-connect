@@ -929,10 +929,6 @@ export type Database = {
         Args: { p_business_id: string }
         Returns: string
       }
-      check_time_overlap: {
-        Args: { end1: string; end2: string; start1: string; start2: string }
-        Returns: boolean
-      }
       find_nearby_businesses_with_slots: {
         Args: {
           search_date?: string

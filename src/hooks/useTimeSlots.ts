@@ -14,39 +14,11 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
   const { toast } = useToast();
 
   const fetchTimeSlots = async () => {
-    console.log('fetchTimeSlots called with:', { businessId, date, durationMinutes, staffId });
-    
-    if (!businessId || !date || !durationMinutes || durationMinutes <= 0) {
-      console.log('Missing required parameters for time slots:', { businessId, date, durationMinutes });
-      return;
-    }
+    if (!businessId || !date || !durationMinutes) return;
 
     setLoading(true);
     try {
       console.log('Fetching time slots for:', { businessId, date, durationMinutes, staffId });
-      
-      // First check business hours for the date to give better error message
-      const selectedDate = new Date(date);
-      const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
-      
-      const { data: businessHours, error: hoursError } = await supabase
-        .from('business_hours')
-        .select('is_closed, start_time, end_time')
-        .eq('business_id', businessId)
-        .eq('day_of_week', dayOfWeek)
-        .single();
-
-      if (hoursError && hoursError.code !== 'PGRST116') {
-        console.error('Error fetching business hours:', hoursError);
-        throw new Error('Could not fetch business hours');
-      }
-
-      if (!businessHours || businessHours.is_closed) {
-        console.log('Business is closed on this day');
-        setTimeSlots([]);
-        setLoading(false);
-        return;
-      }
       
       const { data, error } = await supabase.rpc('get_available_time_slots', {
         p_business_id: businessId,
@@ -76,7 +48,6 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
   };
 
   useEffect(() => {
-    console.log('useTimeSlots useEffect triggered:', { businessId, date, durationMinutes, staffId });
     fetchTimeSlots();
   }, [businessId, date, durationMinutes, staffId]);
 

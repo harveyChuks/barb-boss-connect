@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,8 +11,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useTimeSlots } from "@/hooks/useTimeSlots";
-import { useBusinessAppointments } from "@/hooks/useBusinessAppointments";
 import { format, addDays, isAfter, isBefore, startOfDay, addMonths, subMonths, startOfMonth, endOfMonth, eachWeekOfInterval, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isSameDay } from "date-fns";
 
 interface Business {
@@ -76,43 +74,11 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     notes: ""
   });
 
-  // Fetch appointments for the calendar to show booked slots
-  const { hasAppointmentsOnDate, getAppointmentsForDate } = useBusinessAppointments(
-    business?.id || '',
-    {
-      start: startOfMonth(subMonths(calendarDate, 1)),
-      end: endOfMonth(addMonths(calendarDate, 1))
-    }
-  );
-
-  // Memoize total duration to prevent unnecessary re-renders
-  const totalDuration = useMemo(() => {
-    return services
-      .filter(s => formData.selected_services.includes(s.id))
-      .reduce((sum, service) => sum + service.duration_minutes, 0);
-  }, [services, formData.selected_services]);
-   
-  // Get available time slots for selected date with default 30-minute duration
-  const defaultDuration = totalDuration > 0 ? totalDuration : 30;
-  
-  // Memoize date string to prevent unnecessary re-fetches
-  const dateString = useMemo(() => {
-    return selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
-  }, [selectedDate]);
-  
-  const { timeSlots: availableTimeSlots, loading: timeSlotsLoading, refetch: refetchTimeSlots } = useTimeSlots(
-    business?.id || '',
-    dateString,
-    defaultDuration,
-    formData.staff_id || undefined
-  );
-
-  // Refetch time slots when services change (duration affects availability)
-  useEffect(() => {
-    if (business?.id && selectedDate && refetchTimeSlots) {
-      refetchTimeSlots();
-    }
-  }, [formData.selected_services, business?.id, selectedDate, refetchTimeSlots]);
+  const timeSlots = [
+    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
+  ];
 
   // Mock pictures for demonstration
   const mockPictures = [
@@ -226,11 +192,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         ? prev.selected_services.filter(id => id !== serviceId)
         : [...prev.selected_services, serviceId]
     }));
-    
-    // Clear selected time when services change since duration affects availability
-    if (selectedTime) {
-      setSelectedTime('');
-    }
   };
 
   const handleSubmit = async () => {
@@ -660,8 +621,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                       const isDisabled = isDateDisabled(date);
                       const isAvailable = isDateAvailable(date) && isCurrentMonth && !isDisabled;
                       const isToday = isSameDay(date, new Date());
-                      const hasBookings = isCurrentMonth && hasAppointmentsOnDate(date);
-                      const dayAppointments = isCurrentMonth ? getAppointmentsForDate(date) : [];
 
                       return (
                         <button
@@ -669,73 +628,23 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                           onClick={() => isAvailable && setSelectedDate(date)}
                           disabled={!isAvailable}
                           className={`
-                            aspect-square p-2 text-sm rounded-lg transition-colors relative group
+                            aspect-square p-2 text-sm rounded-lg transition-colors relative
                             ${!isCurrentMonth ? 'text-slate-600' : ''}
                             ${isSelected ? 'bg-primary text-black font-semibold' : ''}
                             ${isToday && !isSelected ? 'bg-slate-600 text-white font-semibold' : ''}
                             ${isAvailable && !isSelected && !isToday ? 'text-white hover:bg-slate-700' : ''}
                             ${!isAvailable ? 'text-slate-600 cursor-not-allowed' : 'cursor-pointer'}
-                            ${hasBookings && !isSelected ? 'border border-amber-500/50' : ''}
                           `}
-                          title={hasBookings ? `${dayAppointments.length} appointment${dayAppointments.length !== 1 ? 's' : ''} booked` : ''}
                         >
                           {format(date, 'd')}
-                          {hasBookings && (
-                            <div className="absolute bottom-1 right-1">
-                              <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
-                            </div>
-                          )}
-                          {!isAvailable && isCurrentMonth && !isDisabled && !hasBookings && (
+                          {!isAvailable && isCurrentMonth && !isDisabled && (
                             <div className="absolute inset-0 flex items-center justify-center">
                               <div className="w-1 h-1 bg-red-500 rounded-full"></div>
-                            </div>
-                          )}
-                          
-                          {/* Tooltip for booked appointments */}
-                          {hasBookings && (
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-black text-white text-xs p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap">
-                              {dayAppointments.slice(0, 3).map((apt, i) => (
-                                <div key={apt.id}>
-                                  {apt.start_time.slice(0, 5)} - {apt.services.name}
-                                </div>
-                              ))}
-                              {dayAppointments.length > 3 && (
-                                <div className="text-slate-300">
-                                  +{dayAppointments.length - 3} more
-                                </div>
-                              )}
                             </div>
                           )}
                         </button>
                       );
                     })}
-                  </div>
-                  
-                  {/* Calendar Legend */}
-                  <div className="mt-4 p-3 bg-slate-700/50 rounded-lg">
-                    <div className="text-sm text-slate-300 mb-2 font-medium">Calendar Legend:</div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 border border-amber-500/50 rounded flex items-end justify-end">
-                          <div className="w-1.5 h-1.5 bg-amber-500 rounded-full -mb-0.5 -mr-0.5"></div>
-                        </div>
-                        <span className="text-slate-400">Has bookings</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-primary rounded"></div>
-                        <span className="text-slate-400">Selected date</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-slate-600 rounded"></div>
-                        <span className="text-slate-400">Today</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-slate-800 rounded flex items-center justify-center">
-                          <div className="w-1 h-1 bg-red-500 rounded-full"></div>
-                        </div>
-                        <span className="text-slate-400">Unavailable</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
                 
@@ -746,89 +655,27 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         Available Times for {format(selectedDate, 'MMM d, yyyy')}
                       </Label>
                       <Badge variant="secondary" className="text-xs">
-                         {availableTimeSlots?.filter(slot => slot.is_available).length || 0} slots available
-                       </Badge>
-                     </div>
-                     
-                     {timeSlotsLoading ? (
-                       <div className="text-center py-4 text-slate-400">
-                         Loading available times...
-                       </div>
-                     ) : (
-                       <>
-                         {availableTimeSlots.filter(slot => slot.is_available).length > 0 ? (
-                           <div className="space-y-3">
-                             <div className="grid grid-cols-3 gap-2">
-                               {availableTimeSlots
-                                 .filter(slot => slot.is_available)
-                                 .map((slot) => {
-                                   const formattedTime = new Date(`2000-01-01T${slot.slot_time}`).toLocaleTimeString('en-US', {
-                                     hour: 'numeric',
-                                     minute: '2-digit',
-                                     hour12: true
-                                   });
-                                   return (
-                                     <Button
-                                       key={slot.slot_time}
-                                       variant={selectedTime === formattedTime ? "default" : "outline"}
-                                       size="sm"
-                                       onClick={() => setSelectedTime(formattedTime)}
-                                       className={
-                                         selectedTime === formattedTime
-                                           ? "bg-primary hover:bg-primary/90 text-black font-medium"
-                                           : "border-slate-600 text-white hover:bg-slate-700 hover:border-slate-500"
-                                       }
-                                     >
-                                       {formattedTime}
-                                     </Button>
-                                   );
-                                 })}
-                             </div>
-                           </div>
-                         ) : (
-                           <div className="text-center py-4 text-slate-400">
-                             No available time slots for this date
-                           </div>
-                         )}
-                         
-                         {/* Show booked time slots */}
-                         {availableTimeSlots.filter(slot => !slot.is_available).length > 0 && (
-                           <div className="space-y-2">
-                             <div className="text-sm text-slate-400 font-medium">Already Booked:</div>
-                             <div className="grid grid-cols-4 gap-2">
-                               {availableTimeSlots
-                                 .filter(slot => !slot.is_available)
-                                 .slice(0, 8)
-                                 .map((slot) => {
-                                   const formattedTime = new Date(`2000-01-01T${slot.slot_time}`).toLocaleTimeString('en-US', {
-                                     hour: 'numeric',
-                                     minute: '2-digit',
-                                     hour12: true
-                                   });
-                                   return (
-                                     <Badge
-                                       key={slot.slot_time}
-                                       variant="secondary"
-                                       className="bg-red-900/30 border border-red-700/50 text-red-300 justify-center py-1 text-xs"
-                                     >
-                                       {formattedTime}
-                                     </Badge>
-                                   );
-                                 })}
-                               {availableTimeSlots.filter(slot => !slot.is_available).length > 8 && (
-                                 <Badge
-                                   variant="secondary"
-                                   className="bg-red-900/30 border border-red-700/50 text-red-300 justify-center py-1 text-xs"
-                                 >
-                                   +{availableTimeSlots.filter(slot => !slot.is_available).length - 8} more
-                                 </Badge>
-                               )}
-                             </div>
-                           </div>
-                         )}
-                       </>
-                     )}
-                   </div>
+                        {timeSlots.length} slots available
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {timeSlots.map((time) => (
+                        <Button
+                          key={time}
+                          variant={selectedTime === time ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setSelectedTime(time)}
+                          className={
+                            selectedTime === time
+                              ? "bg-primary hover:bg-primary/90 text-black font-medium"
+                              : "border-slate-600 text-white hover:bg-slate-700 hover:border-slate-500"
+                          }
+                        >
+                          {time}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </CardContent>
             </Card>
