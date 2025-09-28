@@ -471,7 +471,7 @@ const Index = () => {
               }`}
             >
               <BarChart3 className="w-4 h-4 mb-1" />
-              <span>Analytics</span>
+              <span>Stats</span>
             </button>
             <button
               onClick={() => setActiveSection('services')}
