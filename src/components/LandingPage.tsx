@@ -329,7 +329,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-blue-50">
+      <section className="py-20 px-4 bg-green-50">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Ready to Revolutionize Your Business?
