@@ -367,7 +367,43 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden pb-20 md:pb-0">
+      {/* Mobile Bottom Navigation - Only for authenticated business owners */}
+      {isAuthenticated && userBusiness && (
+        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 md:hidden">
+          <div className="grid grid-cols-4 gap-1 p-2">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex flex-col items-center py-3 px-2 rounded-lg text-xs text-foreground hover:bg-accent"
+            >
+              <BarChart3 className="w-5 h-5 mb-1" style={{ color: '#39FF14' }} />
+              <span>Dashboard</span>
+            </button>
+            <button
+              onClick={() => setShowAppointmentModal(true)}
+              className="flex flex-col items-center py-3 px-2 rounded-lg text-xs text-foreground hover:bg-accent"
+            >
+              <Plus className="w-5 h-5 mb-1" style={{ color: '#39FF14' }} />
+              <span>Appointment</span>
+            </button>
+            <button
+              onClick={() => setShowClientModal(true)}
+              className="flex flex-col items-center py-3 px-2 rounded-lg text-xs text-foreground hover:bg-accent"
+            >
+              <Users className="w-5 h-5 mb-1" style={{ color: '#39FF14' }} />
+              <span>Add Client</span>
+            </button>
+            <button
+              onClick={() => navigate('/discovery')}
+              className="flex flex-col items-center py-3 px-2 rounded-lg text-xs text-foreground hover:bg-accent"
+            >
+              <MapPin className="w-5 h-5 mb-1" style={{ color: '#39FF14' }} />
+              <span>Discover</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Three glowing colors - purple right, blue middle, light blue left - hidden in light mode */}
       <div className="fixed inset-0 pointer-events-none dark:block hidden">
         {/* Left corner - light blue */}
