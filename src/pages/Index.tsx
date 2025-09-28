@@ -627,6 +627,13 @@ const Index = () => {
               )}
             </div>
 
+            {/* Mobile Menu Button - Only for authenticated users with business */}
+            {isAuthenticated && userBusiness && (
+              <div className="md:hidden">
+                <MobileMenu />
+              </div>
+            )}
+
           </div>
         </div>
       </header>
