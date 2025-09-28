@@ -219,14 +219,27 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       console.log('Available slots data:', slotsData);
       console.log('Looking for selected time:', selectedTime);
       
+      // Convert selectedTime (12-hour format) to 24-hour format for comparison
+      const convertTo24Hour = (time12h: string): string => {
+        const [time, period] = time12h.split(' ');
+        const [hours, minutes] = time.split(':');
+        let hour24 = parseInt(hours);
+        
+        if (period.toLowerCase() === 'pm' && hour24 !== 12) {
+          hour24 += 12;
+        } else if (period.toLowerCase() === 'am' && hour24 === 12) {
+          hour24 = 0;
+        }
+        
+        return `${hour24.toString().padStart(2, '0')}:${minutes}:00`;
+      };
+
+      const selectedTime24 = convertTo24Hour(selectedTime);
+      console.log('Selected time in 24h format:', selectedTime24);
+      
       const slot = slotsData?.find((s: any) => {
-        const slotTime = new Date(`2000-01-01T${s.slot_time}`).toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        });
-        console.log('Comparing slot:', s.slot_time, 'formatted as:', slotTime, 'with selected:', selectedTime);
-        return slotTime === selectedTime;
+        console.log('Comparing slot:', s.slot_time, 'with selected:', selectedTime24);
+        return s.slot_time === selectedTime24;
       });
 
       console.log('Found slot:', slot);
@@ -246,21 +259,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       console.log('ALLOWING: Slot appears available, proceeding...');
 
       // Check for appointment conflicts
-      // Convert 12-hour format time to 24-hour format for database
-      const convertTo24Hour = (time12h: string): string => {
-        const [time, period] = time12h.split(' ');
-        const [hours, minutes] = time.split(':');
-        let hour24 = parseInt(hours);
-        
-        if (period.toLowerCase() === 'pm' && hour24 !== 12) {
-          hour24 += 12;
-        } else if (period.toLowerCase() === 'am' && hour24 === 12) {
-          hour24 = 0;
-        }
-        
-        return `${hour24.toString().padStart(2, '0')}:${minutes}:00`;
-      };
-
       const startTime24 = convertTo24Hour(selectedTime);
       const endTime = new Date(`2000-01-01T${startTime24}`);
       endTime.setMinutes(endTime.getMinutes() + totalDuration);
