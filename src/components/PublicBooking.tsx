@@ -90,12 +90,32 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     .filter(s => formData.selected_services.includes(s.id))
     .reduce((sum, service) => sum + service.duration_minutes, 0);
   
-  const { timeSlots: availableTimeSlots, loading: timeSlotsLoading } = useTimeSlots(
-    business?.id || '',
-    selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
-    totalDuration || 30, // Default to 30 minutes if no services selected
+  // Only fetch time slots if we have business, date, and at least one service selected
+  const shouldFetchTimeSlots = business?.id && selectedDate && totalDuration > 0;
+  
+  const { timeSlots: availableTimeSlots, loading: timeSlotsLoading, refetch: refetchTimeSlots } = useTimeSlots(
+    shouldFetchTimeSlots ? business.id : '',
+    shouldFetchTimeSlots ? format(selectedDate, 'yyyy-MM-dd') : '',
+    shouldFetchTimeSlots ? totalDuration : 0,
     formData.staff_id || undefined
   );
+
+  // Debug logging
+  useEffect(() => {
+    console.log('Time slots data updated:', {
+      shouldFetchTimeSlots,
+      totalDuration,
+      availableTimeSlots: availableTimeSlots?.length,
+      loading: timeSlotsLoading
+    });
+  }, [shouldFetchTimeSlots, totalDuration, availableTimeSlots, timeSlotsLoading]);
+
+  // Refetch time slots when services change
+  useEffect(() => {
+    if (shouldFetchTimeSlots && refetchTimeSlots) {
+      refetchTimeSlots();
+    }
+  }, [formData.selected_services, shouldFetchTimeSlots, refetchTimeSlots]);
 
   // Mock pictures for demonstration
   const mockPictures = [
@@ -209,6 +229,11 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         ? prev.selected_services.filter(id => id !== serviceId)
         : [...prev.selected_services, serviceId]
     }));
+    
+    // Clear selected time when services change since duration affects availability
+    if (selectedTime) {
+      setSelectedTime('');
+    }
   };
 
   const handleSubmit = async () => {
@@ -724,11 +749,18 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         Available Times for {format(selectedDate, 'MMM d, yyyy')}
                       </Label>
                       <Badge variant="secondary" className="text-xs">
-                         {availableTimeSlots.filter(slot => slot.is_available).length} slots available
+                         {formData.selected_services.length === 0 
+                           ? "Select a service first" 
+                           : `${availableTimeSlots?.filter(slot => slot.is_available).length || 0} slots available`
+                         }
                        </Badge>
                      </div>
                      
-                     {timeSlotsLoading ? (
+                     {formData.selected_services.length === 0 ? (
+                       <div className="text-center py-4 text-slate-400">
+                         Please select at least one service to see available times
+                       </div>
+                     ) : timeSlotsLoading ? (
                        <div className="text-center py-4 text-slate-400">
                          Loading available times...
                        </div>
