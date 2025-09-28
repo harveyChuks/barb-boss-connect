@@ -96,9 +96,9 @@ const TimeSlotPicker = ({
   const unavailableSlots = timeSlots.filter(slot => !slot.is_available);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h4 className="text-white font-medium">Available Times</h4>
+        <h4 className="text-white font-medium">Select Your Time</h4>
         <Button
           variant="ghost"
           size="sm"
@@ -110,53 +110,79 @@ const TimeSlotPicker = ({
           Refresh
         </Button>
       </div>
+
+      {/* Legend */}
+      <div className="flex flex-wrap gap-4 text-sm">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded bg-green-500/20 border border-green-500/30"></div>
+          <span className="text-slate-300">Available</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded bg-red-500/20 border border-red-500/30"></div>
+          <span className="text-slate-300">Booked</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded bg-amber-500 border border-amber-600"></div>
+          <span className="text-slate-300">Selected</span>
+        </div>
+      </div>
       
-      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-        {availableSlots.map((slot) => {
+      {/* All Time Slots Grid */}
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+        {timeSlots.map((slot) => {
           const formattedTime = formatTime(slot.slot_time);
+          const isAvailable = slot.is_available;
+          const isSelected = selectedTime === formattedTime;
+          
           return (
             <Button
               key={slot.slot_time}
-              variant={selectedTime === formattedTime ? "default" : "outline"}
+              variant="outline"
               size="sm"
-              onClick={() => handleTimeSelect(formattedTime)}
-              className={`${
-                selectedTime === formattedTime
-                  ? "bg-amber-500 hover:bg-amber-600 text-black"
-                  : "border-slate-600 text-white hover:bg-slate-700"
+              disabled={!isAvailable}
+              onClick={() => isAvailable ? handleTimeSelect(formattedTime) : null}
+              className={`relative h-12 ${
+                isSelected
+                  ? "bg-amber-500 hover:bg-amber-600 text-black border-amber-600"
+                  : isAvailable
+                  ? "border-green-500/30 bg-green-500/10 text-white hover:bg-green-500/20 hover:border-green-500/50"
+                  : "border-red-500/30 bg-red-500/10 text-red-300 cursor-not-allowed opacity-60"
               }`}
             >
-              {formattedTime}
+              <div className="flex flex-col items-center">
+                <span className="font-medium">{formattedTime}</span>
+                <span className="text-xs opacity-75">
+                  {isAvailable ? "Available" : "Booked"}
+                </span>
+              </div>
             </Button>
           );
         })}
       </div>
       
       {availableSlots.length === 0 && (
-        <p className="text-slate-400 text-sm">No available slots for this date</p>
-      )}
-
-      {unavailableSlots.length > 0 && (
-        <div>
-          <h4 className="text-slate-400 font-medium mb-3 text-sm">Unavailable Times</h4>
-          <div className="flex flex-wrap gap-2">
-            {unavailableSlots.slice(0, 6).map((slot) => (
-              <Badge
-                key={slot.slot_time}
-                variant="secondary"
-                className="bg-slate-600 text-slate-300"
-              >
-                {formatTime(slot.slot_time)}
-              </Badge>
-            ))}
-            {unavailableSlots.length > 6 && (
-              <Badge variant="secondary" className="bg-slate-600 text-slate-300">
-                +{unavailableSlots.length - 6} more
-              </Badge>
-            )}
+        <div className="text-center py-6">
+          <div className="bg-slate-700/50 rounded-lg p-4">
+            <AlertCircle className="w-8 h-8 mx-auto mb-2 text-slate-400" />
+            <p className="text-slate-400 font-medium">No available slots for this date</p>
+            <p className="text-slate-500 text-sm mt-1">All time slots are currently booked</p>
           </div>
         </div>
       )}
+
+      {/* Summary */}
+      <div className="bg-slate-700/30 rounded-lg p-4">
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-400">{availableSlots.length}</div>
+            <div className="text-slate-300">Available</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-red-400">{unavailableSlots.length}</div>
+            <div className="text-slate-300">Booked</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
