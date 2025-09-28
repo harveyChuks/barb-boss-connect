@@ -214,16 +214,24 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       }
 
       // Check if the selected time slot is still available
+      console.log('Available slots data:', slotsData);
+      console.log('Looking for selected time:', selectedTime);
+      
       const slot = slotsData?.find((s: any) => {
         const slotTime = new Date(`2000-01-01T${s.slot_time}`).toLocaleTimeString('en-US', {
           hour: 'numeric',
           minute: '2-digit',
           hour12: true
         });
+        console.log('Comparing slot:', s.slot_time, 'formatted as:', slotTime, 'with selected:', selectedTime);
         return slotTime === selectedTime;
       });
 
+      console.log('Found slot:', slot);
+      console.log('Slot availability:', slot?.is_available);
+
       if (!slot?.is_available) {
+        console.log('BLOCKING: Slot not available');
         toast({
           title: "Time Slot No Longer Available",
           description: "This time slot was just booked by someone else. Please select a different time.",
@@ -232,6 +240,8 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         setSubmitting(false);
         return;
       }
+
+      console.log('ALLOWING: Slot appears available, proceeding...');
 
       // Check for appointment conflicts
       // Convert 12-hour format time to 24-hour format for database
