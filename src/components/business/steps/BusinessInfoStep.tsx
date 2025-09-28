@@ -42,23 +42,61 @@ const BusinessInfoStep = ({ businessInfo, setBusinessInfo }: BusinessInfoStepPro
     { value: "Canada", label: "Canada", currency: "CAD" }
   ];
 
-  const states = [
-    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", 
-    "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", 
-    "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", 
-    "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", 
-    "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", 
-    "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", 
-    "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", 
-    "Wisconsin", "Wyoming"
-  ];
+  const statesByCountry = {
+    "United States": [
+      "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", 
+      "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", 
+      "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", 
+      "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", 
+      "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", 
+      "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", 
+      "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", 
+      "Wisconsin", "Wyoming"
+    ],
+    "Canada": [
+      "Alberta", "British Columbia", "Manitoba", "New Brunswick", "Newfoundland and Labrador",
+      "Northwest Territories", "Nova Scotia", "Nunavut", "Ontario", "Prince Edward Island",
+      "Quebec", "Saskatchewan", "Yukon"
+    ],
+    "United Kingdom": [
+      "England", "Scotland", "Wales", "Northern Ireland"
+    ],
+    "Nigeria": [
+      "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno",
+      "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "Gombe", "Imo", "Jigawa",
+      "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", "Niger",
+      "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
+      "FCT Abuja"
+    ],
+    "Ghana": [
+      "Ashanti", "Brong-Ahafo", "Central", "Eastern", "Greater Accra", "Northern",
+      "Upper East", "Upper West", "Volta", "Western"
+    ],
+    "Kenya": [
+      "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo-Marakwet", "Embu", "Garissa", "Homa Bay",
+      "Isiolo", "Kajiado", "Kakamega", "Kericho", "Kiambu", "Kilifi", "Kirinyaga", "Kisii",
+      "Kisumu", "Kitui", "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera",
+      "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi", "Nakuru", "Nandi",
+      "Narok", "Nyamira", "Nyandarua", "Nyeri", "Samburu", "Siaya", "Taita-Taveta", "Tana River",
+      "Tharaka-Nithi", "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
+    ],
+    "South Africa": [
+      "Eastern Cape", "Free State", "Gauteng", "KwaZulu-Natal", "Limpopo",
+      "Mpumalanga", "Northern Cape", "North West", "Western Cape"
+    ]
+  };
+
+  const getStatesForCountry = (country: string) => {
+    return statesByCountry[country as keyof typeof statesByCountry] || [];
+  };
 
   const handleCountryChange = (selectedCountry: string) => {
     const country = countries.find(c => c.value === selectedCountry);
     setBusinessInfo({ 
       ...businessInfo, 
       country: selectedCountry,
-      currency: country?.currency || "USD"
+      currency: country?.currency || "USD",
+      state: "" // Reset state when country changes
     });
   };
 
@@ -110,7 +148,7 @@ const BusinessInfoStep = ({ businessInfo, setBusinessInfo }: BusinessInfoStepPro
               <SelectValue placeholder="Select state" />
             </SelectTrigger>
             <SelectContent className="bg-slate-700 border-slate-600 max-h-60">
-              {states.map((state) => (
+              {getStatesForCountry(businessInfo.country).map((state) => (
                 <SelectItem key={state} value={state} className="text-white focus:bg-slate-600">
                   {state}
                 </SelectItem>
