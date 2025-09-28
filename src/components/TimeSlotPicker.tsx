@@ -97,8 +97,9 @@ const TimeSlotPicker = ({
     );
   }
 
-  const availableSlots = timeSlots.filter(slot => slot.is_available);
-  const unavailableSlots = timeSlots.filter(slot => !slot.is_available);
+  // Safe filtering to prevent crashes
+  const availableSlots = timeSlots?.filter(s => s && s.is_available) || [];
+  const unavailableSlots = timeSlots?.filter(s => s && !s.is_available) || [];
 
   return (
     <div className="space-y-6" key={`timeslots-${refreshKey}`}>
