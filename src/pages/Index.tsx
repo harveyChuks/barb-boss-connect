@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, ShieldCheck, User, Camera, TrendingUp, MessageCircle, CreditCard, Settings } from "lucide-react";
+import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, ShieldCheck, User, Camera, TrendingUp, MessageCircle, CreditCard, Settings, Home, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -454,27 +454,51 @@ const Index = () => {
       {/* Mobile Bottom Navigation - Only for authenticated business owners */}
       {isAuthenticated && userBusiness && (
         <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 md:hidden">
-          <div className="grid grid-cols-3 gap-1 p-2">
+          <div className="grid grid-cols-5 gap-1 p-2">
             <button
               onClick={() => setActiveSection('overview')}
-              className="flex flex-col items-center py-3 px-2 rounded-lg text-xs text-foreground hover:bg-accent"
+              className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
+                activeSection === 'overview' ? 'text-primary' : 'text-muted-foreground'
+              }`}
             >
-              <BarChart3 className="w-5 h-5 mb-1" style={{ color: '#39FF14' }} />
-              <span>Overview</span>
+              <Home className="w-4 h-4 mb-1" />
+              <span>Home</span>
             </button>
             <button
-              onClick={() => setShowAppointmentModal(true)}
-              className="flex flex-col items-center py-3 px-2 rounded-lg text-xs text-foreground hover:bg-accent"
+              onClick={() => setActiveSection('reports')}
+              className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
+                activeSection === 'reports' ? 'text-primary' : 'text-muted-foreground'
+              }`}
             >
-              <Plus className="w-5 h-5 mb-1" style={{ color: '#39FF14' }} />
-              <span>Appointment</span>
+              <BarChart3 className="w-4 h-4 mb-1" />
+              <span>Analytics</span>
             </button>
             <button
-              onClick={() => setShowClientModal(true)}
-              className="flex flex-col items-center py-3 px-2 rounded-lg text-xs text-foreground hover:bg-accent"
+              onClick={() => setActiveSection('services')}
+              className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
+                activeSection === 'services' ? 'text-primary' : 'text-muted-foreground'
+              }`}
             >
-              <Users className="w-5 h-5 mb-1" style={{ color: '#39FF14' }} />
-              <span>Add Client</span>
+              <Briefcase className="w-4 h-4 mb-1" />
+              <span>Services</span>
+            </button>
+            <button
+              onClick={() => setActiveSection('bookings')}
+              className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
+                activeSection === 'bookings' ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              <Calendar className="w-4 h-4 mb-1" />
+              <span>Bookings</span>
+            </button>
+            <button
+              onClick={() => setActiveSection('profile')}
+              className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
+                activeSection === 'profile' ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              <User className="w-4 h-4 mb-1" />
+              <span>Profile</span>
             </button>
           </div>
         </div>
