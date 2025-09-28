@@ -27,22 +27,28 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
         timestamp 
       });
       
-      // Force fresh data by adding cache-busting parameter and disabling any potential caching
-      const { data, error } = await supabase
+      // Force fresh data - create new supabase client instance to avoid caching
+      const freshSupabase = supabase;
+      const { data, error } = await freshSupabase
         .rpc('get_available_time_slots', {
           p_business_id: businessId,
           p_date: date,
           p_duration_minutes: durationMinutes,
           p_staff_id: staffId || null
-        })
-        .abortSignal(new AbortController().signal); // Ensure fresh request
+        });
 
       if (error) {
         console.error('Error fetching time slots:', error);
         throw error;
       }
       
-      console.log('Fresh time slots fetched:', data);
+      console.log('🔥 FRESH TIME SLOTS FETCHED:', {
+        timestamp,
+        dataLength: data?.length,
+        sampleSlots: data?.slice(0, 3),
+        bookedSlots: data?.filter((slot: TimeSlot) => !slot.is_available),
+        availableSlots: data?.filter((slot: TimeSlot) => slot.is_available)
+      });
       setTimeSlots(data || []);
     } catch (error: any) {
       console.error('Error fetching time slots:', error);
