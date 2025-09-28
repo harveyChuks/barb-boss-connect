@@ -26,24 +26,8 @@ const TimeSlotPicker = ({
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0); // Add refresh key for cache busting
 
-  // SUPER VISIBLE DEBUG - Check exact data structure and UI logic
-  console.warn('🚨 TIMESLOTPICKER RENDERING 🚨');
-  console.warn('🔍 FULL SLOT DATA:', timeSlots);
-  console.warn('🔍 TIME SLOTS LENGTH:', timeSlots.length);
-  
-  if (timeSlots.length > 0) {
-    // Safe logging without forEach to avoid scoping issues
-    console.warn('🕐 FIRST FEW SLOTS:', {
-      slot1: timeSlots[0],
-      slot2: timeSlots[1], 
-      slot3: timeSlots[2],
-      bookedSlots: timeSlots.filter(slot => !slot.is_available),
-      availableSlots: timeSlots.filter(slot => slot.is_available),
-      bookedCount: timeSlots.filter(slot => !slot.is_available).length
-    });
-  } else {
-    console.warn('🚨 NO TIME SLOTS TO RENDER');
-  }
+  // Debug logging - simplified to avoid crashes
+  console.log('TimeSlotPicker rendering with', timeSlots.length, 'slots');
 
   // Auto-refresh every 30 seconds to keep availability current
   useEffect(() => {

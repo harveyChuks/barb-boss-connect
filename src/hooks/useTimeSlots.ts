@@ -41,14 +41,13 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
         throw error;
       }
       
-      console.log('🔥 AGGRESSIVE FRESH FETCH:', {
+      console.log('🔥 BACKEND RESPONSE:', {
         timestamp,
-        dataLength: data?.length,
-        firstFewSlots: data?.slice(0, 5),
-        bookedSlots: data?.filter((slot: TimeSlot) => !slot.is_available),
-        availableSlots: data?.filter((slot: TimeSlot) => slot.is_available),
-        bookedCount: data?.filter((slot: TimeSlot) => !slot.is_available).length,
-        totalCount: data?.length
+        dataLength: data?.length || 0,
+        bookedCount: data?.filter((slot: TimeSlot) => !slot.is_available).length || 0,
+        availableCount: data?.filter((slot: TimeSlot) => slot.is_available).length || 0,
+        firstSlot: data?.[0] || null,
+        secondSlot: data?.[1] || null
       });
       
       setTimeSlots(data || []);
