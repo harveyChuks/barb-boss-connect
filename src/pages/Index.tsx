@@ -573,7 +573,7 @@ const Index = () => {
       </div>
 
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 relative z-10">
+      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
@@ -648,7 +648,7 @@ const Index = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 relative z-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-4 py-4 sm:py-8 relative z-10">
         {!isAuthenticated ? (
           <LandingPage onGetStarted={() => setShowAuthModal(true)} />
         ) : !userBusiness ? (
