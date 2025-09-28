@@ -582,48 +582,19 @@ const Index = () => {
             
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-4">
-            <Button 
-              onClick={() => setShowClientModal(true)}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            >
-              <Users className="w-4 h-4 mr-2" />
-              Add Client
-            </Button>
-            {isAdmin && (
-              <Button 
-                onClick={() => navigate('/admin')}
-                variant="outline"
-              >
-                <ShieldCheck className="w-4 h-4 mr-2" />
-                Admin Panel
-              </Button>
-            )}
+              {isAdmin && (
+                <Button 
+                  onClick={() => navigate('/admin')}
+                  variant="outline"
+                >
+                  <ShieldCheck className="w-4 h-4 mr-2" />
+                  Admin Panel
+                </Button>
+              )}
               {isAuthenticated ? (
                 <>
                   {userBusiness ? (
-                    <>
-                      <MobileMenu />
-                      <Button 
-                        onClick={() => setShowAppointmentModal(true)}
-                        style={{ backgroundColor: '#39FF14', color: 'black' }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#32e612';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#39FF14';
-                        }}
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Appointment
-                      </Button>
-                      <Button 
-                        onClick={() => setShowClientModal(true)}
-                        variant="outline"
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Client
-                      </Button>
-                    </>
+                    <MobileMenu />
                   ) : (
                     <Button 
                       onClick={() => setShowBusinessModal(true)}
@@ -639,13 +610,6 @@ const Index = () => {
                       Register Business
                     </Button>
                   )}
-                  <Button 
-                    onClick={handleSignOut}
-                    variant="outline"
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Sign Out
-                  </Button>
                 </>
               ) : (
                 <Button 
