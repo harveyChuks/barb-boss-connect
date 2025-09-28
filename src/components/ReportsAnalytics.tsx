@@ -433,9 +433,9 @@ const ReportsAnalytics = () => {
                 Daily revenue and booking counts for the selected period
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig}>
-                <ResponsiveContainer width="100%" height={800} minHeight={800}>
+            <CardContent className="p-2 sm:p-6">
+              <ChartContainer config={chartConfig} className="min-h-[600px] sm:min-h-[800px]">
+                <ResponsiveContainer width="100%" height={600} minHeight={600} className="sm:!h-[800px]">
                   <BarChart data={revenueData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }} barCategoryGap="20%">
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                     <XAxis 
