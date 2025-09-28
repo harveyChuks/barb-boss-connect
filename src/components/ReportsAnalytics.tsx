@@ -436,7 +436,7 @@ const ReportsAnalytics = () => {
             <CardContent>
               <ChartContainer config={chartConfig}>
                 <ResponsiveContainer width="100%" height={300} className="sm:h-[400px]">
-                  <BarChart data={revenueData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <BarChart data={revenueData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }} barCategoryGap="20%">
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                     <XAxis 
                       dataKey="date" 
@@ -467,6 +467,7 @@ const ReportsAnalytics = () => {
                       name="Revenue"
                       radius={[4, 4, 0, 0]}
                       minPointSize={2}
+                      barSize={60}
                     />
                     <Line 
                       yAxisId="bookings"
