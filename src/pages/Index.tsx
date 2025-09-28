@@ -279,6 +279,16 @@ const Index = () => {
               <ul className="space-y-2">
                 <li>
                   <button 
+                    onClick={() => setActiveSection('home')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <Home className="w-4 h-4 mr-3" />
+                    Home
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
                     onClick={() => setActiveSection('overview')}
                     className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
                   >
