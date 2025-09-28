@@ -234,15 +234,39 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       }
 
       // Check for appointment conflicts
-      const startTime = selectedTime;
-      const endTime = new Date(`2000-01-01T${selectedTime}:00`);
+      // Convert 12-hour format time to 24-hour format for database
+      const convertTo24Hour = (time12h: string): string => {
+        const [time, period] = time12h.split(' ');
+        const [hours, minutes] = time.split(':');
+        let hour24 = parseInt(hours);
+        
+        if (period.toLowerCase() === 'pm' && hour24 !== 12) {
+          hour24 += 12;
+        } else if (period.toLowerCase() === 'am' && hour24 === 12) {
+          hour24 = 0;
+        }
+        
+        return `${hour24.toString().padStart(2, '0')}:${minutes}:00`;
+      };
+
+      const startTime24 = convertTo24Hour(selectedTime);
+      const endTime = new Date(`2000-01-01T${startTime24}`);
       endTime.setMinutes(endTime.getMinutes() + totalDuration);
-      const endTimeString = endTime.toTimeString().slice(0, 5);
+      const endTimeString = endTime.toTimeString().slice(0, 8); // Include seconds
+
+      console.log('Booking conflict check:', {
+        selectedTime,
+        startTime24,
+        endTimeString,
+        totalDuration,
+        businessId: business.id,
+        appointmentDate: format(selectedDate, 'yyyy-MM-dd')
+      });
 
       const { data: conflictData, error: conflictError } = await supabase.rpc('check_appointment_conflict', {
         p_business_id: business.id,
         p_appointment_date: format(selectedDate, 'yyyy-MM-dd'),
-        p_start_time: startTime,
+        p_start_time: startTime24,
         p_end_time: endTimeString,
         p_staff_id: formData.staff_id || null,
         p_exclude_appointment_id: null
@@ -264,8 +288,9 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
       // Create separate appointments for each service (this ensures proper tracking and pricing)
       const appointmentPromises = selectedServices.map(async (service, index) => {
-        // Calculate start time for each subsequent service
-        const serviceStartTime = new Date(`2000-01-01T${selectedTime}:00`);
+        // Calculate start time for each subsequent service using 24-hour format
+        const baseStartTime = convertTo24Hour(selectedTime);
+        const serviceStartTime = new Date(`2000-01-01T${baseStartTime}`);
         const previousDuration = selectedServices.slice(0, index).reduce((sum, s) => sum + s.duration_minutes, 0);
         serviceStartTime.setMinutes(serviceStartTime.getMinutes() + previousDuration);
         
