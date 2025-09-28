@@ -627,8 +627,6 @@ const Index = () => {
               )}
             </div>
 
-            {/* Mobile Menu */}
-            <MobileMenu />
           </div>
         </div>
       </header>
