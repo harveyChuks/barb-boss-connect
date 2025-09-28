@@ -32,19 +32,14 @@ const TimeSlotPicker = ({
   console.warn('🔍 TIME SLOTS LENGTH:', timeSlots.length);
   
   if (timeSlots.length > 0) {
-    timeSlots.forEach((slot, index) => {
-      const isAvailable = slot.is_available;
-      const formattedTime = formatTime(slot.slot_time);
-      
-      console.warn(`🕐 Slot ${index + 1} DETAILED:`, {
-        raw_slot: slot,
-        slot_time: slot.slot_time,
-        is_available: slot.is_available,
-        isAvailable_variable: isAvailable,
-        formatted_time: formattedTime,
-        will_render_as: !isAvailable ? 'RED (booked)' : 'GREEN (available)',
-        condition_check: `!${isAvailable} = ${!isAvailable}`
-      });
+    // Safe logging without forEach to avoid scoping issues
+    console.warn('🕐 FIRST FEW SLOTS:', {
+      slot1: timeSlots[0],
+      slot2: timeSlots[1], 
+      slot3: timeSlots[2],
+      bookedSlots: timeSlots.filter(slot => !slot.is_available),
+      availableSlots: timeSlots.filter(slot => slot.is_available),
+      bookedCount: timeSlots.filter(slot => !slot.is_available).length
     });
   } else {
     console.warn('🚨 NO TIME SLOTS TO RENDER');
