@@ -327,6 +327,17 @@ const BookingsManagement = () => {
                       <SelectItem value="no_show">No Show</SelectItem>
                     </SelectContent>
                   </Select>
+                  
+                  {appointment.status !== "cancelled" && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateAppointmentStatus(appointment.id, "cancelled")}
+                      className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
+                    >
+                      Cancel
+                    </Button>
+                  )}
                 </div>
               </div>
             </CardContent>
