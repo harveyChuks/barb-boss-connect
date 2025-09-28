@@ -134,25 +134,38 @@ const TimeSlotPicker = ({
           const isAvailable = slot.is_available;
           const isSelected = selectedTime === formattedTime;
           
+          if (!isAvailable) {
+            // Completely blocked slots - like closed days
+            return (
+              <div
+                key={slot.slot_time}
+                className="relative h-12 border border-red-500/20 bg-red-500/5 rounded-md flex items-center justify-center cursor-not-allowed"
+              >
+                <div className="flex flex-col items-center opacity-40">
+                  <span className="font-medium text-red-400 line-through">{formattedTime}</span>
+                  <span className="text-xs text-red-500">Booked</span>
+                </div>
+                <div className="absolute inset-0 bg-red-500/10 rounded-md"></div>
+              </div>
+            );
+          }
+          
           return (
             <Button
               key={slot.slot_time}
               variant="outline"
               size="sm"
-              disabled={!isAvailable}
-              onClick={() => isAvailable ? handleTimeSelect(formattedTime) : null}
-              className={`relative h-12 ${
+              onClick={() => handleTimeSelect(formattedTime)}
+              className={`relative h-12 transition-all duration-200 ${
                 isSelected
-                  ? "bg-amber-500 hover:bg-amber-600 text-black border-amber-600"
-                  : isAvailable
-                  ? "border-green-500/30 bg-green-500/10 text-white hover:bg-green-500/20 hover:border-green-500/50"
-                  : "border-red-500/30 bg-red-500/10 text-red-300 cursor-not-allowed opacity-60"
+                  ? "bg-amber-500 hover:bg-amber-600 text-black border-amber-600 shadow-lg scale-105"
+                  : "border-green-500/30 bg-green-500/10 text-white hover:bg-green-500/20 hover:border-green-500/50 hover:scale-102"
               }`}
             >
               <div className="flex flex-col items-center">
                 <span className="font-medium">{formattedTime}</span>
                 <span className="text-xs opacity-75">
-                  {isAvailable ? "Available" : "Booked"}
+                  {isSelected ? "Selected" : "Available"}
                 </span>
               </div>
             </Button>
