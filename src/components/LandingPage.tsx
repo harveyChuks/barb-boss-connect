@@ -1,7 +1,8 @@
-import { ArrowRight, Calendar, Users, BarChart3, Clock, CheckCircle, Star } from "lucide-react";
+import { ArrowRight, Calendar, Users, BarChart3, Clock, CheckCircle, Star, TrendingUp, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePageVisitTracker } from "@/hooks/usePageVisitTracker";
+import { useState, useEffect } from "react";
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -9,6 +10,20 @@ interface LandingPageProps {
 
 const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   usePageVisitTracker(); // Track visits to landing page
+  
+  const [animatedText, setAnimatedText] = useState("Earn More");
+  
+  useEffect(() => {
+    const benefits = ["Earn More", "Save Time", "Grow Faster", "Attract Clients", "Build a Brand"];
+    let index = 0;
+    
+    const interval = setInterval(() => {
+      index = (index + 1) % benefits.length;
+      setAnimatedText(benefits[index]);
+    }, 2000);
+    
+    return () => clearInterval(interval);
+  }, []);
   const features = [
     {
       icon: Calendar,
@@ -65,57 +80,167 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 text-center">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <img 
-              src="/lovable-uploads/bce9e11a-cca6-47fb-9dc5-04383b2359db.png" 
-              alt="BizFlow Logo" 
-              className="w-24 h-24 mx-auto mb-6 rounded-xl"
-            />
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-              Streamline Your 
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"> Business</span>
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              The complete business management platform designed for service-based businesses. 
-              Manage appointments, track analytics, and grow your business efficiently.
+      <section className="relative py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          {/* Trust Badge */}
+          <div className="text-center mb-8">
+            <p className="text-sm font-semibold text-primary tracking-wider uppercase">
+              TRUSTED BY 500+ BUSINESSES
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button 
-              onClick={onGetStarted}
-              size="lg"
-              className="text-lg px-8 py-4 bg-primary hover:bg-primary/90"
-            >
-              Get Started Free
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="text-lg px-8 py-4"
-            >
-              Watch Demo
-            </Button>
-          </div>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Content */}
+            <div className="space-y-8">
+              <div>
+                <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
+                  Let's Build your Dream Business
+                </h1>
+                <div className="mt-4 h-16 overflow-hidden">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary transition-all duration-500 ease-in-out">
+                    {animatedText}
+                  </h2>
+                </div>
+                <p className="text-xl text-muted-foreground mt-6 max-w-lg">
+                  BizFlow helps you get booked, stay organised, and look professional — all in one place. 
+                  Say goodbye to missed calls and wasted hours.
+                </p>
+              </div>
+              
+              {/* Feature Checklist */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                  <span className="text-foreground font-medium">Bookings</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                  <span className="text-foreground font-medium">Analytics</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                  <span className="text-foreground font-medium">Website</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                  <span className="text-foreground font-medium">Save Hours</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                  <span className="text-foreground font-medium">Marketing</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                  <span className="text-foreground font-medium">Build your Brand</span>
+                </div>
+              </div>
+              
+              <Button 
+                onClick={onGetStarted}
+                size="lg"
+                className="text-lg px-8 py-4 bg-primary hover:bg-primary/90 w-full sm:w-auto"
+              >
+                Get Started for Free
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
 
-          {/* Trust Indicators */}
-          <div className="flex flex-wrap justify-center items-center gap-8 text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-500" />
-              <span>Free Setup</span>
+              {/* Customer Avatars and Rating */}
+              <div className="flex items-center gap-4">
+                <div className="flex -space-x-2">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 border-2 border-background flex items-center justify-center text-white text-sm font-bold">
+                    S
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-blue-500 border-2 border-background flex items-center justify-center text-white text-sm font-bold">
+                    M
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-red-500 border-2 border-background flex items-center justify-center text-white text-sm font-bold">
+                    L
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 border-2 border-background flex items-center justify-center text-white text-sm font-bold">
+                    +
+                  </div>
+                </div>
+                <div>
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground">5.0 from 500+ businesses</p>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-500" />
-              <span>No Credit Card Required</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-500" />
-              <span>14-Day Trial</span>
+            
+            {/* Right Column - Phone Mockups */}
+            <div className="relative flex justify-center lg:justify-end">
+              <div className="relative">
+                {/* Main Phone */}
+                <div className="w-72 h-[580px] bg-gradient-to-b from-slate-800 to-slate-900 rounded-[3rem] p-2 shadow-2xl">
+                  <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden relative">
+                    {/* Phone Header */}
+                    <div className="bg-primary h-24 flex items-center justify-center">
+                      <div className="text-white font-bold text-lg">BizFlow Dashboard</div>
+                    </div>
+                    {/* Dashboard Content */}
+                    <div className="p-6 space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-green-50 p-4 rounded-lg">
+                          <div className="text-2xl font-bold text-green-600">42</div>
+                          <div className="text-sm text-gray-600">Today's Bookings</div>
+                        </div>
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                          <div className="text-2xl font-bold text-blue-600">₦87k</div>
+                          <div className="text-sm text-gray-600">Revenue</div>
+                        </div>
+                      </div>
+                      {/* Chart representation */}
+                      <div className="bg-gray-50 h-32 rounded-lg flex items-end justify-around p-4">
+                        <div className="bg-primary w-6 h-16 rounded-t"></div>
+                        <div className="bg-primary w-6 h-20 rounded-t"></div>
+                        <div className="bg-primary w-6 h-12 rounded-t"></div>
+                        <div className="bg-primary w-6 h-24 rounded-t"></div>
+                        <div className="bg-primary w-6 h-18 rounded-t"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Secondary Phone - Smaller, positioned behind */}
+                <div className="absolute -right-8 top-16 w-56 h-[450px] bg-gradient-to-b from-slate-700 to-slate-800 rounded-[2.5rem] p-2 shadow-xl opacity-80">
+                  <div className="w-full h-full bg-white rounded-[2rem] overflow-hidden">
+                    <div className="bg-accent h-16 flex items-center justify-center">
+                      <div className="text-white font-semibold">Client View</div>
+                    </div>
+                    <div className="p-4">
+                      <div className="text-center">
+                        <div className="text-lg font-semibold mb-2">Book Appointment</div>
+                        <div className="space-y-2">
+                          <div className="bg-gray-100 h-8 rounded"></div>
+                          <div className="bg-gray-100 h-8 rounded"></div>
+                          <div className="bg-primary h-10 rounded text-white flex items-center justify-center text-sm">
+                            Book Now
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+      </section>
+      
+      {/* Revenue Stats Section */}
+      <section className="py-16 px-4 bg-accent/5">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <DollarSign className="h-8 w-8 text-primary" />
+            <div className="text-4xl md:text-5xl font-bold text-foreground">₦12,450,000</div>
+          </div>
+          <p className="text-lg text-muted-foreground font-medium tracking-wider uppercase">
+            EARNED BY OUR BUSINESS OWNERS
+          </p>
         </div>
       </section>
 
