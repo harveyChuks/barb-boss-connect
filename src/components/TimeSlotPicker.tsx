@@ -26,6 +26,16 @@ const TimeSlotPicker = ({
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0); // Add refresh key for cache busting
 
+  // Debug logging
+  console.log('TimeSlotPicker Debug:', {
+    businessId,
+    date,
+    timeSlots,
+    totalSlots: timeSlots.length,
+    availableSlots: timeSlots.filter(slot => slot.is_available).length,
+    bookedSlots: timeSlots.filter(slot => !slot.is_available).length
+  });
+
   // Auto-refresh every 30 seconds to keep availability current
   useEffect(() => {
     const interval = setInterval(() => {
