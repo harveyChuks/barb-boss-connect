@@ -328,7 +328,7 @@ const BookingsManagement = () => {
                     </SelectContent>
                   </Select>
                   
-                  {appointment.status !== "cancelled" && appointment.status !== "completed" && (
+                  {(appointment.status === "pending" || appointment.status === "confirmed") && (
                     <Button
                       variant="outline"
                       size="sm"
