@@ -291,7 +291,7 @@ const Index = () => {
                 className="justify-start"
               >
                 <TrendingUp className="w-4 h-4 mr-2" />
-                Reports & Analytics
+                Biz Stats
               </Button>
               
               <Button 
