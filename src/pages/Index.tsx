@@ -266,7 +266,7 @@ const Index = () => {
   const MobileMenu = () => (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="sm" className="md:hidden text-white">
+        <Button variant="ghost" size="sm" className="text-white">
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
@@ -602,13 +602,7 @@ const Index = () => {
                 <>
                   {userBusiness ? (
                     <>
-                      <Button 
-                        onClick={() => navigate('/dashboard')}
-                        variant="outline"
-                      >
-                        <BarChart3 className="w-4 h-4 mr-2" />
-                        Dashboard
-                      </Button>
+                      <MobileMenu />
                       <Button 
                         onClick={() => setShowAppointmentModal(true)}
                         style={{ backgroundColor: '#39FF14', color: 'black' }}
