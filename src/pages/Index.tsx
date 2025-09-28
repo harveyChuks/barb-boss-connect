@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, MapPin, ShieldCheck } from "lucide-react";
+import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -260,14 +260,6 @@ const Index = () => {
       </SheetTrigger>
       <SheetContent side="right" className="bg-slate-900 border-slate-700">
         <div className="flex flex-col space-y-4 pt-8">
-          <Button 
-            onClick={() => navigate('/discovery')}
-            variant="outline" 
-            className="justify-start"
-          >
-            <MapPin className="w-4 h-4 mr-2" />
-            Discover Services
-          </Button>
           {isAdmin && (
             <Button 
               onClick={() => navigate('/admin')}
@@ -446,11 +438,11 @@ const Index = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-4">
             <Button 
-              onClick={() => navigate('/discovery')}
-              variant="outline"
+              onClick={() => setShowClientModal(true)}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
-              <MapPin className="w-4 h-4 mr-2" />
-              Discover Services
+              <Users className="w-4 h-4 mr-2" />
+              Add Client
             </Button>
             {isAdmin && (
               <Button 
