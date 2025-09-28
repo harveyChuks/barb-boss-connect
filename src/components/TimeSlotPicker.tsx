@@ -24,6 +24,7 @@ const TimeSlotPicker = ({
 }: TimeSlotPickerProps) => {
   const { timeSlots, loading, refetch } = useTimeSlots(businessId, date, durationMinutes, staffId);
   const [refreshing, setRefreshing] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0); // Add refresh key for cache busting
 
   // Auto-refresh every 30 seconds to keep availability current
   useEffect(() => {
@@ -44,6 +45,7 @@ const TimeSlotPicker = ({
 
   const handleRefresh = async () => {
     setRefreshing(true);
+    setRefreshKey(prev => prev + 1); // Force component refresh
     await refetch();
     setRefreshing(false);
   };
@@ -96,7 +98,7 @@ const TimeSlotPicker = ({
   const unavailableSlots = timeSlots.filter(slot => !slot.is_available);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" key={`timeslots-${refreshKey}`}>
       <div className="flex items-center justify-between">
         <h4 className="text-white font-medium">Select Your Time</h4>
         <Button

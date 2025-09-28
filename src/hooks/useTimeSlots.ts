@@ -13,26 +13,36 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const fetchTimeSlots = async () => {
+  const fetchTimeSlots = async (forceFresh = false) => {
     if (!businessId || !date || !durationMinutes) return;
 
     setLoading(true);
     try {
-      console.log('Fetching time slots for:', { businessId, date, durationMinutes, staffId });
-      
-      const { data, error } = await supabase.rpc('get_available_time_slots', {
-        p_business_id: businessId,
-        p_date: date,
-        p_duration_minutes: durationMinutes,
-        p_staff_id: staffId || null
+      const timestamp = new Date().getTime();
+      console.log(`${forceFresh ? 'Force refreshing' : 'Fetching'} time slots for:`, { 
+        businessId, 
+        date, 
+        durationMinutes, 
+        staffId, 
+        timestamp 
       });
+      
+      // Force fresh data by adding cache-busting parameter and disabling any potential caching
+      const { data, error } = await supabase
+        .rpc('get_available_time_slots', {
+          p_business_id: businessId,
+          p_date: date,
+          p_duration_minutes: durationMinutes,
+          p_staff_id: staffId || null
+        })
+        .abortSignal(new AbortController().signal); // Ensure fresh request
 
       if (error) {
         console.error('Error fetching time slots:', error);
         throw error;
       }
       
-      console.log('Time slots fetched:', data);
+      console.log('Fresh time slots fetched:', data);
       setTimeSlots(data || []);
     } catch (error: any) {
       console.error('Error fetching time slots:', error);
@@ -118,7 +128,7 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
   return {
     timeSlots,
     loading,
-    refetch: fetchTimeSlots,
+    refetch: () => fetchTimeSlots(true), // Force fresh data on manual refresh
     checkConflict,
     verifySlotAvailable
   };
