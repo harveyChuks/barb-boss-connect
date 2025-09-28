@@ -141,11 +141,11 @@ const TimeSlotPicker = ({
             return (
               <div
                 key={slot.slot_time}
-                className="relative h-12 border border-red-500 bg-red-500/20 rounded-md flex items-center justify-center cursor-not-allowed"
+                className="relative h-12 border-2 border-red-500 bg-red-500/30 rounded-md flex items-center justify-center cursor-not-allowed shadow-sm"
               >
                 <div className="flex flex-col items-center">
-                  <span className="font-medium text-red-300">{formattedTime}</span>
-                  <span className="text-xs text-red-400">Booked</span>
+                  <span className="font-semibold text-red-100">{formattedTime}</span>
+                  <span className="text-xs text-red-200 font-medium">Booked</span>
                 </div>
               </div>
             );
