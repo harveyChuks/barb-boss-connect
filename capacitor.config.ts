@@ -4,10 +4,6 @@ const config: CapacitorConfig = {
   appId: 'com.barboss.connect',
   appName: 'barb-boss-connect',
   webDir: 'dist',
-  server: {
-    url: 'https://3ced5a36-4448-4bb2-bf68-babad8a3d633.lovableproject.com?forceHideBadge=true',
-    cleartext: true
-  },
   plugins: {
     SplashScreen: {
       launchShowDuration: 3000,
