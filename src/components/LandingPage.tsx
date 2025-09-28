@@ -78,7 +78,28 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
+      {/* Mobile Quick Actions - Bottom Fixed */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-50 md:hidden">
+        <div className="flex gap-3">
+          <Button 
+            onClick={onGetStarted}
+            size="lg"
+            className="flex-1 text-base px-6 py-3 bg-primary hover:bg-primary/90"
+          >
+            Get Started
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="lg"
+            className="flex-1 text-base px-6 py-3"
+          >
+            Learn More
+          </Button>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
