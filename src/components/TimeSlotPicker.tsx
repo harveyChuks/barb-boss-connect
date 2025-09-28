@@ -69,13 +69,16 @@ const TimeSlotPicker = ({
   }
 
   if (timeSlots.length === 0) {
+    const selectedDate = new Date(date);
+    const dayName = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+    
     return (
       <Card className="bg-slate-700/50 border-slate-600">
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center text-slate-400">
               <AlertCircle className="w-4 h-4 mr-2" />
-              <span>No available time slots for this date</span>
+              <span>We're closed on {dayName}s. Please select another day.</span>
             </div>
             <Button
               variant="ghost"
