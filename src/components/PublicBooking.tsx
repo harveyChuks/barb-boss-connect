@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import TimeSlotPicker from "./TimeSlotPicker";
 import { format, addDays, isAfter, isBefore, startOfDay, addMonths, subMonths, startOfMonth, endOfMonth, eachWeekOfInterval, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isSameDay } from "date-fns";
 
 interface Business {
@@ -74,11 +75,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     notes: ""
   });
 
-  const timeSlots = [
-    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
-  ];
 
   // Mock pictures for demonstration
   const mockPictures = [
@@ -648,33 +644,21 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   </div>
                 </div>
                 
-                {selectedDate && (
+                {selectedDate && business && formData.selected_services.length > 0 && (
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-white font-medium">
-                        Available Times for {format(selectedDate, 'MMM d, yyyy')}
-                      </Label>
-                      <Badge variant="secondary" className="text-xs">
-                        {timeSlots.length} slots available
-                      </Badge>
-                    </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      {timeSlots.map((time) => (
-                        <Button
-                          key={time}
-                          variant={selectedTime === time ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setSelectedTime(time)}
-                          className={
-                            selectedTime === time
-                              ? "bg-primary hover:bg-primary/90 text-black font-medium"
-                              : "border-slate-600 text-white hover:bg-slate-700 hover:border-slate-500"
-                          }
-                        >
-                          {time}
-                        </Button>
-                      ))}
-                    </div>
+                    <Label className="text-white font-medium">
+                      Available Times for {format(selectedDate, 'MMM d, yyyy')}
+                    </Label>
+                    <TimeSlotPicker
+                      businessId={business.id}
+                      date={format(selectedDate, 'yyyy-MM-dd')}
+                      durationMinutes={services
+                        .filter(s => formData.selected_services.includes(s.id))
+                        .reduce((sum, service) => sum + service.duration_minutes, 0) || 60}
+                      staffId={formData.staff_id || undefined}
+                      selectedTime={selectedTime}
+                      onTimeSelect={setSelectedTime}
+                    />
                   </div>
                 )}
               </CardContent>
