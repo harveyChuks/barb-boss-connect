@@ -271,170 +271,200 @@ const Index = () => {
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="bg-slate-900 border-slate-700">
-        <div className="flex flex-col space-y-4 pt-8">
+        <div className="flex flex-col pt-8">
           {isAuthenticated && userBusiness ? (
             <>
-              <div className="text-white font-semibold mb-2 px-3">Business Management</div>
+              <div className="text-white font-semibold mb-4 px-3">Business Management</div>
               
-              <Button 
-                onClick={() => setActiveSection('overview')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <BarChart3 className="w-4 h-4 mr-2" />
-                Overview
-              </Button>
-              
-              <Button 
-                onClick={() => setActiveSection('reports')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <TrendingUp className="w-4 h-4 mr-2" />
-                Biz Stats
-              </Button>
-              
-              <Button 
-                onClick={() => setActiveSection('profile')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <User className="w-4 h-4 mr-2" />
-                Business Profile
-              </Button>
-              
-              <Button 
-                onClick={() => setActiveSection('services')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <Scissors className="w-4 h-4 mr-2" />
-                Services
-              </Button>
-              
-              <Button 
-                onClick={() => setActiveSection('portfolio')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <Camera className="w-4 h-4 mr-2" />
-                Portfolio
-              </Button>
-              
-              <Button 
-                onClick={() => setActiveSection('staff')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <Users className="w-4 h-4 mr-2" />
-                Staff Management
-              </Button>
-              
-              <Button 
-                onClick={() => setActiveSection('bookings')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <Calendar className="w-4 h-4 mr-2" />
-                Bookings
-              </Button>
-              
-              <Button 
-                onClick={() => setActiveSection('calendar')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <Calendar className="w-4 h-4 mr-2" />
-                Calendar View
-              </Button>
-              
-              <Button 
-                onClick={() => setActiveSection('whatsapp')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <MessageCircle className="w-4 h-4 mr-2" />
-                WhatsApp Integration
-              </Button>
-              
-              <Button 
-                onClick={() => setActiveSection('payments')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <CreditCard className="w-4 h-4 mr-2" />
-                Local Payments
-              </Button>
-              
-              <Button 
-                onClick={() => setActiveSection('settings')}
-                variant="outline" 
-                className="justify-start"
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
-              </Button>
+              <ul className="space-y-2">
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('overview')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <BarChart3 className="w-4 h-4 mr-3" />
+                    Overview
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('reports')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <TrendingUp className="w-4 h-4 mr-3" />
+                    Biz Stats
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('profile')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <User className="w-4 h-4 mr-3" />
+                    Business Profile
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('services')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <Scissors className="w-4 h-4 mr-3" />
+                    Services
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('portfolio')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <Camera className="w-4 h-4 mr-3" />
+                    Portfolio
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('staff')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <Users className="w-4 h-4 mr-3" />
+                    Staff Management
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('bookings')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <Calendar className="w-4 h-4 mr-3" />
+                    Bookings
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('calendar')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <Calendar className="w-4 h-4 mr-3" />
+                    Calendar View
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('whatsapp')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-3" />
+                    WhatsApp Integration
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('payments')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <CreditCard className="w-4 h-4 mr-3" />
+                    Local Payments
+                  </button>
+                </li>
+                
+                <li>
+                  <button 
+                    onClick={() => setActiveSection('settings')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <Settings className="w-4 h-4 mr-3" />
+                    Settings
+                  </button>
+                </li>
+              </ul>
               
               <div className="border-t border-slate-700 pt-4 mt-4">
-                <Button 
-                  onClick={() => setShowAppointmentModal(true)}
-                  className="justify-start mb-2"
-                  style={{ backgroundColor: '#39FF14', color: 'black' }}
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  New Appointment
-                </Button>
-                
-                <Button 
-                  onClick={() => setShowClientModal(true)}
-                  variant="outline" 
-                  className="justify-start mb-2"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Client
-                </Button>
+                <ul className="space-y-2">
+                  <li>
+                    <button 
+                      onClick={() => setShowAppointmentModal(true)}
+                      className="w-full flex items-center px-3 py-3 rounded-lg transition-colors"
+                      style={{ backgroundColor: '#39FF14', color: 'black' }}
+                    >
+                      <Plus className="w-4 h-4 mr-3" />
+                      New Appointment
+                    </button>
+                  </li>
+                  
+                  <li>
+                    <button 
+                      onClick={() => setShowClientModal(true)}
+                      className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    >
+                      <Plus className="w-4 h-4 mr-3" />
+                      Add Client
+                    </button>
+                  </li>
+                </ul>
               </div>
             </>
           ) : isAuthenticated ? (
-            <Button 
-              onClick={() => setShowBusinessModal(true)}
-              className="justify-start"
-              style={{ backgroundColor: '#39FF14', color: 'black' }}
-            >
-              <Building className="w-4 h-4 mr-2" />
-              Register Business
-            </Button>
+            <ul className="space-y-2">
+              <li>
+                <button 
+                  onClick={() => setShowBusinessModal(true)}
+                  className="w-full flex items-center px-3 py-3 rounded-lg transition-colors"
+                  style={{ backgroundColor: '#39FF14', color: 'black' }}
+                >
+                  <Building className="w-4 h-4 mr-3" />
+                  Register Business
+                </button>
+              </li>
+            </ul>
           ) : (
-            <Button 
-              onClick={() => setShowAuthModal(true)}
-              className="justify-start"
-              style={{ backgroundColor: '#39FF14', color: 'black' }}
-            >
-              Sign In / Sign Up
-            </Button>
+            <ul className="space-y-2">
+              <li>
+                <button 
+                  onClick={() => setShowAuthModal(true)}
+                  className="w-full flex items-center px-3 py-3 rounded-lg transition-colors"
+                  style={{ backgroundColor: '#39FF14', color: 'black' }}
+                >
+                  Sign In / Sign Up
+                </button>
+              </li>
+            </ul>
           )}
           
           <div className="border-t border-slate-700 pt-4 mt-4">
-            {isAdmin && (
-              <Button 
-                onClick={() => navigate('/admin')}
-                variant="outline" 
-                className="justify-start mb-2"
-              >
-                <ShieldCheck className="w-4 h-4 mr-2" />
-                Admin Panel
-              </Button>
-            )}
-            {isAuthenticated && (
-              <Button 
-                onClick={handleSignOut}
-                variant="outline" 
-                className="justify-start"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
-            )}
+            <ul className="space-y-2">
+              {isAdmin && (
+                <li>
+                  <button 
+                    onClick={() => navigate('/admin')}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <ShieldCheck className="w-4 h-4 mr-3" />
+                    Admin Panel
+                  </button>
+                </li>
+              )}
+              {isAuthenticated && (
+                <li>
+                  <button 
+                    onClick={handleSignOut}
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <LogOut className="w-4 h-4 mr-3" />
+                    Sign Out
+                  </button>
+                </li>
+              )}
+            </ul>
           </div>
         </div>
       </SheetContent>
