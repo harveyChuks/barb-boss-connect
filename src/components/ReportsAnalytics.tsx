@@ -435,7 +435,7 @@ const ReportsAnalytics = () => {
             </CardHeader>
             <CardContent>
               <ChartContainer config={chartConfig}>
-                <ResponsiveContainer width="100%" height={450} className="sm:h-[600px]">
+                <ResponsiveContainer width="100%" height={500} minHeight={500}>
                   <BarChart data={revenueData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }} barCategoryGap="20%">
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                     <XAxis 
