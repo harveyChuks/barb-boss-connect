@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,17 +85,24 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     }
   );
 
-  // Get available time slots for selected date
-  const totalDuration = services
-    .filter(s => formData.selected_services.includes(s.id))
-    .reduce((sum, service) => sum + service.duration_minutes, 0);
-  
+  // Memoize total duration to prevent unnecessary re-renders
+  const totalDuration = useMemo(() => {
+    return services
+      .filter(s => formData.selected_services.includes(s.id))
+      .reduce((sum, service) => sum + service.duration_minutes, 0);
+  }, [services, formData.selected_services]);
+   
   // Get available time slots for selected date with default 30-minute duration
   const defaultDuration = totalDuration > 0 ? totalDuration : 30;
   
+  // Memoize date string to prevent unnecessary re-fetches
+  const dateString = useMemo(() => {
+    return selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
+  }, [selectedDate]);
+  
   const { timeSlots: availableTimeSlots, loading: timeSlotsLoading, refetch: refetchTimeSlots } = useTimeSlots(
     business?.id || '',
-    selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
+    dateString,
     defaultDuration,
     formData.staff_id || undefined
   );
