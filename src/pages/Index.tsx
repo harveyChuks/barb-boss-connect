@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, ShieldCheck } from "lucide-react";
+import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, ShieldCheck, User, Camera, TrendingUp, MessageCircle, CreditCard, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +16,17 @@ import { useUserRole } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import StatisticsOverview from "@/components/StatisticsOverview";
+import ProfileManagement from "@/components/ProfileManagement";
+import ServicesManagement from "@/components/ServicesManagement";
+import BookingsManagement from "@/components/BookingsManagement";
+import SettingsSection from "@/components/SettingsSection";
+import StaffManagement from "@/components/StaffManagement";
+import CalendarView from "@/components/CalendarView";
+import WorkPicturesManagement from "@/components/WorkPicturesManagement";
+import ReportsAnalytics from "@/components/ReportsAnalytics";
+import WhatsAppIntegration from "@/components/WhatsAppIntegration";
+import LocalPaymentsIntegration from "@/components/LocalPaymentsIntegration";
 
 // Currency formatting function
 const formatCurrency = (amount: number, currency: string = 'NGN') => {
@@ -42,6 +53,7 @@ const Index = () => {
   const [showAppointmentModal, setShowAppointmentModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showBusinessModal, setShowBusinessModal] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('home');
   const [searchTerm, setSearchTerm] = useState("");
   const [userBusiness, setUserBusiness] = useState(null);
   const [todayAppointments, setTodayAppointments] = useState([]);
@@ -260,67 +272,160 @@ const Index = () => {
       </SheetTrigger>
       <SheetContent side="right" className="bg-slate-900 border-slate-700">
         <div className="flex flex-col space-y-4 pt-8">
-          {isAdmin && (
+          {isAuthenticated && userBusiness ? (
+            <>
+              <div className="text-white font-semibold mb-2 px-3">Business Management</div>
+              
+              <Button 
+                onClick={() => setActiveSection('overview')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Overview
+              </Button>
+              
+              <Button 
+                onClick={() => setActiveSection('reports')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Reports & Analytics
+              </Button>
+              
+              <Button 
+                onClick={() => setActiveSection('profile')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <User className="w-4 h-4 mr-2" />
+                Business Profile
+              </Button>
+              
+              <Button 
+                onClick={() => setActiveSection('services')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <Scissors className="w-4 h-4 mr-2" />
+                Services
+              </Button>
+              
+              <Button 
+                onClick={() => setActiveSection('portfolio')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <Camera className="w-4 h-4 mr-2" />
+                Portfolio
+              </Button>
+              
+              <Button 
+                onClick={() => setActiveSection('staff')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                Staff Management
+              </Button>
+              
+              <Button 
+                onClick={() => setActiveSection('bookings')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Bookings
+              </Button>
+              
+              <Button 
+                onClick={() => setActiveSection('calendar')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Calendar View
+              </Button>
+              
+              <Button 
+                onClick={() => setActiveSection('whatsapp')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                WhatsApp Integration
+              </Button>
+              
+              <Button 
+                onClick={() => setActiveSection('payments')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <CreditCard className="w-4 h-4 mr-2" />
+                Local Payments
+              </Button>
+              
+              <Button 
+                onClick={() => setActiveSection('settings')}
+                variant="outline" 
+                className="justify-start"
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Settings
+              </Button>
+              
+              <div className="border-t border-slate-700 pt-4 mt-4">
+                <Button 
+                  onClick={() => setShowAppointmentModal(true)}
+                  className="justify-start mb-2"
+                  style={{ backgroundColor: '#39FF14', color: 'black' }}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Appointment
+                </Button>
+                
+                <Button 
+                  onClick={() => setShowClientModal(true)}
+                  variant="outline" 
+                  className="justify-start mb-2"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Client
+                </Button>
+              </div>
+            </>
+          ) : isAuthenticated ? (
             <Button 
-              onClick={() => navigate('/admin')}
-              variant="outline" 
+              onClick={() => setShowBusinessModal(true)}
               className="justify-start"
+              style={{ backgroundColor: '#39FF14', color: 'black' }}
             >
-              <ShieldCheck className="w-4 h-4 mr-2" />
-              Admin Panel
+              <Building className="w-4 h-4 mr-2" />
+              Register Business
+            </Button>
+          ) : (
+            <Button 
+              onClick={() => setShowAuthModal(true)}
+              className="justify-start"
+              style={{ backgroundColor: '#39FF14', color: 'black' }}
+            >
+              Sign In / Sign Up
             </Button>
           )}
-          {isAuthenticated ? (
-            <>
-              {userBusiness ? (
-                <>
-                  <Button 
-                    onClick={() => navigate('/dashboard')}
-                    variant="outline" 
-                    className="justify-start"
-                  >
-                    <BarChart3 className="w-4 h-4 mr-2" />
-                    Dashboard
-                  </Button>
-                  <Button 
-                    onClick={() => setShowAppointmentModal(true)}
-                    className="justify-start"
-                    style={{ backgroundColor: '#39FF14', color: 'black' }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#32e612';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#39FF14';
-                    }}
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Appointment
-                  </Button>
-                  <Button 
-                    onClick={() => setShowClientModal(true)}
-                    variant="outline" 
-                    className="justify-start"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Client
-                  </Button>
-                </>
-              ) : (
-                <Button 
-                  onClick={() => setShowBusinessModal(true)}
-                  className="justify-start"
-                  style={{ backgroundColor: '#39FF14', color: 'black' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#32e612';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#39FF14';
-                  }}
-                >
-                  <Building className="w-4 h-4 mr-2" />
-                  Register Business
-                </Button>
-              )}
+          
+          <div className="border-t border-slate-700 pt-4 mt-4">
+            {isAdmin && (
+              <Button 
+                onClick={() => navigate('/admin')}
+                variant="outline" 
+                className="justify-start mb-2"
+              >
+                <ShieldCheck className="w-4 h-4 mr-2" />
+                Admin Panel
+              </Button>
+            )}
+            {isAuthenticated && (
               <Button 
                 onClick={handleSignOut}
                 variant="outline" 
@@ -329,22 +434,8 @@ const Index = () => {
                 <LogOut className="w-4 h-4 mr-2" />
                 Sign Out
               </Button>
-            </>
-          ) : (
-            <Button 
-              onClick={() => setShowAuthModal(true)}
-              className="justify-start"
-              style={{ backgroundColor: '#39FF14', color: 'black' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#32e612';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#39FF14';
-              }}
-            >
-              Sign In / Sign Up
-            </Button>
-          )}
+            )}
+          </div>
         </div>
       </SheetContent>
     </Sheet>
@@ -365,11 +456,11 @@ const Index = () => {
         <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 md:hidden">
           <div className="grid grid-cols-3 gap-1 p-2">
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => setActiveSection('overview')}
               className="flex flex-col items-center py-3 px-2 rounded-lg text-xs text-foreground hover:bg-accent"
             >
               <BarChart3 className="w-5 h-5 mb-1" style={{ color: '#39FF14' }} />
-              <span>Dashboard</span>
+              <span>Overview</span>
             </button>
             <button
               onClick={() => setShowAppointmentModal(true)}
@@ -608,168 +699,91 @@ const Index = () => {
               </Card>
             </div>
 
-            {/* Quick Actions */}
-            <div className="mb-6 sm:mb-8">
-              <Card className="bg-card border-border">
-                <CardHeader className="pb-3 sm:pb-6">
-                  <CardTitle className="text-foreground text-lg sm:text-xl">Quick Actions</CardTitle>
-                  <CardDescription className="text-muted-foreground text-sm sm:text-base">
-                    Access your most used features or visit the full dashboard
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                    <Button 
-                      onClick={() => navigate('/dashboard')}
-                      className="h-12 sm:h-16 text-sm sm:text-lg"
-                      style={{ backgroundColor: '#39FF14', color: 'black' }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#32e612';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#39FF14';
-                      }}
-                    >
-                      <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                      Full Dashboard
-                    </Button>
-                    <Button 
-                      onClick={() => setShowAppointmentModal(true)}
-                      variant="outline"
-                      className="h-12 sm:h-16 text-sm sm:text-lg"
-                    >
-                      <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                      Book Appointment
-                    </Button>
-                    <Button 
-                      onClick={() => setShowClientModal(true)}
-                      variant="outline"
-                      className="h-12 sm:h-16 text-sm sm:text-lg"
-                    >
-                      <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                      Add Client
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-              {/* Today's Appointments */}
-              <Card className="bg-card border-border">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-foreground flex items-center text-lg sm:text-xl">
-                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
-                    Today's Appointments
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground text-sm">
-                    {todayAppointments.length} appointments scheduled
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {todayAppointments.length > 0 ? (
-                    <div className="space-y-3 sm:space-y-4">
-                      {todayAppointments.slice(0, 3).map((appointment) => (
-                        <div
-                          key={appointment.id}
-                          className="flex items-center justify-between p-3 sm:p-4 bg-accent/50 rounded-lg hover:bg-accent/70 transition-colors"
+            {activeSection === 'home' && (
+              <>
+                {/* Quick Actions */}
+                <div className="mb-6 sm:mb-8">
+                  <Card className="bg-card border-border">
+                    <CardHeader className="pb-3 sm:pb-6">
+                      <CardTitle className="text-foreground text-lg sm:text-xl">Quick Actions</CardTitle>
+                      <CardDescription className="text-muted-foreground text-sm sm:text-base">
+                        Access your most used features
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <Button 
+                          onClick={() => setShowAppointmentModal(true)}
+                          className="h-12 sm:h-16 text-sm sm:text-lg"
+                          style={{ backgroundColor: '#39FF14', color: 'black' }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#32e612';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#39FF14';
+                          }}
                         >
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-foreground text-sm sm:text-base truncate">{appointment.customer_name}</p>
-                            <p className="text-xs sm:text-sm text-muted-foreground truncate">{appointment.services?.name || 'Service'}</p>
-                          </div>
-                          <Badge variant="outline" className="text-xs sm:text-sm ml-2 flex-shrink-0" style={{ borderColor: '#39FF14', color: '#39FF14' }}>
-                            {appointment.start_time}
-                          </Badge>
-                        </div>
-                      ))}
-                      {todayAppointments.length > 3 && (
-                          <Button
-                            onClick={() => navigate('/dashboard')}
-                            variant="outline"
-                            className="w-full text-sm sm:text-base"
-                          >
-                            View All ({todayAppointments.length})
-                          </Button>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="text-center py-6 sm:py-8">
-                      <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-muted-foreground text-sm sm:text-base">No appointments for today</p>
-                      <Button
-                        onClick={() => setShowAppointmentModal(true)}
-                        className="mt-4 text-sm sm:text-base"
-                        style={{ backgroundColor: '#39FF14', color: 'black' }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#32e612';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#39FF14';
-                        }}
-                      >
-                        Schedule First Appointment
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Recent Clients */}
-              <Card className="bg-card border-border">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-foreground flex items-center text-lg sm:text-xl">
-                    <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
-                    Recent Clients
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground text-sm">
-                    Your client database
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3 sm:space-y-4">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                      <Input
-                        placeholder="Search clients..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 bg-input border-border text-foreground placeholder-muted-foreground text-sm sm:text-base"
-                      />
-                    </div>
-                    {filteredClients.length > 0 ? (
-                      <div className="space-y-2 sm:space-y-3">
-                        {filteredClients.slice(0, 4).map((client) => (
-                          <div
-                            key={client.id}
-                            className="flex items-center justify-between p-2 sm:p-3 bg-accent/50 rounded-lg hover:bg-accent/70 transition-colors cursor-pointer"
-                          >
-                            <div className="flex-1 min-w-0">
-                              <p className="font-medium text-foreground text-sm sm:text-base truncate">{client.name}</p>
-                              <p className="text-xs sm:text-sm text-muted-foreground truncate">{client.phone}</p>
-                            </div>
-                            <Badge variant="secondary" className="text-xs flex-shrink-0 ml-2">
-                              Recent
-                            </Badge>
-                          </div>
-                        ))}
-                        <Button
-                          onClick={() => navigate('/dashboard')}
+                          <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                          Book Appointment
+                        </Button>
+                        <Button 
+                          onClick={() => setShowClientModal(true)}
                           variant="outline"
-                          className="w-full text-sm sm:text-base"
+                          className="h-12 sm:h-16 text-sm sm:text-lg"
                         >
-                          View All Clients
+                          <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                          Add Client
                         </Button>
                       </div>
-                    ) : (
-                      <div className="text-center py-6 sm:py-8">
-                        <Users className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-4" />
-                        <p className="text-muted-foreground text-sm sm:text-base">
-                          {searchTerm ? "No clients match your search" : "No clients yet"}
-                        </p>
-                        {!searchTerm && (
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                  {/* Today's Appointments */}
+                  <Card className="bg-card border-border">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-foreground flex items-center text-lg sm:text-xl">
+                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
+                        Today's Appointments
+                      </CardTitle>
+                      <CardDescription className="text-muted-foreground text-sm">
+                        {todayAppointments.length} appointments scheduled
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {todayAppointments.length > 0 ? (
+                        <div className="space-y-3 sm:space-y-4">
+                          {todayAppointments.slice(0, 3).map((appointment) => (
+                            <div
+                              key={appointment.id}
+                              className="flex items-center justify-between p-3 sm:p-4 bg-accent/50 rounded-lg hover:bg-accent/70 transition-colors"
+                            >
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-foreground text-sm sm:text-base truncate">{appointment.customer_name}</p>
+                                <p className="text-xs sm:text-sm text-muted-foreground truncate">{appointment.services?.name || 'Service'}</p>
+                              </div>
+                              <Badge variant="outline" className="text-xs sm:text-sm ml-2 flex-shrink-0" style={{ borderColor: '#39FF14', color: '#39FF14' }}>
+                                {appointment.start_time}
+                              </Badge>
+                            </div>
+                          ))}
+                          {todayAppointments.length > 3 && (
+                              <Button
+                                onClick={() => setActiveSection('bookings')}
+                                variant="outline"
+                                className="w-full text-sm sm:text-base"
+                              >
+                                View All ({todayAppointments.length})
+                              </Button>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="text-center py-6 sm:py-8">
+                          <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-4" />
+                          <p className="text-muted-foreground text-sm sm:text-base">No appointments for today</p>
                           <Button
-                            onClick={() => setShowClientModal(true)}
+                            onClick={() => setShowAppointmentModal(true)}
                             className="mt-4 text-sm sm:text-base"
                             style={{ backgroundColor: '#39FF14', color: 'black' }}
                             onMouseEnter={(e) => {
@@ -779,15 +793,268 @@ const Index = () => {
                               e.currentTarget.style.backgroundColor = '#39FF14';
                             }}
                           >
-                            Add First Client
+                            Schedule First Appointment
                           </Button>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Recent Clients */}
+                  <Card className="bg-card border-border">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-foreground flex items-center text-lg sm:text-xl">
+                        <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
+                        Recent Clients
+                      </CardTitle>
+                      <CardDescription className="text-muted-foreground text-sm">
+                        Your client database
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3 sm:space-y-4">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                          <Input
+                            placeholder="Search clients..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-10 bg-input border-border text-foreground placeholder-muted-foreground text-sm sm:text-base"
+                          />
+                        </div>
+                        {filteredClients.length > 0 ? (
+                          <div className="space-y-2 sm:space-y-3">
+                            {filteredClients.slice(0, 4).map((client) => (
+                              <div
+                                key={client.id}
+                                className="flex items-center justify-between p-2 sm:p-3 bg-accent/50 rounded-lg hover:bg-accent/70 transition-colors cursor-pointer"
+                              >
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-medium text-foreground text-sm sm:text-base truncate">{client.name}</p>
+                                  <p className="text-xs sm:text-sm text-muted-foreground truncate">{client.phone}</p>
+                                </div>
+                                <Badge variant="secondary" className="text-xs flex-shrink-0 ml-2">
+                                  Recent
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-6 sm:py-8">
+                            <Users className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-4" />
+                            <p className="text-muted-foreground text-sm sm:text-base">
+                              {searchTerm ? "No clients match your search" : "No clients yet"}
+                            </p>
+                            {!searchTerm && (
+                              <Button
+                                onClick={() => setShowClientModal(true)}
+                                className="mt-4 text-sm sm:text-base"
+                                style={{ backgroundColor: '#39FF14', color: 'black' }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.backgroundColor = '#32e612';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.backgroundColor = '#39FF14';
+                                }}
+                              >
+                                Add First Client
+                              </Button>
+                            )}
+                          </div>
                         )}
                       </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </>
+            )}
+
+            {activeSection === 'overview' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">Business Overview</h1>
+                </div>
+                <StatisticsOverview />
+              </div>
+            )}
+
+            {activeSection === 'reports' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">Reports & Analytics</h1>
+                </div>
+                <ReportsAnalytics />
+              </div>
+            )}
+
+            {activeSection === 'profile' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">Business Profile</h1>
+                </div>
+                <ProfileManagement />
+              </div>
+            )}
+
+            {activeSection === 'services' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">Services Management</h1>
+                </div>
+                <ServicesManagement />
+              </div>
+            )}
+
+            {activeSection === 'portfolio' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">Portfolio Management</h1>
+                </div>
+                <WorkPicturesManagement />
+              </div>
+            )}
+
+            {activeSection === 'staff' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">Staff Management</h1>
+                </div>
+                <StaffManagement />
+              </div>
+            )}
+
+            {activeSection === 'bookings' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">Bookings Management</h1>
+                </div>
+                <BookingsManagement />
+              </div>
+            )}
+
+            {activeSection === 'calendar' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">Calendar View</h1>
+                </div>
+                <CalendarView />
+              </div>
+            )}
+
+            {activeSection === 'whatsapp' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">WhatsApp Integration</h1>
+                </div>
+                <WhatsAppIntegration />
+              </div>
+            )}
+
+            {activeSection === 'payments' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">Local Payments</h1>
+                </div>
+                <LocalPaymentsIntegration />
+              </div>
+            )}
+
+            {activeSection === 'settings' && (
+              <div>
+                <div className="mb-6">
+                  <Button 
+                    onClick={() => setActiveSection('home')}
+                    variant="outline" 
+                    size="sm"
+                    className="mb-4"
+                  >
+                    ← Back to Home
+                  </Button>
+                  <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+                </div>
+                <SettingsSection />
+              </div>
+            )}
           </>
         )}
       </main>
