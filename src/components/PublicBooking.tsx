@@ -90,32 +90,22 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     .filter(s => formData.selected_services.includes(s.id))
     .reduce((sum, service) => sum + service.duration_minutes, 0);
   
-  // Only fetch time slots if we have business, date, and at least one service selected
-  const shouldFetchTimeSlots = business?.id && selectedDate && totalDuration > 0;
+  // Get available time slots for selected date with default 30-minute duration
+  const defaultDuration = totalDuration > 0 ? totalDuration : 30;
   
   const { timeSlots: availableTimeSlots, loading: timeSlotsLoading, refetch: refetchTimeSlots } = useTimeSlots(
-    shouldFetchTimeSlots ? business.id : '',
-    shouldFetchTimeSlots ? format(selectedDate, 'yyyy-MM-dd') : '',
-    shouldFetchTimeSlots ? totalDuration : 0,
+    business?.id || '',
+    selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
+    defaultDuration,
     formData.staff_id || undefined
   );
 
-  // Debug logging
+  // Refetch time slots when services change (duration affects availability)
   useEffect(() => {
-    console.log('Time slots data updated:', {
-      shouldFetchTimeSlots,
-      totalDuration,
-      availableTimeSlots: availableTimeSlots?.length,
-      loading: timeSlotsLoading
-    });
-  }, [shouldFetchTimeSlots, totalDuration, availableTimeSlots, timeSlotsLoading]);
-
-  // Refetch time slots when services change
-  useEffect(() => {
-    if (shouldFetchTimeSlots && refetchTimeSlots) {
+    if (business?.id && selectedDate && refetchTimeSlots) {
       refetchTimeSlots();
     }
-  }, [formData.selected_services, shouldFetchTimeSlots, refetchTimeSlots]);
+  }, [formData.selected_services, business?.id, selectedDate, refetchTimeSlots]);
 
   // Mock pictures for demonstration
   const mockPictures = [
@@ -749,18 +739,11 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         Available Times for {format(selectedDate, 'MMM d, yyyy')}
                       </Label>
                       <Badge variant="secondary" className="text-xs">
-                         {formData.selected_services.length === 0 
-                           ? "Select a service first" 
-                           : `${availableTimeSlots?.filter(slot => slot.is_available).length || 0} slots available`
-                         }
+                         {availableTimeSlots?.filter(slot => slot.is_available).length || 0} slots available
                        </Badge>
                      </div>
                      
-                     {formData.selected_services.length === 0 ? (
-                       <div className="text-center py-4 text-slate-400">
-                         Please select at least one service to see available times
-                       </div>
-                     ) : timeSlotsLoading ? (
+                     {timeSlotsLoading ? (
                        <div className="text-center py-4 text-slate-400">
                          Loading available times...
                        </div>

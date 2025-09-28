@@ -14,7 +14,10 @@ export const useTimeSlots = (businessId: string, date: string, durationMinutes: 
   const { toast } = useToast();
 
   const fetchTimeSlots = async () => {
-    if (!businessId || !date || !durationMinutes) return;
+    if (!businessId || !date || !durationMinutes || durationMinutes <= 0) {
+      console.log('Missing required parameters for time slots:', { businessId, date, durationMinutes });
+      return;
+    }
 
     setLoading(true);
     try {
