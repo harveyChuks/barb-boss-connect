@@ -191,6 +191,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   };
 
   const handleSubmit = async () => {
+    alert('BOOKING FUNCTION TRIGGERED!');
     console.log('=== BOOKING STARTED ===');
     if (!business || !selectedDate || !selectedTime || formData.selected_services.length === 0) return;
 
