@@ -94,7 +94,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <div className="space-y-8">
               <div>
                 <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
-                  We will make your business even better
+                  We will Transform your Business even Better
                 </h1>
                 <div className="mt-4 h-16 overflow-hidden">
                   <h2 className="text-2xl md:text-3xl font-bold text-primary transition-all duration-500 ease-in-out">
