@@ -135,17 +135,16 @@ const TimeSlotPicker = ({
           const isSelected = selectedTime === formattedTime;
           
           if (!isAvailable) {
-            // Completely blocked slots - like closed days
+            // Booked slots - display as red to match legend
             return (
               <div
                 key={slot.slot_time}
-                className="relative h-12 border border-red-500/20 bg-red-500/5 rounded-md flex items-center justify-center cursor-not-allowed"
+                className="relative h-12 border border-red-500 bg-red-500/20 rounded-md flex items-center justify-center cursor-not-allowed"
               >
-                <div className="flex flex-col items-center opacity-40">
-                  <span className="font-medium text-red-400 line-through">{formattedTime}</span>
-                  <span className="text-xs text-red-500">Booked</span>
+                <div className="flex flex-col items-center">
+                  <span className="font-medium text-red-300">{formattedTime}</span>
+                  <span className="text-xs text-red-400">Booked</span>
                 </div>
-                <div className="absolute inset-0 bg-red-500/10 rounded-md"></div>
               </div>
             );
           }
