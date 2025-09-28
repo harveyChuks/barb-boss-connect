@@ -552,22 +552,6 @@ const ProfileManagement = () => {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="state">State/Province</Label>
-            <Select value={formData.state} onValueChange={(value) => handleInputChange("state", value)}>
-              <SelectTrigger className="bg-input border-border text-foreground">
-                <SelectValue placeholder="Select state/province" />
-              </SelectTrigger>
-              <SelectContent className="bg-popover border-border z-50 max-h-60">
-                {getStatesForCountry(formData.country).map((state) => (
-                  <SelectItem key={state} value={state} className="focus:bg-muted">
-                    {state}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="website">Website</Label>
@@ -619,6 +603,22 @@ const ProfileManagement = () => {
                 placeholder="Auto-selected"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="state">State/Province</Label>
+            <Select value={formData.state} onValueChange={(value) => handleInputChange("state", value)}>
+              <SelectTrigger className="bg-input border-border text-foreground">
+                <SelectValue placeholder="Select state/province" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border z-50 max-h-60">
+                {getStatesForCountry(formData.country).map((state) => (
+                  <SelectItem key={state} value={state} className="focus:bg-muted">
+                    {state}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <Button
