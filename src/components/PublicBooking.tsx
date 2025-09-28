@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useTimeSlots } from "@/hooks/useTimeSlots";
 import { useBusinessAppointments } from "@/hooks/useBusinessAppointments";
 import { format, addDays, isAfter, isBefore, startOfDay, addMonths, subMonths, startOfMonth, endOfMonth, eachWeekOfInterval, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isSameDay } from "date-fns";
 
@@ -84,11 +85,17 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     }
   );
 
-  const timeSlots = [
-    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
-  ];
+  // Get available time slots for selected date
+  const totalDuration = services
+    .filter(s => formData.selected_services.includes(s.id))
+    .reduce((sum, service) => sum + service.duration_minutes, 0);
+  
+  const { timeSlots: availableTimeSlots, loading: timeSlotsLoading } = useTimeSlots(
+    business?.id || '',
+    selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
+    totalDuration || 30, // Default to 30 minutes if no services selected
+    formData.staff_id || undefined
+  );
 
   // Mock pictures for demonstration
   const mockPictures = [
@@ -717,27 +724,89 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         Available Times for {format(selectedDate, 'MMM d, yyyy')}
                       </Label>
                       <Badge variant="secondary" className="text-xs">
-                        {timeSlots.length} slots available
-                      </Badge>
-                    </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      {timeSlots.map((time) => (
-                        <Button
-                          key={time}
-                          variant={selectedTime === time ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setSelectedTime(time)}
-                          className={
-                            selectedTime === time
-                              ? "bg-primary hover:bg-primary/90 text-black font-medium"
-                              : "border-slate-600 text-white hover:bg-slate-700 hover:border-slate-500"
-                          }
-                        >
-                          {time}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
+                         {availableTimeSlots.filter(slot => slot.is_available).length} slots available
+                       </Badge>
+                     </div>
+                     
+                     {timeSlotsLoading ? (
+                       <div className="text-center py-4 text-slate-400">
+                         Loading available times...
+                       </div>
+                     ) : (
+                       <>
+                         {availableTimeSlots.filter(slot => slot.is_available).length > 0 ? (
+                           <div className="space-y-3">
+                             <div className="grid grid-cols-3 gap-2">
+                               {availableTimeSlots
+                                 .filter(slot => slot.is_available)
+                                 .map((slot) => {
+                                   const formattedTime = new Date(`2000-01-01T${slot.slot_time}`).toLocaleTimeString('en-US', {
+                                     hour: 'numeric',
+                                     minute: '2-digit',
+                                     hour12: true
+                                   });
+                                   return (
+                                     <Button
+                                       key={slot.slot_time}
+                                       variant={selectedTime === formattedTime ? "default" : "outline"}
+                                       size="sm"
+                                       onClick={() => setSelectedTime(formattedTime)}
+                                       className={
+                                         selectedTime === formattedTime
+                                           ? "bg-primary hover:bg-primary/90 text-black font-medium"
+                                           : "border-slate-600 text-white hover:bg-slate-700 hover:border-slate-500"
+                                       }
+                                     >
+                                       {formattedTime}
+                                     </Button>
+                                   );
+                                 })}
+                             </div>
+                           </div>
+                         ) : (
+                           <div className="text-center py-4 text-slate-400">
+                             No available time slots for this date
+                           </div>
+                         )}
+                         
+                         {/* Show booked time slots */}
+                         {availableTimeSlots.filter(slot => !slot.is_available).length > 0 && (
+                           <div className="space-y-2">
+                             <div className="text-sm text-slate-400 font-medium">Already Booked:</div>
+                             <div className="grid grid-cols-4 gap-2">
+                               {availableTimeSlots
+                                 .filter(slot => !slot.is_available)
+                                 .slice(0, 8)
+                                 .map((slot) => {
+                                   const formattedTime = new Date(`2000-01-01T${slot.slot_time}`).toLocaleTimeString('en-US', {
+                                     hour: 'numeric',
+                                     minute: '2-digit',
+                                     hour12: true
+                                   });
+                                   return (
+                                     <Badge
+                                       key={slot.slot_time}
+                                       variant="secondary"
+                                       className="bg-red-900/30 border border-red-700/50 text-red-300 justify-center py-1 text-xs"
+                                     >
+                                       {formattedTime}
+                                     </Badge>
+                                   );
+                                 })}
+                               {availableTimeSlots.filter(slot => !slot.is_available).length > 8 && (
+                                 <Badge
+                                   variant="secondary"
+                                   className="bg-red-900/30 border border-red-700/50 text-red-300 justify-center py-1 text-xs"
+                                 >
+                                   +{availableTimeSlots.filter(slot => !slot.is_available).length - 8} more
+                                 </Badge>
+                               )}
+                             </div>
+                           </div>
+                         )}
+                       </>
+                     )}
+                   </div>
                 )}
               </CardContent>
             </Card>
