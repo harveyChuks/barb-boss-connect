@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useBusinessAppointments } from "@/hooks/useBusinessAppointments";
 import { format, addDays, isAfter, isBefore, startOfDay, addMonths, subMonths, startOfMonth, endOfMonth, eachWeekOfInterval, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isSameDay } from "date-fns";
 
 interface Business {
@@ -73,6 +74,15 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     staff_id: "",
     notes: ""
   });
+
+  // Fetch appointments for the calendar to show booked slots
+  const { hasAppointmentsOnDate, getAppointmentsForDate } = useBusinessAppointments(
+    business?.id || '',
+    {
+      start: startOfMonth(subMonths(calendarDate, 1)),
+      end: endOfMonth(addMonths(calendarDate, 1))
+    }
+  );
 
   const timeSlots = [
     "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -621,6 +631,8 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                       const isDisabled = isDateDisabled(date);
                       const isAvailable = isDateAvailable(date) && isCurrentMonth && !isDisabled;
                       const isToday = isSameDay(date, new Date());
+                      const hasBookings = isCurrentMonth && hasAppointmentsOnDate(date);
+                      const dayAppointments = isCurrentMonth ? getAppointmentsForDate(date) : [];
 
                       return (
                         <button
@@ -628,23 +640,73 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                           onClick={() => isAvailable && setSelectedDate(date)}
                           disabled={!isAvailable}
                           className={`
-                            aspect-square p-2 text-sm rounded-lg transition-colors relative
+                            aspect-square p-2 text-sm rounded-lg transition-colors relative group
                             ${!isCurrentMonth ? 'text-slate-600' : ''}
                             ${isSelected ? 'bg-primary text-black font-semibold' : ''}
                             ${isToday && !isSelected ? 'bg-slate-600 text-white font-semibold' : ''}
                             ${isAvailable && !isSelected && !isToday ? 'text-white hover:bg-slate-700' : ''}
                             ${!isAvailable ? 'text-slate-600 cursor-not-allowed' : 'cursor-pointer'}
+                            ${hasBookings && !isSelected ? 'border border-amber-500/50' : ''}
                           `}
+                          title={hasBookings ? `${dayAppointments.length} appointment${dayAppointments.length !== 1 ? 's' : ''} booked` : ''}
                         >
                           {format(date, 'd')}
-                          {!isAvailable && isCurrentMonth && !isDisabled && (
+                          {hasBookings && (
+                            <div className="absolute bottom-1 right-1">
+                              <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                            </div>
+                          )}
+                          {!isAvailable && isCurrentMonth && !isDisabled && !hasBookings && (
                             <div className="absolute inset-0 flex items-center justify-center">
                               <div className="w-1 h-1 bg-red-500 rounded-full"></div>
+                            </div>
+                          )}
+                          
+                          {/* Tooltip for booked appointments */}
+                          {hasBookings && (
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-black text-white text-xs p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap">
+                              {dayAppointments.slice(0, 3).map((apt, i) => (
+                                <div key={apt.id}>
+                                  {apt.start_time.slice(0, 5)} - {apt.services.name}
+                                </div>
+                              ))}
+                              {dayAppointments.length > 3 && (
+                                <div className="text-slate-300">
+                                  +{dayAppointments.length - 3} more
+                                </div>
+                              )}
                             </div>
                           )}
                         </button>
                       );
                     })}
+                  </div>
+                  
+                  {/* Calendar Legend */}
+                  <div className="mt-4 p-3 bg-slate-700/50 rounded-lg">
+                    <div className="text-sm text-slate-300 mb-2 font-medium">Calendar Legend:</div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 border border-amber-500/50 rounded flex items-end justify-end">
+                          <div className="w-1.5 h-1.5 bg-amber-500 rounded-full -mb-0.5 -mr-0.5"></div>
+                        </div>
+                        <span className="text-slate-400">Has bookings</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-primary rounded"></div>
+                        <span className="text-slate-400">Selected date</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-slate-600 rounded"></div>
+                        <span className="text-slate-400">Today</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-slate-800 rounded flex items-center justify-center">
+                          <div className="w-1 h-1 bg-red-500 rounded-full"></div>
+                        </div>
+                        <span className="text-slate-400">Unavailable</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 

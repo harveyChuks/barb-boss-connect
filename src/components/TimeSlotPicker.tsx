@@ -138,20 +138,20 @@ const TimeSlotPicker = ({
 
       {unavailableSlots.length > 0 && (
         <div>
-          <h4 className="text-slate-400 font-medium mb-3 text-sm">Unavailable Times</h4>
-          <div className="flex flex-wrap gap-2">
-            {unavailableSlots.slice(0, 6).map((slot) => (
+          <h4 className="text-slate-400 font-medium mb-3 text-sm">Already Booked</h4>
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+            {unavailableSlots.slice(0, 8).map((slot) => (
               <Badge
                 key={slot.slot_time}
                 variant="secondary"
-                className="bg-slate-600 text-slate-300"
+                className="bg-red-900/30 border border-red-700/50 text-red-300 justify-center py-2"
               >
                 {formatTime(slot.slot_time)}
               </Badge>
             ))}
-            {unavailableSlots.length > 6 && (
-              <Badge variant="secondary" className="bg-slate-600 text-slate-300">
-                +{unavailableSlots.length - 6} more
+            {unavailableSlots.length > 8 && (
+              <Badge variant="secondary" className="bg-red-900/30 border border-red-700/50 text-red-300 justify-center py-2">
+                +{unavailableSlots.length - 8} more
               </Badge>
             )}
           </div>

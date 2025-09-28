@@ -206,6 +206,19 @@ const CalendarView = () => {
               selected={selectedDate}
               onSelect={(date) => date && setSelectedDate(date)}
               className="rounded-md border-0 w-full p-0"
+              modifiers={{
+                booked: (date) => {
+                  const dateAppointments = getAppointmentsForDate(date);
+                  return dateAppointments.length > 0;
+                }
+              }}
+              modifiersStyles={{
+                booked: {
+                  backgroundColor: 'hsl(var(--primary))',
+                  color: 'black',
+                  fontWeight: 'bold'
+                }
+              }}
             />
             <div className="mt-4 space-y-2">
               <div className="flex items-center gap-2 text-sm">
