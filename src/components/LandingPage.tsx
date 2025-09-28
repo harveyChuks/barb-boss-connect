@@ -14,7 +14,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   const [animatedText, setAnimatedText] = useState("Earn More");
   
   useEffect(() => {
-    const benefits = ["Earn More", "Save Time", "Grow Faster", "Attract Clients", "Build a Brand"];
+    const benefits = ["Maximize Revenue", "Streamline Operations", "Scale Efficiently", "Delight Customers", "Enhance Your Brand"];
     let index = 0;
     
     const interval = setInterval(() => {
@@ -85,7 +85,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
           {/* Trust Badge */}
           <div className="text-center mb-8">
             <p className="text-sm font-semibold text-primary tracking-wider uppercase">
-              TRUSTED BY 500+ BUSINESSES
+              POWERING 500+ SUCCESSFUL BUSINESSES
             </p>
           </div>
           
@@ -94,7 +94,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <div className="space-y-8">
               <div>
                 <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
-                  Let's Build your Dream Business
+                  Transform Your Business Operations
                 </h1>
                 <div className="mt-4 h-16 overflow-hidden">
                   <h2 className="text-2xl md:text-3xl font-bold text-primary transition-all duration-500 ease-in-out">
@@ -102,8 +102,8 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                   </h2>
                 </div>
                 <p className="text-xl text-muted-foreground mt-6 max-w-lg">
-                  BizFlow helps you get booked, stay organised, and look professional — all in one place. 
-                  Say goodbye to missed calls and wasted hours.
+                  BizFlow empowers service businesses to automate scheduling, enhance client relationships, 
+                  and accelerate growth — all from one comprehensive platform.
                 </p>
               </div>
               
@@ -111,27 +111,27 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Bookings</span>
+                  <span className="text-foreground font-medium">Smart Scheduling</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Analytics</span>
+                  <span className="text-foreground font-medium">Business Intelligence</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Website</span>
+                  <span className="text-foreground font-medium">Professional Presence</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Save Hours</span>
+                  <span className="text-foreground font-medium">Time Optimization</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Marketing</span>
+                  <span className="text-foreground font-medium">Growth Tools</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Build your Brand</span>
+                  <span className="text-foreground font-medium">Brand Excellence</span>
                 </div>
               </div>
               
@@ -140,7 +140,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 size="lg"
                 className="text-lg px-8 py-4 bg-primary hover:bg-primary/90 w-full sm:w-auto"
               >
-                Get Started for Free
+                Start Your Success Journey
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
 
@@ -166,7 +166,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                       <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <p className="text-sm text-muted-foreground">5.0 from 500+ businesses</p>
+                  <p className="text-sm text-muted-foreground">4.9/5 from 500+ business owners</p>
                 </div>
               </div>
             </div>
@@ -236,10 +236,10 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center gap-4 mb-4">
             <DollarSign className="h-8 w-8 text-primary" />
-            <div className="text-4xl md:text-5xl font-bold text-foreground">₦12,450,000</div>
+            <div className="text-4xl md:text-5xl font-bold text-foreground">₦15,750,000</div>
           </div>
           <p className="text-lg text-muted-foreground font-medium tracking-wider uppercase">
-            EARNED BY OUR BUSINESS OWNERS
+            REVENUE GENERATED BY OUR PLATFORM USERS
           </p>
         </div>
       </section>
@@ -249,10 +249,10 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Everything You Need to Succeed
+              The Complete Business Solution You Need to <span className="text-primary">{animatedText}</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Powerful features designed to help service-based businesses thrive in today's competitive market.
+              Comprehensive tools designed specifically for service-based businesses to excel in today's competitive marketplace.
             </p>
           </div>
 
@@ -277,10 +277,10 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Why Choose BizFlow?
+              Why BizFlow Stands Apart
             </h2>
             <p className="text-xl text-muted-foreground">
-              Join thousands of businesses already growing with BizFlow
+              Experience the advantages that drive business transformation
             </p>
           </div>
 
@@ -300,10 +300,10 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Loved by Business Owners
+              Success Stories from Business Leaders
             </h2>
             <p className="text-xl text-muted-foreground">
-              See what our customers have to say about BizFlow
+              Discover how BizFlow transforms business operations
             </p>
           </div>
 
@@ -332,10 +332,10 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       <section className="py-20 px-4 bg-primary/10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Ready to Transform Your Business?
+            Ready to Revolutionize Your Business?
           </h2>
           <p className="text-xl text-muted-foreground mb-8">
-            Join thousands of businesses already using BizFlow to streamline their operations and boost growth.
+            Join the thousands of successful businesses leveraging BizFlow to optimize operations and accelerate growth.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -344,7 +344,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               size="lg"
               className="text-lg px-8 py-4 bg-primary hover:bg-primary/90"
             >
-              Start Your Free Trial
+              Launch Your Business Transformation
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button 
@@ -352,12 +352,12 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               size="lg"
               className="text-lg px-8 py-4"
             >
-              Schedule a Demo
+              Request a Personalized Demo
             </Button>
           </div>
 
           <p className="text-sm text-muted-foreground mt-6">
-            No credit card required • Free 14-day trial • Cancel anytime
+            No commitment required • Risk-free 14-day experience • Cancel anytime
           </p>
         </div>
       </section>
