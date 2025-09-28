@@ -64,7 +64,57 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 sm:p-6">
+    <div className="min-h-screen bg-background p-4 sm:p-6 pb-20 md:pb-6">
+      {/* Mobile Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 md:hidden">
+        <div className="grid grid-cols-5 gap-1 p-2">
+          <button
+            onClick={() => setActiveTab("overview")}
+            className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
+              activeTab === "overview" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+            }`}
+          >
+            <BarChart3 className="w-4 h-4 mb-1" />
+            <span>Overview</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("bookings")}
+            className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
+              activeTab === "bookings" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+            }`}
+          >
+            <Calendar className="w-4 h-4 mb-1" />
+            <span>Bookings</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("services")}
+            className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
+              activeTab === "services" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+            }`}
+          >
+            <Scissors className="w-4 h-4 mb-1" />
+            <span>Services</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("calendar")}
+            className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
+              activeTab === "calendar" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+            }`}
+          >
+            <Calendar className="w-4 h-4 mb-1" />
+            <span>Calendar</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("settings")}
+            className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
+              activeTab === "settings" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+            }`}
+          >
+            <Settings className="w-4 h-4 mb-1" />
+            <span>Settings</span>
+          </button>
+        </div>
+      </div>
       <div className="max-w-7xl mx-auto">
         <div className="mb-6 sm:mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
