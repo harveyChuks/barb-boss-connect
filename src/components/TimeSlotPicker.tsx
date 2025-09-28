@@ -26,23 +26,29 @@ const TimeSlotPicker = ({
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0); // Add refresh key for cache busting
 
-  // DETAILED DEBUG - Check exact data structure and UI logic
-  console.log('🔍 FULL SLOT DATA:', timeSlots);
+  // SUPER VISIBLE DEBUG - Check exact data structure and UI logic
+  console.warn('🚨 TIMESLOTPICKER RENDERING 🚨');
+  console.warn('🔍 FULL SLOT DATA:', timeSlots);
+  console.warn('🔍 TIME SLOTS LENGTH:', timeSlots.length);
   
-  timeSlots.forEach((slot, index) => {
-    const isAvailable = slot.is_available;
-    const formattedTime = formatTime(slot.slot_time);
-    
-    console.log(`🕐 Slot ${index + 1} DETAILED:`, {
-      raw_slot: slot,
-      slot_time: slot.slot_time,
-      is_available: slot.is_available,
-      isAvailable_variable: isAvailable,
-      formatted_time: formattedTime,
-      will_render_as: !isAvailable ? 'RED (booked)' : 'GREEN (available)',
-      condition_check: `!${isAvailable} = ${!isAvailable}`
+  if (timeSlots.length > 0) {
+    timeSlots.forEach((slot, index) => {
+      const isAvailable = slot.is_available;
+      const formattedTime = formatTime(slot.slot_time);
+      
+      console.warn(`🕐 Slot ${index + 1} DETAILED:`, {
+        raw_slot: slot,
+        slot_time: slot.slot_time,
+        is_available: slot.is_available,
+        isAvailable_variable: isAvailable,
+        formatted_time: formattedTime,
+        will_render_as: !isAvailable ? 'RED (booked)' : 'GREEN (available)',
+        condition_check: `!${isAvailable} = ${!isAvailable}`
+      });
     });
-  });
+  } else {
+    console.warn('🚨 NO TIME SLOTS TO RENDER');
+  }
 
   // Auto-refresh every 30 seconds to keep availability current
   useEffect(() => {
