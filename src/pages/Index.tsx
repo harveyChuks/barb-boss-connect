@@ -371,7 +371,7 @@ const Index = () => {
       {/* Mobile Bottom Navigation - Only for authenticated business owners */}
       {isAuthenticated && userBusiness && (
         <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 md:hidden">
-          <div className="grid grid-cols-4 gap-1 p-2">
+          <div className="grid grid-cols-3 gap-1 p-2">
             <button
               onClick={() => navigate('/dashboard')}
               className="flex flex-col items-center py-3 px-2 rounded-lg text-xs text-foreground hover:bg-accent"
@@ -392,13 +392,6 @@ const Index = () => {
             >
               <Users className="w-5 h-5 mb-1" style={{ color: '#39FF14' }} />
               <span>Add Client</span>
-            </button>
-            <button
-              onClick={() => navigate('/discovery')}
-              className="flex flex-col items-center py-3 px-2 rounded-lg text-xs text-foreground hover:bg-accent"
-            >
-              <MapPin className="w-5 h-5 mb-1" style={{ color: '#39FF14' }} />
-              <span>Discover</span>
             </button>
           </div>
         </div>
