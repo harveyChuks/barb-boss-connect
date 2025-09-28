@@ -435,26 +435,29 @@ const ReportsAnalytics = () => {
             </CardHeader>
             <CardContent>
               <ChartContainer config={chartConfig}>
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart data={revenueData}>
+                <ResponsiveContainer width="100%" height={300} className="sm:h-[400px]">
+                  <BarChart data={revenueData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                     <XAxis 
                       dataKey="date" 
                       stroke="#9ca3af"
-                      tick={{ fill: '#9ca3af' }}
+                      tick={{ fill: '#9ca3af', fontSize: 12 }}
+                      className="text-xs sm:text-sm"
                     />
                     <YAxis 
                       yAxisId="revenue"
                       orientation="left"
                       stroke="#9ca3af"
-                      tick={{ fill: '#9ca3af' }}
+                      tick={{ fill: '#9ca3af', fontSize: 12 }}
                       tickFormatter={(value) => `$${value}`}
+                      className="text-xs sm:text-sm"
                     />
                     <YAxis 
                       yAxisId="bookings"
                       orientation="right"
                       stroke="#9ca3af"
-                      tick={{ fill: '#9ca3af' }}
+                      tick={{ fill: '#9ca3af', fontSize: 12 }}
+                      className="text-xs sm:text-sm"
                     />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <Bar 
@@ -463,6 +466,7 @@ const ReportsAnalytics = () => {
                       fill="#39FF14" 
                       name="Revenue"
                       radius={[4, 4, 0, 0]}
+                      minPointSize={2}
                     />
                     <Line 
                       yAxisId="bookings"
