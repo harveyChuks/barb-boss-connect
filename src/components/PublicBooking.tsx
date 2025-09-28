@@ -644,7 +644,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   </div>
                 </div>
                 
-                {selectedDate && business && formData.selected_services.length > 0 && (
+                {selectedDate && business && (
                   <div className="space-y-3">
                     <Label className="text-white font-medium">
                       Available Times for {format(selectedDate, 'MMM d, yyyy')}
@@ -652,9 +652,11 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                     <TimeSlotPicker
                       businessId={business.id}
                       date={format(selectedDate, 'yyyy-MM-dd')}
-                      durationMinutes={services
-                        .filter(s => formData.selected_services.includes(s.id))
-                        .reduce((sum, service) => sum + service.duration_minutes, 0) || 60}
+                      durationMinutes={formData.selected_services.length > 0 
+                        ? services
+                            .filter(s => formData.selected_services.includes(s.id))
+                            .reduce((sum, service) => sum + service.duration_minutes, 0)
+                        : 60} // Default to 60 minutes if no services selected
                       staffId={formData.staff_id || undefined}
                       selectedTime={selectedTime}
                       onTimeSelect={setSelectedTime}
