@@ -407,8 +407,31 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/lovable-uploads/bce9e11a-cca6-47fb-9dc5-04383b2359db.png" 
+                alt="BizFlow Logo" 
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
+              />
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-white">
+                  {business?.name || "BizFlow"}
+                </h1>
+                <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block">
+                  Book your appointment
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto pt-16 md:pt-0 p-6">
         {/* Business Header */}
         <Card className="bg-slate-800/50 border-slate-700 mb-8">
           <CardContent className="p-8">
