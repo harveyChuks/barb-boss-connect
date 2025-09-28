@@ -467,7 +467,7 @@ const ReportsAnalytics = () => {
                       name="Revenue"
                       radius={[4, 4, 0, 0]}
                       minPointSize={2}
-                      barSize={60}
+                      barSize={140}
                     />
                     <Line 
                       yAxisId="bookings"
