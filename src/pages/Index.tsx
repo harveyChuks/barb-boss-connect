@@ -583,9 +583,11 @@ const Index = () => {
                 className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
               />
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-white">BizFlow</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-white">
+                  {userBusiness?.name || "BizFlow"}
+                </h1>
                 {userBusiness && (
-                  <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block">{userBusiness.name}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block">Business Dashboard</p>
                 )}
               </div>
             </div>
