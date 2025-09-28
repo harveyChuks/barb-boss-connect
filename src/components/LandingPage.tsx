@@ -78,9 +78,9 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 bg-slate-900">
+      <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Trust Badge */}
           <div className="text-center mb-8">
@@ -93,7 +93,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             {/* Left Column - Content */}
             <div className="space-y-8">
               <div>
-                <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
+                <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
                   We will Transform your Business even Better
                 </h1>
                 <div className="mt-4 h-16 overflow-hidden">
@@ -101,7 +101,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                     {animatedText}
                   </h2>
                 </div>
-                <p className="text-xl text-gray-300 mt-6 max-w-lg">
+                <p className="text-xl text-muted-foreground mt-6 max-w-lg">
                   BizFlow empowers service businesses to automate scheduling, enhance client relationships, 
                   and accelerate growth — all from one comprehensive platform.
                 </p>
@@ -111,27 +111,27 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-white font-medium">Smart Scheduling</span>
+                  <span className="text-foreground font-medium">Smart Scheduling</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-white font-medium">Business Intelligence</span>
+                  <span className="text-foreground font-medium">Business Intelligence</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-white font-medium">Professional Presence</span>
+                  <span className="text-foreground font-medium">Professional Presence</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-white font-medium">Time Optimization</span>
+                  <span className="text-foreground font-medium">Time Optimization</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-white font-medium">Growth Tools</span>
+                  <span className="text-foreground font-medium">Growth Tools</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-white font-medium">Brand Excellence</span>
+                  <span className="text-foreground font-medium">Brand Excellence</span>
                 </div>
               </div>
               
@@ -147,16 +147,16 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               {/* Customer Avatars and Rating */}
               <div className="flex items-center gap-4">
                 <div className="flex -space-x-2">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 border-2 border-slate-700 flex items-center justify-center text-white text-sm font-bold">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 border-2 border-background flex items-center justify-center text-white text-sm font-bold">
                     S
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-blue-500 border-2 border-slate-700 flex items-center justify-center text-white text-sm font-bold">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-blue-500 border-2 border-background flex items-center justify-center text-white text-sm font-bold">
                     M
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-red-500 border-2 border-slate-700 flex items-center justify-center text-white text-sm font-bold">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-red-500 border-2 border-background flex items-center justify-center text-white text-sm font-bold">
                     L
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 border-2 border-slate-700 flex items-center justify-center text-white text-sm font-bold">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 border-2 border-background flex items-center justify-center text-white text-sm font-bold">
                     +
                   </div>
                 </div>
@@ -166,7 +166,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                       <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <p className="text-sm text-gray-400">4.9/5 from 500+ business owners</p>
+                  <p className="text-sm text-muted-foreground">4.9/5 from 500+ business owners</p>
                 </div>
               </div>
             </div>
@@ -232,39 +232,39 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
       
       {/* Revenue Stats Section */}
-      <section className="py-16 px-4 bg-slate-800">
+      <section className="py-16 px-4 bg-accent/5">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center gap-4 mb-4">
             <DollarSign className="h-8 w-8 text-primary" />
-            <div className="text-4xl md:text-5xl font-bold text-white">₦15,750,000</div>
+            <div className="text-4xl md:text-5xl font-bold text-foreground">₦15,750,000</div>
           </div>
-          <p className="text-lg text-gray-400 font-medium tracking-wider uppercase">
+          <p className="text-lg text-muted-foreground font-medium tracking-wider uppercase">
             REVENUE GENERATED BY OUR PLATFORM USERS
           </p>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 bg-slate-900">
+      <section className="py-20 px-4 bg-accent/5">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               The Complete Business Solution You Need to <span className="text-primary">{animatedText}</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Comprehensive tools designed specifically for service-based businesses to excel in today's competitive marketplace.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="bg-slate-800 border-slate-700 hover:shadow-lg transition-shadow">
+              <Card key={index} className="bg-card border-border hover:shadow-lg transition-shadow">
                 <CardContent className="p-6 text-center">
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <feature.icon className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
-                  <p className="text-gray-300">{feature.description}</p>
+                  <h3 className="text-xl font-semibold text-foreground mb-3">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -273,13 +273,13 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 px-4 bg-slate-800">
+      <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Why BizFlow Stands Apart
             </h2>
-            <p className="text-xl text-gray-300">
+            <p className="text-xl text-muted-foreground">
               Experience the advantages that drive business transformation
             </p>
           </div>
@@ -288,7 +288,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             {benefits.map((benefit, index) => (
               <div key={index} className="flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
-                <p className="text-white text-lg">{benefit}</p>
+                <p className="text-foreground text-lg">{benefit}</p>
               </div>
             ))}
           </div>
@@ -296,30 +296,30 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 px-4 bg-slate-900">
+      <section className="py-20 px-4 bg-accent/5">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Success Stories from Business Leaders
             </h2>
-            <p className="text-xl text-gray-300">
+            <p className="text-xl text-muted-foreground">
               Discover how BizFlow transforms business operations
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-slate-800 border-slate-700">
+              <Card key={index} className="bg-card border-border">
                 <CardContent className="p-6">
                   <div className="flex mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <p className="text-white mb-4 italic">"{testimonial.text}"</p>
+                  <p className="text-foreground mb-4 italic">"{testimonial.text}"</p>
                   <div>
-                    <p className="font-semibold text-white">{testimonial.name}</p>
-                    <p className="text-sm text-gray-400">{testimonial.business}</p>
+                    <p className="font-semibold text-foreground">{testimonial.name}</p>
+                    <p className="text-sm text-muted-foreground">{testimonial.business}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -329,12 +329,12 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-slate-800">
+      <section className="py-20 px-4 bg-primary/10">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Ready to Revolutionize Your Business?
           </h2>
-          <p className="text-xl text-gray-300 mb-8">
+          <p className="text-xl text-muted-foreground mb-8">
             Join the thousands of successful businesses leveraging BizFlow to optimize operations and accelerate growth.
           </p>
           
@@ -350,13 +350,13 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <Button 
               variant="outline" 
               size="lg"
-              className="text-lg px-8 py-4 border-gray-600 text-white hover:bg-slate-700"
+              className="text-lg px-8 py-4"
             >
               Request a Personalized Demo
             </Button>
           </div>
 
-          <p className="text-sm text-gray-400 mt-6">
+          <p className="text-sm text-muted-foreground mt-6">
             No commitment required • Risk-free 14-day experience • Cancel anytime
           </p>
         </div>
