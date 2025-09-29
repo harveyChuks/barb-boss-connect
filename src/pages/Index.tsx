@@ -598,17 +598,11 @@ const Index = () => {
                 <Button 
                   onClick={() => setShowAuthModal(true)}
                   size="sm"
-                  className="text-sm px-4 py-2 bg-primary hover:bg-primary/90"
+                  className="text-xs md:text-sm px-2 md:px-4 py-1 md:py-2 h-7 md:h-9 bg-primary hover:bg-primary/90"
                 >
-                  Get Started
+                  <span className="hidden md:inline">Get Started</span>
+                  <span className="md:hidden">Start</span>
                   <ArrowRight className="ml-1 h-3 w-3" />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="text-sm px-4 py-2"
-                >
-                  Learn More
                 </Button>
               </div>
             )}
