@@ -241,11 +241,11 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             {features.map((feature, index) => (
               <Card key={index} className="bg-card border-border hover:shadow-lg transition-shadow">
                 <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-foreground/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-foreground" />
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-card-foreground/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-card-foreground" />
                   </div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-3">{feature.title}</h3>
-                  <p className="text-sm sm:text-base text-foreground">{feature.description}</p>
+                  <h3 className="text-lg sm:text-xl font-semibold text-card-foreground mb-3">{feature.title}</h3>
+                  <p className="text-sm sm:text-base text-card-foreground">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -430,10 +430,10 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                       <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <p className="text-foreground mb-4 italic">"{testimonial.text}"</p>
+                  <p className="text-card-foreground mb-4 italic">"{testimonial.text}"</p>
                   <div>
-                    <p className="font-semibold text-foreground">{testimonial.name}</p>
-                    <p className="text-sm text-foreground">{testimonial.business}</p>
+                    <p className="font-semibold text-card-foreground">{testimonial.name}</p>
+                    <p className="text-sm text-card-foreground/80">{testimonial.business}</p>
                   </div>
                 </CardContent>
               </Card>
