@@ -464,7 +464,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <Button 
               variant="outline" 
               size="lg"
-              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 flex-1 sm:flex-none"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 flex-1 sm:flex-none bg-foreground text-background hover:bg-foreground/90 border-foreground"
             >
               Request a Personalized Demo
             </Button>
