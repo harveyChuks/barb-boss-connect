@@ -59,6 +59,8 @@
 
     --primary: 215.4 16.3% 46.9%;
     --primary-foreground: 210 40% 98%;
+    
+    --vivid-green: 120 100% 55%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 215.4 16.3% 26.9%;
@@ -114,6 +116,8 @@
     --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 127 20% 18%;
     --sidebar-ring: 120 100% 55%;
+    
+    --vivid-green: 120 100% 55%;
   }
 }
 
