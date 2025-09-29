@@ -176,7 +176,14 @@ const AdminDashboard = () => {
             </div>
             <div className="flex gap-2">
               <Button
-                onClick={() => navigate('/')}
+                onClick={() => {
+                  // Sign out and then navigate to landing page
+                  const handleBackToLanding = async () => {
+                    await supabase.auth.signOut();
+                    navigate('/');
+                  };
+                  handleBackToLanding();
+                }}
                 variant="outline"
                 size="sm"
                 className="border-border text-foreground hover:bg-muted"
