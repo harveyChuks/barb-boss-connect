@@ -31,7 +31,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
       if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
         return savedTheme;
       }
-      return 'light';
+      return 'dark';
     } catch (error) {
       console.error('Error reading theme from localStorage:', error);
       return 'dark';
