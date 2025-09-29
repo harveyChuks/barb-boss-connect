@@ -112,7 +112,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                   We will Transform your Business even Better
                 </h1>
                 <div className="mt-3 sm:mt-4 h-10 sm:h-12 md:h-14 lg:h-16 overflow-hidden">
-                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold transition-all duration-500 ease-in-out" style={{ color: 'hsl(var(--vivid-green))' }}>
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold transition-all duration-500 ease-in-out text-green-500">
                     {animatedText}
                   </h2>
                 </div>
@@ -216,7 +216,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       <section className="py-12 sm:py-16 px-4 bg-accent/5">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-4">
-            <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+            <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-green-500" />
             <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">₦15,750,000</div>
           </div>
           <p className="text-sm sm:text-base lg:text-lg text-foreground font-medium tracking-wider uppercase">
@@ -230,7 +230,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              The Complete Business Solution You Need to <span className="block sm:inline" style={{ color: 'hsl(var(--vivid-green))' }}>{animatedText}</span>
+              The Complete Business Solution You Need to <span className="block sm:inline text-green-500">{animatedText}</span>
             </h2>
             <p className="text-base sm:text-lg lg:text-xl text-foreground max-w-2xl mx-auto">
               Comprehensive tools designed specifically for service-based businesses to excel in today's competitive marketplace.
@@ -242,7 +242,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <Card key={index} className="bg-card border-border hover:shadow-lg transition-shadow">
                 <CardContent className="p-4 sm:p-6 text-center">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 bg-card-foreground/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-card-foreground" />
+                    <feature.icon className="w-6 h-6 sm:w-8 sm:h-8" style={{ color: 'hsl(var(--vivid-green))' }} />
                   </div>
                   <h3 className="text-lg sm:text-xl font-semibold text-card-foreground mb-3">{feature.title}</h3>
                   <p className="text-sm sm:text-base text-card-foreground">{feature.description}</p>
@@ -259,7 +259,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             <div className="space-y-4 sm:space-y-6 order-2 lg:order-1">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4">
-                <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-foreground flex-shrink-0" />
+                <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 flex-shrink-0" />
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
                   Complete Business Overview at Your Fingertips
                 </h3>
@@ -317,7 +317,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             </div>
             <div className="space-y-4 sm:space-y-6 lg:order-2">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4">
-                <QrCode className="h-6 w-6 sm:h-8 sm:w-8 text-foreground flex-shrink-0" />
+                <QrCode className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 flex-shrink-0" />
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
                   Professional Online Presence & Service Management
                 </h3>
@@ -351,7 +351,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             <div className="space-y-4 sm:space-y-6 order-2 lg:order-1">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4">
-                <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-foreground flex-shrink-0" />
+                <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 flex-shrink-0" />
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
                   Effortless Appointment Management
                 </h3>
