@@ -92,6 +92,31 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 bg-card border-b border-border backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-sm">B</span>
+              </div>
+              <span className="text-lg font-bold text-card-foreground">BizFlow</span>
+            </div>
+            <nav className="hidden md:flex items-center gap-6">
+              <a href="#features" className="text-card-foreground hover:text-primary transition-colors">Features</a>
+              <a href="#benefits" className="text-card-foreground hover:text-primary transition-colors">Benefits</a>
+              <a href="#testimonials" className="text-card-foreground hover:text-primary transition-colors">Reviews</a>
+            </nav>
+            <Button 
+              onClick={onGetStarted}
+              size="sm"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              Get Started
+            </Button>
+          </div>
+        </div>
+      </header>
 
       {/* Hero Section */}
       <section className="relative py-12 sm:py-16 lg:py-20 px-4">
