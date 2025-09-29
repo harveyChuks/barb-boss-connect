@@ -204,7 +204,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <div className="relative flex justify-center lg:justify-end">
               <div className="relative">
                 {/* Main Phone - Dashboard */}
-                <div className="relative z-10">
+                <div className="relative z-10 transform rotate-[-8deg] hover:rotate-[-5deg] transition-transform duration-300">
                   <img 
                     src={dashboardMockup} 
                     alt="BizFlow Dashboard on iPhone showing appointments, stats, and quick actions"
@@ -213,7 +213,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 </div>
                 
                 {/* Secondary Phone - Analytics positioned behind */}
-                <div className="absolute -right-8 top-16 z-0">
+                <div className="absolute -right-8 top-16 z-0 transform rotate-[12deg] hover:rotate-[8deg] transition-transform duration-300">
                   <img 
                     src={analyticsMockup} 
                     alt="BizFlow Analytics showing business reports and revenue"
@@ -301,12 +301,12 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <img 
                 src={reportsMockup} 
                 alt="Business reports showing revenue analytics"
-                className="w-64 h-auto rounded-[2.5rem] shadow-xl"
+                className="w-64 h-auto rounded-[2.5rem] shadow-xl transform rotate-[-6deg] hover:rotate-[-3deg] transition-transform duration-300"
               />
               <img 
                 src={performanceMockup} 
                 alt="Service performance analytics with charts"
-                className="w-64 h-auto rounded-[2.5rem] shadow-xl"
+                className="w-64 h-auto rounded-[2.5rem] shadow-xl transform rotate-[8deg] hover:rotate-[5deg] transition-transform duration-300"
               />
             </div>
           </div>
@@ -321,12 +321,12 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <img 
                 src={profileMockup} 
                 alt="Business profile with QR code for easy booking"
-                className="w-64 h-auto rounded-[2.5rem] shadow-xl"
+                className="w-64 h-auto rounded-[2.5rem] shadow-xl transform rotate-[5deg] hover:rotate-[2deg] transition-transform duration-300"
               />
               <img 
                 src={servicesMockup} 
                 alt="Services management with pricing and duration"
-                className="w-64 h-auto rounded-[2.5rem] shadow-xl"
+                className="w-64 h-auto rounded-[2.5rem] shadow-xl transform rotate-[-10deg] hover:rotate-[-7deg] transition-transform duration-300"
               />
             </div>
             <div className="space-y-6 lg:order-2">
@@ -393,7 +393,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <img 
                 src={bookingsMockup} 
                 alt="Bookings management showing appointment list and filtering"
-                className="w-72 h-auto rounded-[2.5rem] shadow-xl"
+                className="w-72 h-auto rounded-[2.5rem] shadow-xl transform rotate-[-4deg] hover:rotate-[-1deg] transition-transform duration-300"
               />
             </div>
           </div>
