@@ -409,15 +409,24 @@ const ReportsAnalytics = () => {
 
       {/* Charts */}
       <Tabs defaultValue="revenue" className="space-y-6">
-        <div className="overflow-x-auto pb-2">
-          <TabsList className="bg-card border-border inline-flex w-auto min-w-full">
-            <TabsTrigger value="revenue" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2">
+        <div className="overflow-x-auto scrollbar-hide">
+          <TabsList className="bg-card border-border inline-flex w-max">
+            <TabsTrigger 
+              value="revenue" 
+              className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2 flex-shrink-0"
+            >
               Revenue Trends
             </TabsTrigger>
-            <TabsTrigger value="services" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2">
+            <TabsTrigger 
+              value="services" 
+              className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2 flex-shrink-0"
+            >
               Service Performance
             </TabsTrigger>
-            <TabsTrigger value="staff" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2">
+            <TabsTrigger 
+              value="staff" 
+              className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2 flex-shrink-0"
+            >
               Staff Performance
             </TabsTrigger>
           </TabsList>
@@ -492,16 +501,16 @@ const ReportsAnalytics = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
-                <div className="w-full h-[400px] flex items-center justify-center">
-                  <ChartContainer config={chartConfig}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart margin={{ top: 40, right: 40, bottom: 40, left: 40 }}>
+                <div className="w-full" style={{ height: '400px' }}>
+                  <ChartContainer config={chartConfig} className="w-full h-full">
+                    <ResponsiveContainer width="100%" height={400}>
+                      <PieChart>
                         <Pie
                           data={serviceData}
                           cx="50%"
                           cy="50%"
                           innerRadius={40}
-                          outerRadius={80}
+                          outerRadius={120}
                           paddingAngle={5}
                           dataKey="revenue"
                         >
