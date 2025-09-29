@@ -157,11 +157,10 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
       if (workPicturesError) {
         console.error('Error fetching work pictures:', workPicturesError);
-        // Use mock data if error or no pictures
-        setWorkPictures(mockPictures);
+        setWorkPictures([]);
       } else {
-        // Use real pictures or mock data if none exist
-        setWorkPictures(workPicturesData?.length > 0 ? workPicturesData : mockPictures);
+        // Only show actual uploaded pictures
+        setWorkPictures(workPicturesData || []);
       }
     } catch (error) {
       console.error('Error fetching business data:', error);
@@ -170,8 +169,8 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         description: "The business you're looking for doesn't exist or is no longer active.",
         variant: "destructive",
       });
-      // Show mock pictures even on error
-      setWorkPictures(mockPictures);
+      // Show empty work pictures on error
+      setWorkPictures([]);
     } finally {
       setLoading(false);
     }
