@@ -98,7 +98,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         <div className="max-w-7xl mx-auto">
           {/* Trust Badge */}
           <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-            <p className="text-xs sm:text-sm font-semibold text-primary tracking-wider uppercase">
+            <p className="text-xs sm:text-sm font-semibold text-green-500 tracking-wider uppercase">
               POWERING 500+ SUCCESSFUL BUSINESSES
             </p>
           </div>
