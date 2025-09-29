@@ -409,15 +409,15 @@ const ReportsAnalytics = () => {
 
       {/* Charts */}
       <Tabs defaultValue="revenue" className="space-y-6">
-        <div className="overflow-x-auto">
-          <TabsList className="bg-card border-border flex w-full min-w-fit">
-            <TabsTrigger value="revenue" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-4">
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="bg-card border-border inline-flex w-auto min-w-full">
+            <TabsTrigger value="revenue" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2">
               Revenue Trends
             </TabsTrigger>
-            <TabsTrigger value="services" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-4">
+            <TabsTrigger value="services" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2">
               Service Performance
             </TabsTrigger>
-            <TabsTrigger value="staff" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-4">
+            <TabsTrigger value="staff" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2">
               Staff Performance
             </TabsTrigger>
           </TabsList>
@@ -492,40 +492,42 @@ const ReportsAnalytics = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
-                <ChartContainer config={chartConfig}>
-                  <ResponsiveContainer width="100%" height={350} className="min-h-[350px]">
-                    <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                      <Pie
-                        data={serviceData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={40}
-                        outerRadius={100}
-                        paddingAngle={5}
-                        dataKey="revenue"
-                      >
-                        {serviceData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <ChartTooltip 
-                        content={({ active, payload }) => {
-                          if (active && payload && payload.length) {
-                            const data = payload[0].payload;
-                            return (
-                              <div className="bg-slate-800 border border-slate-600 rounded p-2">
-                                <p className="text-white font-medium">{data.name}</p>
-                                <p className="text-[#39FF14]">Revenue: {formatCurrency(data.revenue)}</p>
-                                <p className="text-blue-400">Bookings: {data.count}</p>
-                              </div>
-                            );
-                          }
-                          return null;
-                        }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
+                <div className="w-full h-[400px] flex items-center justify-center">
+                  <ChartContainer config={chartConfig}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart margin={{ top: 40, right: 40, bottom: 40, left: 40 }}>
+                        <Pie
+                          data={serviceData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={40}
+                          outerRadius={80}
+                          paddingAngle={5}
+                          dataKey="revenue"
+                        >
+                          {serviceData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <ChartTooltip 
+                          content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                              const data = payload[0].payload;
+                              return (
+                                <div className="bg-slate-800 border border-slate-600 rounded p-2">
+                                  <p className="text-white font-medium">{data.name}</p>
+                                  <p className="text-[#39FF14]">Revenue: {formatCurrency(data.revenue)}</p>
+                                  <p className="text-blue-400">Bookings: {data.count}</p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
+                </div>
               </CardContent>
             </Card>
 
