@@ -112,8 +112,8 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Trust Badge */}
-          <div className="text-center mb-8">
-            <p className="text-sm font-semibold text-primary tracking-wider uppercase">
+          <div className="text-center mb-4 sm:mb-6 lg:mb-8">
+            <p className="text-xs sm:text-sm font-semibold text-primary tracking-wider uppercase">
               POWERING 500+ SUCCESSFUL BUSINESSES
             </p>
           </div>
@@ -122,45 +122,45 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             {/* Left Column - Content */}
             <div className="space-y-8">
               <div>
-                <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
+                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-foreground leading-tight">
                   We will Transform your Business even Better
                 </h1>
-                <div className="mt-4 h-16 overflow-hidden">
-                  <h2 className="text-2xl md:text-3xl font-bold text-primary transition-all duration-500 ease-in-out">
+                <div className="mt-4 h-12 sm:h-14 lg:h-16 overflow-hidden">
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary transition-all duration-500 ease-in-out">
                     {animatedText}
                   </h2>
                 </div>
-                <p className="text-xl text-muted-foreground mt-6 max-w-lg">
+                <p className="text-lg sm:text-xl text-muted-foreground mt-6 max-w-lg">
                   BizFlow empowers service businesses to automate scheduling, enhance client relationships, 
                   and accelerate growth — all from one comprehensive platform.
                 </p>
               </div>
               
               {/* Feature Checklist */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Smart Scheduling</span>
+                  <span className="text-sm sm:text-base text-foreground font-medium">Smart Scheduling</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Business Intelligence</span>
+                  <span className="text-sm sm:text-base text-foreground font-medium">Business Intelligence</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Professional Presence</span>
+                  <span className="text-sm sm:text-base text-foreground font-medium">Professional Presence</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Time Optimization</span>
+                  <span className="text-sm sm:text-base text-foreground font-medium">Time Optimization</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Growth Tools</span>
+                  <span className="text-sm sm:text-base text-foreground font-medium">Growth Tools</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-foreground font-medium">Brand Excellence</span>
+                  <span className="text-sm sm:text-base text-foreground font-medium">Brand Excellence</span>
                 </div>
               </div>
               
@@ -208,16 +208,16 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                   <img 
                     src={dashboardMockup} 
                     alt="BizFlow Dashboard on iPhone showing appointments, stats, and quick actions"
-                    className="w-72 h-auto rounded-[3rem] shadow-2xl"
+                    className="w-48 sm:w-60 lg:w-72 h-auto rounded-[2rem] sm:rounded-[2.5rem] lg:rounded-[3rem] shadow-2xl"
                   />
                 </div>
                 
                 {/* Secondary Phone - Analytics positioned behind */}
-                <div className="absolute -right-8 top-16 z-0 transform rotate-[12deg] hover:rotate-[8deg] transition-transform duration-300">
+                <div className="absolute -right-4 sm:-right-6 lg:-right-8 top-12 sm:top-14 lg:top-16 z-0 transform rotate-[12deg] hover:rotate-[8deg] transition-transform duration-300">
                   <img 
                     src={analyticsMockup} 
                     alt="BizFlow Analytics showing business reports and revenue"
-                    className="w-56 h-auto rounded-[2.5rem] shadow-xl opacity-80"
+                    className="w-36 sm:w-44 lg:w-56 h-auto rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl opacity-80"
                   />
                 </div>
               </div>
@@ -297,16 +297,16 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 </div>
               </div>
             </div>
-            <div className="flex gap-6 justify-center">
+            <div className="flex gap-3 sm:gap-4 lg:gap-6 justify-center">
               <img 
                 src={reportsMockup} 
                 alt="Business reports showing revenue analytics"
-                className="w-64 h-auto rounded-[2.5rem] shadow-xl transform rotate-[-6deg] hover:rotate-[-3deg] transition-transform duration-300"
+                className="w-36 sm:w-48 lg:w-64 h-auto rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[-6deg] hover:rotate-[-3deg] transition-transform duration-300"
               />
               <img 
                 src={performanceMockup} 
                 alt="Service performance analytics with charts"
-                className="w-64 h-auto rounded-[2.5rem] shadow-xl transform rotate-[8deg] hover:rotate-[5deg] transition-transform duration-300"
+                className="w-36 sm:w-48 lg:w-64 h-auto rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[8deg] hover:rotate-[5deg] transition-transform duration-300"
               />
             </div>
           </div>
@@ -317,16 +317,16 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       <section className="py-20 px-4 bg-accent/5">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="flex gap-6 justify-center lg:order-1">
+            <div className="flex gap-3 sm:gap-4 lg:gap-6 justify-center lg:order-1">
               <img 
                 src={profileMockup} 
                 alt="Business profile with QR code for easy booking"
-                className="w-64 h-auto rounded-[2.5rem] shadow-xl transform rotate-[5deg] hover:rotate-[2deg] transition-transform duration-300"
+                className="w-36 sm:w-48 lg:w-64 h-auto rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[5deg] hover:rotate-[2deg] transition-transform duration-300"
               />
               <img 
                 src={servicesMockup} 
                 alt="Services management with pricing and duration"
-                className="w-64 h-auto rounded-[2.5rem] shadow-xl transform rotate-[-10deg] hover:rotate-[-7deg] transition-transform duration-300"
+                className="w-36 sm:w-48 lg:w-64 h-auto rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[-10deg] hover:rotate-[-7deg] transition-transform duration-300"
               />
             </div>
             <div className="space-y-6 lg:order-2">
@@ -393,7 +393,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <img 
                 src={bookingsMockup} 
                 alt="Bookings management showing appointment list and filtering"
-                className="w-72 h-auto rounded-[2.5rem] shadow-xl transform rotate-[-4deg] hover:rotate-[-1deg] transition-transform duration-300"
+                className="w-48 sm:w-60 lg:w-72 h-auto rounded-[2rem] sm:rounded-[2.5rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[-4deg] hover:rotate-[-1deg] transition-transform duration-300"
               />
             </div>
           </div>
