@@ -1,8 +1,16 @@
-import { ArrowRight, Calendar, Users, BarChart3, Clock, CheckCircle, Star, TrendingUp, DollarSign } from "lucide-react";
+import { ArrowRight, Calendar, Users, BarChart3, Clock, CheckCircle, Star, TrendingUp, DollarSign, QrCode, Scissors, TrendingDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePageVisitTracker } from "@/hooks/usePageVisitTracker";
 import { useState, useEffect } from "react";
+import dashboardMockup from "@/assets/mockup-dashboard.png";
+import analyticsMockup from "@/assets/mockup-analytics.png";
+import profileMockup from "@/assets/mockup-profile.png";
+import bookingsMockup from "@/assets/mockup-bookings.png";
+import servicesMockup from "@/assets/mockup-services.png";
+import chartsMockup from "@/assets/mockup-charts.png";
+import reportsMockup from "@/assets/mockup-reports.png";
+import performanceMockup from "@/assets/mockup-performance.png";
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -195,56 +203,22 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             {/* Right Column - Phone Mockups */}
             <div className="relative flex justify-center lg:justify-end">
               <div className="relative">
-                {/* Main Phone */}
-                <div className="w-72 h-[580px] bg-gradient-to-b from-slate-800 to-slate-900 rounded-[3rem] p-2 shadow-2xl">
-                  <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden relative">
-                    {/* Phone Header */}
-                    <div className="bg-primary h-24 flex items-center justify-center">
-                      <div className="text-white font-bold text-lg">BizFlow Dashboard</div>
-                    </div>
-                    {/* Dashboard Content */}
-                    <div className="p-6 space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-green-50 p-4 rounded-lg">
-                          <div className="text-2xl font-bold text-green-600">42</div>
-                          <div className="text-sm text-gray-600">Today's Bookings</div>
-                        </div>
-                        <div className="bg-blue-50 p-4 rounded-lg">
-                          <div className="text-2xl font-bold text-blue-600">₦87k</div>
-                          <div className="text-sm text-gray-600">Revenue</div>
-                        </div>
-                      </div>
-                      {/* Chart representation */}
-                      <div className="bg-gray-50 h-32 rounded-lg flex items-end justify-around p-4">
-                        <div className="bg-primary w-6 h-16 rounded-t"></div>
-                        <div className="bg-primary w-6 h-20 rounded-t"></div>
-                        <div className="bg-primary w-6 h-12 rounded-t"></div>
-                        <div className="bg-primary w-6 h-24 rounded-t"></div>
-                        <div className="bg-primary w-6 h-18 rounded-t"></div>
-                      </div>
-                    </div>
-                  </div>
+                {/* Main Phone - Dashboard */}
+                <div className="relative z-10">
+                  <img 
+                    src={dashboardMockup} 
+                    alt="BizFlow Dashboard on iPhone showing appointments, stats, and quick actions"
+                    className="w-72 h-auto rounded-[3rem] shadow-2xl"
+                  />
                 </div>
                 
-                {/* Secondary Phone - Smaller, positioned behind */}
-                <div className="absolute -right-8 top-16 w-56 h-[450px] bg-gradient-to-b from-slate-700 to-slate-800 rounded-[2.5rem] p-2 shadow-xl opacity-80">
-                  <div className="w-full h-full bg-white rounded-[2rem] overflow-hidden">
-                    <div className="bg-accent h-16 flex items-center justify-center">
-                      <div className="text-white font-semibold">Client View</div>
-                    </div>
-                    <div className="p-4">
-                      <div className="text-center">
-                        <div className="text-lg font-semibold mb-2">Book Appointment</div>
-                        <div className="space-y-2">
-                          <div className="bg-gray-100 h-8 rounded"></div>
-                          <div className="bg-gray-100 h-8 rounded"></div>
-                          <div className="bg-primary h-10 rounded text-white flex items-center justify-center text-sm">
-                            Book Now
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                {/* Secondary Phone - Analytics positioned behind */}
+                <div className="absolute -right-8 top-16 z-0">
+                  <img 
+                    src={analyticsMockup} 
+                    alt="BizFlow Analytics showing business reports and revenue"
+                    className="w-56 h-auto rounded-[2.5rem] shadow-xl opacity-80"
+                  />
                 </div>
               </div>
             </div>
@@ -289,6 +263,139 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Dashboard & Analytics Feature Section */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 mb-4">
+                <BarChart3 className="h-8 w-8 text-primary" />
+                <h3 className="text-3xl md:text-4xl font-bold text-foreground">
+                  Complete Business Overview at Your Fingertips
+                </h3>
+              </div>
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                Get real-time insights into your business performance with comprehensive analytics, 
+                revenue tracking, and intelligent business reports that help you make data-driven decisions.
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-foreground">Real-time revenue and booking analytics</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-foreground">Service performance breakdown</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-foreground">Completion rate tracking</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-6 justify-center">
+              <img 
+                src={reportsMockup} 
+                alt="Business reports showing revenue analytics"
+                className="w-64 h-auto rounded-[2.5rem] shadow-xl"
+              />
+              <img 
+                src={performanceMockup} 
+                alt="Service performance analytics with charts"
+                className="w-64 h-auto rounded-[2.5rem] shadow-xl"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Business Profile & Services Section */}
+      <section className="py-20 px-4 bg-accent/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="flex gap-6 justify-center lg:order-1">
+              <img 
+                src={profileMockup} 
+                alt="Business profile with QR code for easy booking"
+                className="w-64 h-auto rounded-[2.5rem] shadow-xl"
+              />
+              <img 
+                src={servicesMockup} 
+                alt="Services management with pricing and duration"
+                className="w-64 h-auto rounded-[2.5rem] shadow-xl"
+              />
+            </div>
+            <div className="space-y-6 lg:order-2">
+              <div className="flex items-center gap-3 mb-4">
+                <QrCode className="h-8 w-8 text-primary" />
+                <h3 className="text-3xl md:text-4xl font-bold text-foreground">
+                  Professional Online Presence & Service Management
+                </h3>
+              </div>
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                Create a professional booking experience for your clients with custom QR codes and links, 
+                while efficiently managing your services, pricing, and business profile.
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-foreground">Custom QR codes for instant booking</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-foreground">Service pricing and duration management</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-foreground">Professional business profile setup</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Booking Management Section */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Calendar className="h-8 w-8 text-primary" />
+                <h3 className="text-3xl md:text-4xl font-bold text-foreground">
+                  Effortless Appointment Management
+                </h3>
+              </div>
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                Streamline your booking process with advanced filtering, search capabilities, 
+                and comprehensive appointment tracking. Manage all your client interactions in one place.
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-foreground">Advanced appointment filtering and search</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-foreground">Real-time booking status updates</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-foreground">Client contact information management</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <img 
+                src={bookingsMockup} 
+                alt="Bookings management showing appointment list and filtering"
+                className="w-72 h-auto rounded-[2.5rem] shadow-xl"
+              />
+            </div>
           </div>
         </div>
       </section>
