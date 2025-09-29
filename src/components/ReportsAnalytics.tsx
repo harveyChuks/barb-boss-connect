@@ -308,11 +308,7 @@ const ReportsAnalytics = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-foreground">Business Reports</h2>
-          <p className="text-muted-foreground">Analyze your business performance and trends</p>
-        </div>
+      <div className="flex justify-end">
         <Select value={dateRange} onValueChange={setDateRange}>
           <SelectTrigger className="w-48 bg-card border-border text-foreground">
             <SelectValue />

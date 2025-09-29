@@ -186,11 +186,7 @@ const StaffManagement = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold text-foreground">Staff Management</h2>
-          <p className="text-muted-foreground">Manage your team members and their information</p>
-        </div>
+      <div className="flex justify-end">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">

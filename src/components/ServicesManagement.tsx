@@ -225,11 +225,7 @@ const ServicesManagement = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold text-foreground">Services Management</h2>
-          <p className="text-muted-foreground">Manage your business services and pricing</p>
-        </div>
+      <div className="flex justify-end">
         <Button onClick={openNewServiceModal} className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <Plus className="w-4 h-4 mr-2" />
           Add Service
