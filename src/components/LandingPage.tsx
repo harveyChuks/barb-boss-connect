@@ -86,26 +86,24 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   ];
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-0">
-      {/* Mobile Quick Actions - Bottom Fixed */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-50 md:hidden">
-        <div className="flex gap-3">
-          <Button 
-            onClick={onGetStarted}
-            size="lg"
-            className="flex-1 text-base px-6 py-3 bg-primary hover:bg-primary/90"
-          >
-            Get Started
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="lg"
-            className="flex-1 text-base px-6 py-3"
-          >
-            Learn More
-          </Button>
-        </div>
+    <div className="min-h-screen bg-background">
+      {/* Top Action Buttons */}
+      <div className="fixed top-4 right-4 z-50 flex gap-2">
+        <Button 
+          onClick={onGetStarted}
+          size="sm"
+          className="text-sm px-4 py-2 bg-primary hover:bg-primary/90"
+        >
+          Get Started
+          <ArrowRight className="ml-1 h-3 w-3" />
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="text-sm px-4 py-2"
+        >
+          Learn More
+        </Button>
       </div>
 
       {/* Hero Section */}
@@ -457,34 +455,34 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-primary/10">
+      <section className="py-16 sm:py-20 px-4 bg-primary/10">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
             Ready to Revolutionize Your Business?
           </h2>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-base sm:text-lg lg:text-xl text-muted-foreground mb-8">
             Join the thousands of successful businesses leveraging BizFlow to optimize operations and accelerate growth.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-2xl mx-auto">
             <Button 
               onClick={onGetStarted}
               size="lg"
-              className="text-lg px-8 py-4 bg-primary hover:bg-primary/90"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-primary hover:bg-primary/90 flex-1 sm:flex-none"
             >
               Launch Your Business Transformation
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
             <Button 
               variant="outline" 
               size="lg"
-              className="text-lg px-8 py-4"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 flex-1 sm:flex-none"
             >
               Request a Personalized Demo
             </Button>
           </div>
 
-          <p className="text-sm text-muted-foreground mt-6">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-6">
             No commitment required • Risk-free 14-day experience • Cancel anytime
           </p>
         </div>
