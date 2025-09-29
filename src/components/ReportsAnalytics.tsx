@@ -409,17 +409,19 @@ const ReportsAnalytics = () => {
 
       {/* Charts */}
       <Tabs defaultValue="revenue" className="space-y-6">
-        <TabsList className="bg-card border-border">
-          <TabsTrigger value="revenue" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
-            Revenue Trends
-          </TabsTrigger>
-          <TabsTrigger value="services" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
-            Service Performance
-          </TabsTrigger>
-          <TabsTrigger value="staff" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black">
-            Staff Performance
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="bg-card border-border flex w-full min-w-fit">
+            <TabsTrigger value="revenue" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-4">
+              Revenue Trends
+            </TabsTrigger>
+            <TabsTrigger value="services" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-4">
+              Service Performance
+            </TabsTrigger>
+            <TabsTrigger value="staff" className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-4">
+              Staff Performance
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="revenue">
           <Card className="bg-card border-border">
@@ -489,16 +491,16 @@ const ReportsAnalytics = () => {
                   Revenue breakdown by service type
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 sm:p-6">
                 <ChartContainer config={chartConfig}>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
+                  <ResponsiveContainer width="100%" height={350} className="min-h-[350px]">
+                    <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                       <Pie
                         data={serviceData}
                         cx="50%"
                         cy="50%"
-                        innerRadius={60}
-                        outerRadius={120}
+                        innerRadius={40}
+                        outerRadius={100}
                         paddingAngle={5}
                         dataKey="revenue"
                       >
