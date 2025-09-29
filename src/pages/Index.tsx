@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, ShieldCheck, User, Camera, TrendingUp, MessageCircle, CreditCard, Settings, Home, Briefcase } from "lucide-react";
+import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, ShieldCheck, User, Camera, TrendingUp, MessageCircle, CreditCard, Settings, Home, Briefcase, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -592,52 +592,58 @@ const Index = () => {
               </div>
             </div>
             
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-4">
-              {isAdmin && (
-                <Button 
-                  onClick={() => navigate('/admin')}
-                  variant="outline"
-                >
-                  <ShieldCheck className="w-4 h-4 mr-2" />
-                  Admin Panel
-                </Button>
-              )}
-              {isAuthenticated ? (
-                <>
-                  {userBusiness ? (
-                    <MobileMenu />
-                  ) : (
-                    <Button 
-                      onClick={() => setShowBusinessModal(true)}
-                      style={{ backgroundColor: '#39FF14', color: 'black' }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#32e612';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#39FF14';
-                      }}
-                    >
-                      <Building className="w-4 h-4 mr-2" />
-                      Register Business
-                    </Button>
-                  )}
-                </>
-              ) : (
+            {/* Top Action Buttons - Show when not authenticated */}
+            {!isAuthenticated && (
+              <div className="flex gap-2">
                 <Button 
                   onClick={() => setShowAuthModal(true)}
-                  style={{ backgroundColor: '#39FF14', color: 'black' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#32e612';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#39FF14';
-                  }}
+                  size="sm"
+                  className="text-sm px-4 py-2 bg-primary hover:bg-primary/90"
                 >
-                  Sign In / Sign Up
+                  Get Started
+                  <ArrowRight className="ml-1 h-3 w-3" />
                 </Button>
-              )}
-            </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="text-sm px-4 py-2"
+                >
+                  Learn More
+                </Button>
+              </div>
+            )}
+            
+            {/* Desktop Menu - Show when authenticated */}
+            {isAuthenticated && (
+              <div className="hidden md:flex items-center space-x-4">
+                {isAdmin && (
+                  <Button 
+                    onClick={() => navigate('/admin')}
+                    variant="outline"
+                  >
+                    <ShieldCheck className="w-4 h-4 mr-2" />
+                    Admin Panel
+                  </Button>
+                )}
+                {userBusiness ? (
+                  <MobileMenu />
+                ) : (
+                  <Button 
+                    onClick={() => setShowBusinessModal(true)}
+                    style={{ backgroundColor: '#39FF14', color: 'black' }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#32e612';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#39FF14';
+                    }}
+                  >
+                    <Building className="w-4 h-4 mr-2" />
+                    Register Business
+                  </Button>
+                )}
+              </div>
+            )}
 
             {/* Mobile Menu Button - Only for authenticated users with business */}
             {isAuthenticated && userBusiness && (

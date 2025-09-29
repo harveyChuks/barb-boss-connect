@@ -87,24 +87,6 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Top Action Buttons */}
-      <div className="fixed top-4 right-4 z-50 flex gap-2">
-        <Button 
-          onClick={onGetStarted}
-          size="sm"
-          className="text-sm px-4 py-2 bg-primary hover:bg-primary/90"
-        >
-          Get Started
-          <ArrowRight className="ml-1 h-3 w-3" />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm"
-          className="text-sm px-4 py-2"
-        >
-          Learn More
-        </Button>
-      </div>
 
       {/* Hero Section */}
       <section className="relative py-12 sm:py-16 lg:py-20 px-4">
