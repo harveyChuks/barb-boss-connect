@@ -597,12 +597,11 @@ const Index = () => {
               <div className="flex gap-2">
                 <Button 
                   onClick={() => setShowAuthModal(true)}
-                  size="sm"
-                  className="text-xs md:text-sm px-2 md:px-4 py-1 md:py-2 h-7 md:h-9 bg-primary hover:bg-primary/90"
+                  size="default"
+                  className="text-sm px-6 py-2 h-10 bg-primary hover:bg-primary/90"
                 >
-                  <span className="hidden md:inline">Get Started</span>
-                  <span className="md:hidden">Start</span>
-                  <ArrowRight className="ml-1 h-3 w-3" />
+                  Get Started
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             )}
