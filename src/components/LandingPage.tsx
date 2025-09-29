@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePageVisitTracker } from "@/hooks/usePageVisitTracker";
 import { useState, useEffect } from "react";
-import { ImageProcessor } from "@/components/ImageProcessor";
 import dashboardMockup from "@/assets/mockup-dashboard.png";
 import analyticsMockup from "@/assets/mockup-analytics.png";
 import profileMockup from "@/assets/mockup-profile.png";
@@ -88,11 +87,6 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
-      {/* Temporary Image Processor */}
-      <div className="fixed top-4 right-4 z-50">
-        <ImageProcessor />
-      </div>
-      
       {/* Mobile Quick Actions - Bottom Fixed */}
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-50 md:hidden">
         <div className="flex gap-3">
