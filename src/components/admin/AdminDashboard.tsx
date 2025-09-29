@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Building2, Users, DollarSign, TrendingUp, Search, Ban, CheckCircle, ArrowLeft } from "lucide-react";
+import { Building2, Users, DollarSign, TrendingUp, Search, Ban, CheckCircle, ArrowLeft, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import VisitAnalytics from "@/components/analytics/VisitAnalytics";
 import UserManagement from "@/components/admin/UserManagement";
@@ -174,15 +174,26 @@ const AdminDashboard = () => {
               <h1 className="text-3xl font-bold text-foreground mb-2">Platform Administration</h1>
               <p className="text-muted-foreground">Manage businesses, subscriptions, and platform oversight</p>
             </div>
-            <Button
-              onClick={() => navigate('/dashboard')}
-              variant="outline"
-              size="sm"
-              className="border-border text-foreground hover:bg-muted"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Exit Admin
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => navigate('/')}
+                variant="outline"
+                size="sm"
+                className="border-border text-foreground hover:bg-muted"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Back to Landing
+              </Button>
+              <Button
+                onClick={() => navigate('/dashboard')}
+                variant="outline"
+                size="sm"
+                className="border-border text-foreground hover:bg-muted"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Exit Admin
+              </Button>
+            </div>
           </div>
         </div>
 
