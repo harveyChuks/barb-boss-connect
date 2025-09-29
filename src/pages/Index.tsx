@@ -495,7 +495,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background relative pb-20 md:pb-0">
+    <div className="min-h-screen bg-background relative overflow-hidden pb-20 md:pb-0">
       {/* Mobile Bottom Navigation - Only for authenticated business owners */}
       {isAuthenticated && userBusiness && (
         <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 md:hidden">
@@ -654,7 +654,7 @@ const Index = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 relative z-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-4 py-4 sm:py-8 relative z-10">
         {!isAuthenticated ? (
           <LandingPage onGetStarted={() => setShowAuthModal(true)} />
         ) : !userBusiness ? (
