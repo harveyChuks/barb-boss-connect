@@ -204,7 +204,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <div className="relative flex justify-center lg:justify-end">
               <div className="relative">
                 {/* Main Phone - Dashboard */}
-                <div className="relative z-10 transform rotate-[8deg] hover:rotate-[5deg] transition-transform duration-300">
+                <div className="relative z-10 transform rotate-[-8deg] hover:rotate-[-5deg] transition-transform duration-300">
                   <img 
                     src={dashboardMockup} 
                     alt="BizFlow Dashboard on iPhone showing appointments, stats, and quick actions"
@@ -213,7 +213,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 </div>
                 
                 {/* Secondary Phone - Analytics positioned behind */}
-                <div className="absolute -right-8 top-16 z-0 transform rotate-[-12deg] hover:rotate-[-8deg] transition-transform duration-300">
+                <div className="absolute -right-8 top-16 z-0 transform rotate-[12deg] hover:rotate-[8deg] transition-transform duration-300">
                   <img 
                     src={analyticsMockup} 
                     alt="BizFlow Analytics showing business reports and revenue"
