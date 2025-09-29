@@ -13,6 +13,7 @@ import MultiStepRegistrationModal from "@/components/business/MultiStepRegistrat
 import LandingPage from "@/components/LandingPage";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
+import { useTimeBasedTheme } from "@/hooks/useTimeBasedTheme";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -47,6 +48,10 @@ const formatCurrency = (amount: number, currency: string = 'NGN') => {
 const Index = () => {
   const { user, loading: authLoading, signOut, isAuthenticated } = useAuth();
   const { isAdmin } = useUserRole();
+  
+  // Apply time-based theme switching only for landing page visitors (non-authenticated users)
+  const themeInfo = useTimeBasedTheme(!isAuthenticated);
+  
   const { toast } = useToast();
   const navigate = useNavigate();
   const [showClientModal, setShowClientModal] = useState(false);

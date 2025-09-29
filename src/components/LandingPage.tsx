@@ -1,7 +1,9 @@
-import { ArrowRight, Calendar, Users, BarChart3, Clock, CheckCircle, Star, TrendingUp, DollarSign, QrCode, Scissors, TrendingDown } from "lucide-react";
+import { ArrowRight, Calendar, Users, BarChart3, Clock, CheckCircle, Star, TrendingUp, DollarSign, QrCode, Scissors, TrendingDown, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePageVisitTracker } from "@/hooks/usePageVisitTracker";
+import { useTimeBasedTheme } from "@/hooks/useTimeBasedTheme";
+import { useTheme } from "@/contexts/ThemeContext";
 import { useState, useEffect } from "react";
 import dashboardMockup from "@/assets/mockup-dashboard.png";
 import analyticsMockup from "@/assets/mockup-analytics.png";
@@ -18,6 +20,9 @@ interface LandingPageProps {
 
 const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   usePageVisitTracker(); // Track visits to landing page
+  
+  const { theme } = useTheme();
+  const themeInfo = useTimeBasedTheme(true); // Enable time-based theming for landing page
   
   const [animatedText, setAnimatedText] = useState("Earn More");
   
@@ -96,6 +101,20 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <p className="text-xs sm:text-sm font-semibold text-primary tracking-wider uppercase">
               POWERING 500+ SUCCESSFUL BUSINESSES
             </p>
+          </div>
+          
+          {/* Theme Indicator */}
+          <div className="flex justify-center mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-card/50 backdrop-blur-sm border border-border/50 rounded-full text-xs text-muted-foreground">
+              {theme === 'light' ? (
+                <Sun className="w-3 h-3 text-yellow-500" />
+              ) : (
+                <Moon className="w-3 h-3 text-blue-400" />
+              )}
+              <span>
+                {theme === 'light' ? 'Day Mode' : 'Night Mode'} • Switches to {theme === 'light' ? 'Night' : 'Day'} at {themeInfo.nextChangeTime}
+              </span>
+            </div>
           </div>
           
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
