@@ -578,7 +578,7 @@ const Index = () => {
       </div>
 
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10">
+      <header className="bg-black border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
@@ -603,7 +603,7 @@ const Index = () => {
                 <Button 
                   onClick={() => setShowAuthModal(true)}
                   size="default"
-                  className="text-sm px-6 py-2 h-10 bg-primary hover:bg-primary/90"
+                  className="text-sm px-6 py-2 h-10 bg-white text-black hover:bg-white/90"
                 >
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4" />
