@@ -26,8 +26,8 @@ const ProfessionalProfileStep = ({ professionalProfile, setProfessionalProfile }
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white">Professional Profile</h3>
-        <p className="text-slate-400">Show clients what makes you special</p>
+        <h3 className="text-lg font-semibold text-white">Your Experience</h3>
+        <p className="text-slate-400">Share your expertise and background</p>
       </div>
       
       <div className="space-y-2">

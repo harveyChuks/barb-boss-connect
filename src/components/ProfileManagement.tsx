@@ -438,9 +438,9 @@ const ProfileManagement = () => {
       {/* Business Profile Section */}
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-foreground">Business Profile</CardTitle>
+          <CardTitle className="text-foreground">Profile Settings</CardTitle>
           <CardDescription className="text-muted-foreground">
-            Manage your business information and settings
+            Update your business details and contact information
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">

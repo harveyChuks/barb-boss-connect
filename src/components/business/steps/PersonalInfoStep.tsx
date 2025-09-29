@@ -17,8 +17,8 @@ const PersonalInfoStep = ({ personalInfo, setPersonalInfo }: PersonalInfoStepPro
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white">Personal Information</h3>
-        <p className="text-slate-400">Let's start with your basic details</p>
+        <h3 className="text-lg font-semibold text-white">Your Details</h3>
+        <p className="text-slate-400">Tell us about yourself to get started</p>
       </div>
       
       <div className="space-y-2">

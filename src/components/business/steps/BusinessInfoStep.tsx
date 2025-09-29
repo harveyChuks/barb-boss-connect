@@ -103,8 +103,8 @@ const BusinessInfoStep = ({ businessInfo, setBusinessInfo }: BusinessInfoStepPro
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white">Business Information</h3>
-        <p className="text-slate-400">Tell us about your barbershop</p>
+        <h3 className="text-lg font-semibold text-white">Business Setup</h3>
+        <p className="text-slate-400">Tell us about your business location and type</p>
       </div>
       
       <div className="space-y-2">
