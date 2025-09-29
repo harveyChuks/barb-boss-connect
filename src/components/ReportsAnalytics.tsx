@@ -501,16 +501,16 @@ const ReportsAnalytics = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
-                <div className="w-full" style={{ height: '400px' }}>
+                <div className="w-full" style={{ height: '300px' }}>
                   <ChartContainer config={chartConfig} className="w-full h-full">
-                    <ResponsiveContainer width="100%" height={400}>
+                    <ResponsiveContainer width="100%" height={300}>
                       <PieChart>
                         <Pie
                           data={serviceData}
                           cx="50%"
                           cy="50%"
                           innerRadius={40}
-                          outerRadius={120}
+                          outerRadius={100}
                           paddingAngle={5}
                           dataKey="revenue"
                         >
