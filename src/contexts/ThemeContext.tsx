@@ -29,10 +29,10 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
       const savedTheme = localStorage.getItem('theme') as Theme;
       // Validate the saved theme to prevent invalid values
       if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
-        return savedTheme;
-      }
-      return 'dark';
-    } catch (error) {
+      return savedTheme;
+    }
+    return 'light';
+  } catch (error) {
       console.error('Error reading theme from localStorage:', error);
       return 'dark';
     }
