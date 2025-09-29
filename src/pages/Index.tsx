@@ -276,7 +276,7 @@ const Index = () => {
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="bg-slate-900 border-slate-700">
-        <div className="flex flex-col pt-8">
+        <div className="flex flex-col pt-8 h-full overflow-y-auto pb-6">
           {isAuthenticated && userBusiness ? (
             <>
               <div className="text-white font-semibold mb-4 px-3">Business Management</div>
