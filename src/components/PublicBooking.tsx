@@ -473,6 +473,9 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         </Card>
 
         {/* Work Portfolio Section */}
+        <div className="text-white bg-red-500 p-2 mb-4">
+          DEBUG: Work Pictures Length: {workPictures.length}, Business ID: {business?.id}
+        </div>
         {workPictures.length > 0 && (
           <Card className="bg-slate-800/50 border-slate-700 mb-8">
             <CardHeader>
