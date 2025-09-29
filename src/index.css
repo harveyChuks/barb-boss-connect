@@ -48,38 +48,6 @@
   }
 
   .light {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
-
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 215.4 16.3% 26.9%;
-
-    --primary: 215.4 16.3% 46.9%;
-    --primary-foreground: 210 40% 98%;
-    
-    --vivid-green: 120 100% 55%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 215.4 16.3% 26.9%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 215.4 16.3% 26.9%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 215.4 16.3% 46.9%;
-  }
-
-  .dark {
     --background: 127 35% 10%;
     --foreground: 0 0% 98%;
 
@@ -91,6 +59,8 @@
 
     --primary: 120 100% 55%;
     --primary-foreground: 0 0% 0%;
+    
+    --vivid-green: 120 100% 55%;
 
     --secondary: 127 12% 12%;
     --secondary-foreground: 0 0% 98%;
@@ -107,15 +77,45 @@
     --border: 127 20% 20%;
     --input: 127 18% 18%;
     --ring: 120 100% 55%;
+  }
 
-    --sidebar-background: 127 15% 6%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 120 100% 55%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 127 12% 10%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 127 20% 18%;
-    --sidebar-ring: 120 100% 55%;
+  .dark {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215.4 16.3% 26.9%;
+
+    --primary: 215.4 16.3% 46.9%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 215.4 16.3% 26.9%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 215.4 16.3% 26.9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 215.4 16.3% 46.9%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
     
     --vivid-green: 120 100% 55%;
   }
@@ -130,7 +130,7 @@
     @apply bg-background text-foreground;
   }
 
-  .dark body {
+  .light body {
     background: radial-gradient(ellipse at center, hsl(127, 35%, 12%) 0%, hsl(127, 35%, 8%) 100%);
     box-shadow: inset 0 0 200px hsla(127, 50%, 20%, 0.3);
   }
