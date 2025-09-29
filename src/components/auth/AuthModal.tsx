@@ -184,7 +184,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-card border-border text-foreground">
         <DialogHeader>
-          <DialogTitle>Welcome to BarbS</DialogTitle>
+          <DialogTitle>Welcome to BizFlow</DialogTitle>
           <DialogDescription className="text-muted-foreground">
             Sign in to manage your business or create a new account
           </DialogDescription>
