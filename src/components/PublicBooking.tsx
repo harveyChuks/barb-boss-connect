@@ -157,9 +157,8 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
       if (workPicturesError) {
         console.error('Error fetching work pictures:', workPicturesError);
-        setWorkPictures([]);
       } else {
-        // Only show actual uploaded pictures
+        console.log('✅ Work pictures fetched:', workPicturesData?.length || 0, 'images');
         setWorkPictures(workPicturesData || []);
       }
     } catch (error) {
@@ -473,9 +472,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         </Card>
 
         {/* Work Portfolio Section */}
-        <div className="text-white bg-red-500 p-2 mb-4">
-          DEBUG: Work Pictures Length: {workPictures.length}, Business ID: {business?.id}
-        </div>
         {workPictures.length > 0 && (
           <Card className="bg-slate-800/50 border-slate-700 mb-8">
             <CardHeader>
@@ -488,25 +484,27 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {workPictures.slice(0, 8).map((picture) => (
-                  <div key={picture.id} className="relative group">
-                    <div className="aspect-square overflow-hidden rounded-lg">
-                      <img
-                        src={picture.image_url}
-                        alt={picture.description || "Work sample"}
-                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-end">
-                      <div className="p-3 text-white">
+                  <div key={picture.id} className="relative group overflow-hidden rounded-lg aspect-square">
+                    <img
+                      src={picture.image_url}
+                      alt={picture.description || "Work sample"}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      onError={(e) => {
+                        console.error('Image failed to load:', picture.image_url);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
                         {picture.service_type && (
                           <Badge variant="secondary" className="mb-1 text-xs">
                             {picture.service_type}
                           </Badge>
                         )}
                         {picture.description && (
-                          <p className="text-sm font-medium">{picture.description}</p>
+                          <p className="text-sm font-medium line-clamp-2">{picture.description}</p>
                         )}
                       </div>
                     </div>
