@@ -493,10 +493,10 @@ const ReportsAnalytics = () => {
 
         <TabsContent value="services">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="bg-slate-800/50 border-slate-700">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-white">Service Revenue</CardTitle>
-                <CardDescription className="text-slate-400">
+                <CardTitle className="text-card-foreground">Service Revenue</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Revenue breakdown by service type
                 </CardDescription>
               </CardHeader>
@@ -523,8 +523,8 @@ const ReportsAnalytics = () => {
                             if (active && payload && payload.length) {
                               const data = payload[0].payload;
                               return (
-                                <div className="bg-slate-800 border border-slate-600 rounded p-2">
-                                  <p className="text-white font-medium">{data.name}</p>
+                                <div className="bg-popover border border-border rounded p-2">
+                                  <p className="text-popover-foreground font-medium">{data.name}</p>
                                   <p className="text-[#39FF14] [.light_&]:text-green-500">Revenue: {formatCurrency(data.revenue)}</p>
                                   <p className="text-blue-400">Bookings: {data.count}</p>
                                 </div>
@@ -540,30 +540,30 @@ const ReportsAnalytics = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-800/50 border-slate-700">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-white">Service Statistics</CardTitle>
-                <CardDescription className="text-slate-400">
+                <CardTitle className="text-card-foreground">Service Statistics</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Detailed breakdown of service performance
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {serviceData.map((service, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-3 bg-accent rounded-lg">
                       <div className="flex items-center space-x-3">
                         <div 
                           className="w-4 h-4 rounded-full"
                           style={{ backgroundColor: service.color }}
                         />
                         <div>
-                          <p className="text-white font-medium">{service.name}</p>
-                          <p className="text-slate-400 text-sm">{service.count} bookings</p>
+                          <p className="text-foreground font-medium">{service.name}</p>
+                          <p className="text-muted-foreground text-sm">{service.count} bookings</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-white font-medium">{formatCurrency(service.revenue)}</p>
-                        <p className="text-slate-400 text-sm">
+                        <p className="text-foreground font-medium">{formatCurrency(service.revenue)}</p>
+                        <p className="text-muted-foreground text-sm">
                           {formatCurrency(service.revenue / service.count)} avg
                         </p>
                       </div>
@@ -576,10 +576,10 @@ const ReportsAnalytics = () => {
         </TabsContent>
 
         <TabsContent value="staff">
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">Staff Performance</CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardTitle className="text-card-foreground">Staff Performance</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Revenue and booking statistics by staff member
               </CardDescription>
             </CardHeader>
@@ -605,8 +605,8 @@ const ReportsAnalytics = () => {
                       content={({ active, payload, label }) => {
                         if (active && payload && payload.length) {
                           return (
-                            <div className="bg-slate-800 border border-slate-600 rounded p-2">
-                              <p className="text-white font-medium">{label}</p>
+                            <div className="bg-popover border border-border rounded p-2">
+                              <p className="text-popover-foreground font-medium">{label}</p>
                               <p className="text-[#39FF14] [.light_&]:text-green-500">Revenue: {formatCurrency(payload[0].value as number)}</p>
                               <p className="text-blue-400">Bookings: {payload[0].payload.bookings}</p>
                             </div>
