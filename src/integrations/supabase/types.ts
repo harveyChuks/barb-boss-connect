@@ -347,6 +347,8 @@ export type Database = {
       businesses: {
         Row: {
           address: string | null
+          block_reason: string | null
+          blocked_at: string | null
           booking_link: string | null
           business_type: Database["public"]["Enums"]["business_type"]
           city: string | null
@@ -359,6 +361,7 @@ export type Database = {
           id: string
           instagram: string | null
           is_active: boolean | null
+          is_blocked: boolean | null
           language_settings: Json | null
           latitude: number | null
           logo_url: string | null
@@ -378,6 +381,8 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          block_reason?: string | null
+          blocked_at?: string | null
           booking_link?: string | null
           business_type: Database["public"]["Enums"]["business_type"]
           city?: string | null
@@ -390,6 +395,7 @@ export type Database = {
           id?: string
           instagram?: string | null
           is_active?: boolean | null
+          is_blocked?: boolean | null
           language_settings?: Json | null
           latitude?: number | null
           logo_url?: string | null
@@ -409,6 +415,8 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          block_reason?: string | null
+          blocked_at?: string | null
           booking_link?: string | null
           business_type?: Database["public"]["Enums"]["business_type"]
           city?: string | null
@@ -421,6 +429,7 @@ export type Database = {
           id?: string
           instagram?: string | null
           is_active?: boolean | null
+          is_blocked?: boolean | null
           language_settings?: Json | null
           latitude?: number | null
           logo_url?: string | null

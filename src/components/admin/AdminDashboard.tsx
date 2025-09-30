@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import VisitAnalytics from "@/components/analytics/VisitAnalytics";
 import UserManagement from "@/components/admin/UserManagement";
 import SubscriptionPlanManagement from "@/components/admin/SubscriptionPlanManagement";
+import BusinessSubscriptionManagement from "@/components/admin/BusinessSubscriptionManagement";
 import { FinancialDashboard } from "@/components/admin/FinancialDashboard";
 import { SystemSettings } from "@/components/admin/SystemSettings";
 import { SupportCommunication } from "@/components/admin/SupportCommunication";
@@ -351,57 +352,7 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="subscriptions">
-            <Card>
-              <CardHeader>
-                <CardTitle>Subscription Overview</CardTitle>
-                <CardDescription>
-                  Monitor subscription status and revenue
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Business</TableHead>
-                      <TableHead>Plan</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Trial End</TableHead>
-                      <TableHead>Monthly Revenue</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {subscriptions.map((subscription: any) => (
-                      <TableRow key={subscription.id}>
-                        <TableCell>
-                          {businesses.find((b: any) => b.id === subscription.business_id)?.name || 'Unknown'}
-                        </TableCell>
-                        <TableCell>{subscription.subscription_plans?.name}</TableCell>
-                        <TableCell>
-                          <Badge variant={
-                            subscription.status === 'active' ? 'default' :
-                            subscription.status === 'trial' ? 'secondary' : 'destructive'
-                          }>
-                            {subscription.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {subscription.trial_end_date 
-                            ? new Date(subscription.trial_end_date).toLocaleDateString()
-                            : '-'
-                          }
-                        </TableCell>
-                        <TableCell>
-                          ${subscription.status === 'active' 
-                            ? (subscription.subscription_plans?.price_monthly || 0)
-                            : 0
-                          }
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+            <BusinessSubscriptionManagement />
           </TabsContent>
 
           <TabsContent value="users">
