@@ -160,7 +160,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-black text-white hover:bg-black/90"
+                className="flex-1 bg-[#39FF14] text-black hover:bg-[#39FF14]/90 [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
               >
                 {loading ? "Sending..." : "Send Reset Link"}
               </Button>
@@ -191,10 +191,10 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
 
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-muted">
-            <TabsTrigger value="login" className="data-[state=active]:bg-black data-[state=active]:text-white">
+            <TabsTrigger value="login" className="data-[state=active]:bg-[#39FF14] data-[state=active]:text-black [.light_&]:data-[state=active]:bg-black [.light_&]:data-[state=active]:text-white">
               Login
             </TabsTrigger>
-            <TabsTrigger value="signup" className="data-[state=active]:bg-black data-[state=active]:text-white">
+            <TabsTrigger value="signup" className="data-[state=active]:bg-[#39FF14] data-[state=active]:text-black [.light_&]:data-[state=active]:bg-black [.light_&]:data-[state=active]:text-white">
               Sign Up
             </TabsTrigger>
           </TabsList>
@@ -245,7 +245,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-black text-white hover:bg-black/90"
+                className="w-full bg-[#39FF14] text-black hover:bg-[#39FF14]/90 [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
               >
                 {loading ? "Signing in..." : "Sign In"}
               </Button>
@@ -335,7 +335,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-black text-white hover:bg-black/90"
+                className="w-full bg-[#39FF14] text-black hover:bg-[#39FF14]/90 [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
               >
                 {loading ? "Creating account..." : "Create Account"}
               </Button>
