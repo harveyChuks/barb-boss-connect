@@ -160,7 +160,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-green-500 hover:bg-green-600 text-black light:bg-black light:text-white light:hover:bg-black/90"
+                className="flex-1 bg-black text-white hover:bg-black/90"
               >
                 {loading ? "Sending..." : "Send Reset Link"}
               </Button>
@@ -245,7 +245,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-green-500 hover:bg-green-600 text-black light:bg-black light:text-white light:hover:bg-black/90"
+                className="w-full bg-black text-white hover:bg-black/90"
               >
                 {loading ? "Signing in..." : "Sign In"}
               </Button>
@@ -335,7 +335,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-green-500 hover:bg-green-600 text-black light:bg-black light:text-white light:hover:bg-black/90"
+                className="w-full bg-black text-white hover:bg-black/90"
               >
                 {loading ? "Creating account..." : "Create Account"}
               </Button>
