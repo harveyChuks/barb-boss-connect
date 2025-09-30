@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Edit, DollarSign, Users, Trash2 } from "lucide-react";
+import { useLocation } from "@/contexts/LocationContext";
 
 interface SubscriptionPlan {
   id: string;
@@ -40,6 +41,7 @@ const SubscriptionPlanManagement = () => {
     is_active: true
   });
   const { toast } = useToast();
+  const { currencySymbol, currency } = useLocation();
 
   const fetchPlans = async () => {
     setLoading(true);
@@ -262,7 +264,7 @@ const SubscriptionPlanManagement = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="price_monthly">Monthly Price ($)</Label>
+                      <Label htmlFor="price_monthly">Monthly Price ({currencySymbol})</Label>
                       <Input
                         id="price_monthly"
                         type="number"
@@ -273,7 +275,7 @@ const SubscriptionPlanManagement = () => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="price_yearly">Yearly Price ($)</Label>
+                      <Label htmlFor="price_yearly">Yearly Price ({currencySymbol})</Label>
                       <Input
                         id="price_yearly"
                         type="number"
@@ -333,8 +335,8 @@ const SubscriptionPlanManagement = () => {
               {plans.map((plan) => (
                 <TableRow key={plan.id}>
                   <TableCell className="font-medium">{plan.name}</TableCell>
-                  <TableCell>${plan.price_monthly}</TableCell>
-                  <TableCell>${plan.price_yearly || '-'}</TableCell>
+                  <TableCell>{currencySymbol}{plan.price_monthly}</TableCell>
+                  <TableCell>{plan.price_yearly ? `${currencySymbol}${plan.price_yearly}` : '-'}</TableCell>
                   <TableCell>
                     {plan.max_appointments_per_month ? (
                       <Badge variant="outline" className="gap-1">
@@ -429,7 +431,7 @@ const SubscriptionPlanManagement = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="edit_price_monthly">Monthly Price ($)</Label>
+                <Label htmlFor="edit_price_monthly">Monthly Price ({currencySymbol})</Label>
                 <Input
                   id="edit_price_monthly"
                   type="number"
@@ -439,7 +441,7 @@ const SubscriptionPlanManagement = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="edit_price_yearly">Yearly Price ($)</Label>
+                <Label htmlFor="edit_price_yearly">Yearly Price ({currencySymbol})</Label>
                 <Input
                   id="edit_price_yearly"
                   type="number"
