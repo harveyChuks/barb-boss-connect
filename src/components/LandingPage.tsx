@@ -95,6 +95,26 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
+      {/* Free Trial Banner */}
+      <section className="bg-gradient-to-r from-green-500 to-green-600 py-3 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-center">
+            <span className="text-white font-semibold text-sm sm:text-base">
+              🎉 Limited Time Offer:
+            </span>
+            <span className="text-white text-sm sm:text-base">
+              Get <span className="font-bold underline">3 Months FREE</span> when you start today
+            </span>
+            <Button 
+              onClick={onGetStarted}
+              size="sm"
+              className="bg-white text-green-600 hover:bg-gray-100 font-semibold shadow-md hover:shadow-lg transition-all"
+            >
+              Claim Free Trial →
+            </Button>
+          </div>
+        </div>
+      </section>
 
       {/* Hero Section */}
       <section className="relative py-12 sm:py-16 lg:py-20 px-4">
