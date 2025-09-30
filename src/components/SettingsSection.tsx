@@ -131,7 +131,7 @@ const SettingsSection = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
-                    <category.icon className="w-5 h-5 text-primary" />
+                    <category.icon className="w-5 h-5 text-primary [.light_&]:text-green-500" />
                   </div>
                   <div>
                     <CardTitle className="text-foreground text-lg">{category.title}</CardTitle>
@@ -140,7 +140,7 @@ const SettingsSection = () => {
                     </CardDescription>
                   </div>
                 </div>
-                <Badge variant="outline" className="border-primary text-primary">
+                <Badge variant="outline" className="border-primary text-primary [.light_&]:border-green-500 [.light_&]:text-green-500">
                   {category.status}
                 </Badge>
               </div>
@@ -177,7 +177,7 @@ const SettingsSection = () => {
             <Badge variant="outline" className="border-blue-400 text-blue-400">Enhanced Security</Badge>
             <Badge variant="outline" className="border-green-400 text-green-400">Team Management</Badge>
             <Badge variant="outline" className="border-purple-400 text-purple-400">Custom Integrations</Badge>
-            <Badge variant="outline" className="border-[#39FF14] text-[#39FF14]">Advanced Analytics</Badge>
+            <Badge variant="outline" className="border-[#39FF14] text-[#39FF14] [.light_&]:border-green-500 [.light_&]:text-green-500">Advanced Analytics</Badge>
           </div>
         </CardContent>
       </Card>

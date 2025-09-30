@@ -141,7 +141,7 @@ const HyperlocalDiscovery = () => {
       <Card className="w-full max-w-2xl mx-auto">
         <CardHeader className="text-center">
           <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <MapPin className="w-8 h-8 text-primary" />
+            <MapPin className="w-8 h-8 text-primary [.light_&]:text-green-500" />
           </div>
           <CardTitle className="text-2xl">Discover Nearby Businesses</CardTitle>
           <CardDescription>

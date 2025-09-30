@@ -27,7 +27,7 @@ const LanguageSelector = () => {
       <CardHeader>
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
-            <Languages className="w-5 h-5 text-primary" />
+            <Languages className="w-5 h-5 text-primary [.light_&]:text-green-500" />
           </div>
           <div>
             <CardTitle className="text-foreground text-lg">{t('settings.language')}</CardTitle>
@@ -40,7 +40,7 @@ const LanguageSelector = () => {
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">{t('language.current')}:</span>
-          <Badge variant="outline" className="border-primary text-primary">
+          <Badge variant="outline" className="border-primary text-primary [.light_&]:border-green-500 [.light_&]:text-green-500">
             <Globe className="w-3 h-3 mr-1" />
             {currentLanguage?.nativeName}
           </Badge>

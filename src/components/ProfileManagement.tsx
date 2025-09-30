@@ -419,7 +419,7 @@ const ProfileManagement = () => {
                 </div>
                 <div className="flex-1 space-y-2">
                   <h4 className="text-foreground font-medium flex items-center">
-                    <QrCode className="w-4 h-4 mr-2 text-primary" />
+                    <QrCode className="w-4 h-4 mr-2 text-primary [.light_&]:text-green-500" />
                     QR Code Instructions
                   </h4>
                   <ul className="text-muted-foreground text-sm space-y-1">

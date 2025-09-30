@@ -13,7 +13,7 @@ const ThemeSettings = () => {
       <CardHeader>
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
-            <Palette className="w-5 h-5 text-primary" />
+            <Palette className="w-5 h-5 text-primary [.light_&]:text-green-500" />
           </div>
           <div>
             <CardTitle className="text-foreground text-lg">Theme Settings</CardTitle>
@@ -27,7 +27,7 @@ const ThemeSettings = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Current theme:</span>
-            <Badge variant="outline" className="border-primary text-primary">
+            <Badge variant="outline" className="border-primary text-primary [.light_&]:border-green-500 [.light_&]:text-green-500">
               {theme === 'dark' ? 'Dark Theme' : 'Light Theme'}
             </Badge>
           </div>
