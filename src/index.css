@@ -51,7 +51,7 @@
     --background: 0 0% 100%;
     --foreground: 0 0% 0%;
 
-    --card: 0 0% 100% / 0.05;
+    --card: 0 0% 50% / 0.1;
     --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
