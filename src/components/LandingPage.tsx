@@ -240,55 +240,6 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
           </div>
         </div>
       </section>
-      
-      {/* Get Booked in 3 Easy Steps Section */}
-      <section className="py-16 sm:py-20 px-4 bg-accent/5">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-              Get Booked in <span className="text-green-500">3 Easy Steps</span>
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-card border-border hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
-                  <Edit className="w-8 h-8 text-green-500" />
-                </div>
-                <h3 className="text-xl font-bold text-card-foreground mb-3">Complete your Profile</h3>
-                <p className="text-card-foreground">
-                  Fill out your business details and unlock your personalized booking link that anyone can use to book you in seconds.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-border hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
-                  <Share2 className="w-8 h-8 text-green-500" />
-                </div>
-                <h3 className="text-xl font-bold text-card-foreground mb-3">Share your Link</h3>
-                <p className="text-card-foreground">
-                  Post your link on social media or send it directly to clients to make booking easy and start saving hours every week.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-border hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
-                  <Zap className="w-8 h-8 text-green-500" />
-                </div>
-                <h3 className="text-xl font-bold text-card-foreground mb-3">Less Admin, More Clients</h3>
-                <p className="text-card-foreground">
-                  We handle the bookings, reminders, and more — so you can focus on actually serving clients and growing your business.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
 
       {/* Revenue Stats Section */}
       <section className="py-12 sm:py-16 px-4 bg-gradient-to-r from-green-500/10 via-accent/5 to-green-500/10 relative overflow-hidden">
@@ -586,8 +537,57 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* Get Booked in 3 Easy Steps Section */}
       <section className="py-16 sm:py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+              Get Booked in <span className="text-green-500">3 Easy Steps</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="bg-card border-border hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+                  <Edit className="w-8 h-8 text-green-500" />
+                </div>
+                <h3 className="text-xl font-bold text-card-foreground mb-3">Complete your Profile</h3>
+                <p className="text-card-foreground">
+                  Fill out your business details and unlock your personalized booking link that anyone can use to book you in seconds.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+                  <Share2 className="w-8 h-8 text-green-500" />
+                </div>
+                <h3 className="text-xl font-bold text-card-foreground mb-3">Share your Link</h3>
+                <p className="text-card-foreground">
+                  Post your link on social media or send it directly to clients to make booking easy and start saving hours every week.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+                  <Zap className="w-8 h-8 text-green-500" />
+                </div>
+                <h3 className="text-xl font-bold text-card-foreground mb-3">Less Admin, More Clients</h3>
+                <p className="text-card-foreground">
+                  We handle the bookings, reminders, and more — so you can focus on actually serving clients and growing your business.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-16 sm:py-20 px-4 bg-accent/5">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
