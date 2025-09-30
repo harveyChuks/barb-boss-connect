@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { supabase } from '@/integrations/supabase/client';
-import { Eye, Smartphone, Monitor, Tablet, TrendingUp } from 'lucide-react';
+import { Eye, Smartphone, Monitor, Tablet, TrendingUp, MapPin, Globe } from 'lucide-react';
 
 interface VisitStats {
   total_visits: number;
@@ -14,6 +14,8 @@ interface VisitStats {
   tablet_visits: number;
   top_pages: Array<{ page_path: string; visits: number }>;
   daily_visits: Array<{ date: string; visits: number }>;
+  top_countries: Array<{ country: string; visits: number }>;
+  top_cities: Array<{ city: string; country: string; visits: number }>;
 }
 
 const VisitAnalytics = ({ businessId }: { businessId?: string }) => {
@@ -55,7 +57,9 @@ const VisitAnalytics = ({ businessId }: { businessId?: string }) => {
         desktop_visits: data.filter(visit => visit.device_type === 'desktop').length,
         tablet_visits: data.filter(visit => visit.device_type === 'tablet').length,
         top_pages: [],
-        daily_visits: []
+        daily_visits: [],
+        top_countries: [],
+        top_cities: []
       };
 
       // Calculate top pages
@@ -79,6 +83,36 @@ const VisitAnalytics = ({ businessId }: { businessId?: string }) => {
       processedStats.daily_visits = Object.entries(dailyVisits)
         .map(([date, visits]) => ({ date, visits }))
         .sort((a, b) => a.date.localeCompare(b.date));
+
+      // Calculate top countries
+      const countryVisits = data.reduce((acc: Record<string, number>, visit) => {
+        if (visit.country) {
+          acc[visit.country] = (acc[visit.country] || 0) + 1;
+        }
+        return acc;
+      }, {});
+
+      processedStats.top_countries = Object.entries(countryVisits)
+        .map(([country, visits]) => ({ country, visits }))
+        .sort((a, b) => b.visits - a.visits)
+        .slice(0, 10);
+
+      // Calculate top cities
+      const cityVisits = data.reduce((acc: Record<string, { country: string; visits: number }>, visit) => {
+        if (visit.city) {
+          const key = `${visit.city}, ${visit.country || 'Unknown'}`;
+          if (!acc[key]) {
+            acc[key] = { country: visit.country || 'Unknown', visits: 0 };
+          }
+          acc[key].visits++;
+        }
+        return acc;
+      }, {});
+
+      processedStats.top_cities = Object.entries(cityVisits)
+        .map(([city, data]) => ({ city, country: data.country, visits: data.visits }))
+        .sort((a, b) => b.visits - a.visits)
+        .slice(0, 10);
 
       setStats(processedStats);
     } catch (error) {
@@ -229,6 +263,56 @@ const VisitAnalytics = ({ businessId }: { businessId?: string }) => {
                   </span>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Countries</CardTitle>
+            <CardDescription>Visitors by country</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {stats.top_countries.length > 0 ? (
+                stats.top_countries.map((country, index) => (
+                  <div key={country.country} className="flex items-center justify-between p-2 rounded border">
+                    <div className="flex items-center space-x-2">
+                      <Globe className="h-4 w-4 text-muted-foreground" />
+                      <span className="font-medium">{country.country}</span>
+                    </div>
+                    <Badge>{country.visits} visits</Badge>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">No location data available</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Cities</CardTitle>
+            <CardDescription>Visitors by city</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {stats.top_cities.length > 0 ? (
+                stats.top_cities.map((city, index) => (
+                  <div key={city.city} className="flex items-center justify-between p-2 rounded border">
+                    <div className="flex items-center space-x-2">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <span className="font-medium">{city.city}</span>
+                    </div>
+                    <Badge>{city.visits} visits</Badge>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">No location data available</p>
+              )}
             </div>
           </CardContent>
         </Card>
