@@ -609,7 +609,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                   <span className="text-5xl font-bold text-foreground">{currencySymbol}{monthlyPrice}</span>
                   <span className="text-xl text-muted-foreground">/mo</span>
                 </div>
-                <p className="text-sm text-muted-foreground">14-day free trial | No card required</p>
+                <p className="text-sm text-muted-foreground">3 months free trial | No card required</p>
               </div>
 
               <div className="space-y-4 mb-8">
@@ -717,7 +717,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
-              <p className="text-sm text-muted-foreground mt-4">14-day free trial • No credit card required</p>
+              <p className="text-sm text-muted-foreground mt-4">3 months free trial • No credit card required</p>
             </CardContent>
           </Card>
         </div>
