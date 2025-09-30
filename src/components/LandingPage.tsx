@@ -246,9 +246,11 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1),transparent_50%)]"></div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-4 animate-scale-in">
-            <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 animate-pulse" />
+            <div className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 animate-pulse font-bold text-2xl sm:text-3xl">
+              {currencySymbol}
+            </div>
             <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground hover:scale-110 transition-transform duration-300">
-              {location === 'UK' ? '£125,000' : '₦15,750,000'}
+              {location === 'UK' ? '125,000' : '15,750,000'}
             </div>
           </div>
           <p className="text-sm sm:text-base lg:text-lg text-foreground font-medium tracking-wider uppercase animate-fade-in">
