@@ -29,6 +29,28 @@ export const LocationProvider = ({ children }: LocationProviderProps) => {
     const savedLocation = localStorage.getItem('location') as Location;
     return savedLocation || 'NG';
   });
+  const [isAutoDetected, setIsAutoDetected] = useState(false);
+
+  useEffect(() => {
+    // Auto-detect location on first visit
+    const savedLocation = localStorage.getItem('location');
+    if (!savedLocation && !isAutoDetected) {
+      fetch('https://ipapi.co/json/')
+        .then(response => response.json())
+        .then(data => {
+          const countryCode = data.country_code;
+          // Set to UK if user is in UK, otherwise default to Nigeria
+          const detectedLocation: Location = countryCode === 'GB' ? 'UK' : 'NG';
+          setLocationState(detectedLocation);
+          setIsAutoDetected(true);
+          console.log('Auto-detected location:', detectedLocation, 'from country:', countryCode);
+        })
+        .catch(error => {
+          console.error('Failed to detect location:', error);
+          setIsAutoDetected(true);
+        });
+    }
+  }, [isAutoDetected]);
 
   useEffect(() => {
     localStorage.setItem('location', location);
