@@ -1,10 +1,12 @@
-import { ArrowRight, Calendar, Users, BarChart3, Clock, CheckCircle, Star, TrendingUp, DollarSign, QrCode, Scissors, TrendingDown, Sun, Moon } from "lucide-react";
+import { ArrowRight, Calendar, Users, BarChart3, Clock, CheckCircle, Star, TrendingUp, DollarSign, QrCode, Scissors, TrendingDown, Sun, Moon, Edit, Share2, Zap, BarChart, Sparkles, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePageVisitTracker } from "@/hooks/usePageVisitTracker";
 import { useTimeBasedTheme } from "@/hooks/useTimeBasedTheme";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useLocation } from "@/contexts/LocationContext";
 import { useState, useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
 import dashboardMockup from "@/assets/mockup-dashboard.png";
 import analyticsMockup from "@/assets/mockup-analytics.png";
 import profileMockup from "@/assets/mockup-profile.png";
@@ -23,6 +25,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   
   const { theme } = useTheme();
   const themeInfo = useTimeBasedTheme(true); // Enable time-based theming for landing page
+  const { location, setLocation, currencySymbol, monthlyPrice } = useLocation();
   
   const [animatedText, setAnimatedText] = useState("Earn More");
   
@@ -96,6 +99,32 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       {/* Hero Section */}
       <section className="relative py-12 sm:py-16 lg:py-20 px-4">
         <div className="max-w-7xl mx-auto">
+          {/* Location Selector */}
+          <div className="flex justify-center mb-6">
+            <div className="inline-flex bg-card border border-border rounded-lg p-1">
+              <button
+                onClick={() => setLocation('NG')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  location === 'NG' 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                🇳🇬 Nigeria
+              </button>
+              <button
+                onClick={() => setLocation('UK')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  location === 'UK' 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                🇬🇧 United Kingdom
+              </button>
+            </div>
+          </div>
+          
           {/* Trust Badge */}
           <div className="text-center mb-6 sm:mb-8 lg:mb-12">
             <p className="text-xs sm:text-sm font-semibold text-green-500 tracking-wider uppercase">
@@ -212,13 +241,64 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         </div>
       </section>
       
+      {/* Get Booked in 3 Easy Steps Section */}
+      <section className="py-16 sm:py-20 px-4 bg-accent/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+              Get Booked in <span className="text-green-500">3 Easy Steps</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="bg-card border-border hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+                  <Edit className="w-8 h-8 text-green-500" />
+                </div>
+                <h3 className="text-xl font-bold text-card-foreground mb-3">Complete your Profile</h3>
+                <p className="text-card-foreground">
+                  Fill out your business details and unlock your personalized booking link that anyone can use to book you in seconds.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+                  <Share2 className="w-8 h-8 text-green-500" />
+                </div>
+                <h3 className="text-xl font-bold text-card-foreground mb-3">Share your Link</h3>
+                <p className="text-card-foreground">
+                  Post your link on social media or send it directly to clients to make booking easy and start saving hours every week.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+                  <Zap className="w-8 h-8 text-green-500" />
+                </div>
+                <h3 className="text-xl font-bold text-card-foreground mb-3">Less Admin, More Clients</h3>
+                <p className="text-card-foreground">
+                  We handle the bookings, reminders, and more — so you can focus on actually serving clients and growing your business.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Revenue Stats Section */}
       <section className="py-12 sm:py-16 px-4 bg-gradient-to-r from-green-500/10 via-accent/5 to-green-500/10 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1),transparent_50%)]"></div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-4 animate-scale-in">
             <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 animate-pulse" />
-            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground hover:scale-110 transition-transform duration-300">₦15,750,000</div>
+            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground hover:scale-110 transition-transform duration-300">
+              {location === 'UK' ? '£125,000' : '₦15,750,000'}
+            </div>
           </div>
           <p className="text-sm sm:text-base lg:text-lg text-foreground font-medium tracking-wider uppercase animate-fade-in">
             REVENUE GENERATED BY OUR PLATFORM USERS
@@ -451,39 +531,192 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 sm:py-20 px-4 bg-gradient-to-br from-green-500/10 via-primary/10 to-green-500/10 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(34,197,94,0.15),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(34,197,94,0.15),transparent_50%)]"></div>
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 animate-fade-in hover:scale-105 transition-transform duration-300">
-            Ready to Revolutionize Your Business?
-          </h2>
-          <p className="text-base sm:text-lg lg:text-xl text-foreground mb-8 animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
-            Join the thousands of successful businesses leveraging BizFlow to optimize operations and accelerate growth.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-2xl mx-auto animate-scale-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
-            <Button 
-              onClick={onGetStarted}
-              size="lg"
-              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-white/90 hover:scale-110 hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-300 flex-1 sm:flex-none group shadow-lg"
-            >
-              Launch Your Business Transformation
-              <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 flex-1 sm:flex-none hover:scale-105 hover:shadow-xl transition-all duration-300 hover:bg-accent"
-            >
-              Request a Personalized Demo
-            </Button>
+      {/* Manage Your Business Section */}
+      <section className="py-16 sm:py-20 px-4 bg-accent/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
+                Manage your <span className="text-green-500">business</span>
+              </h2>
+              
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <QrCode className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground mb-1">One Booking Link for All Services</h3>
+                    <p className="text-muted-foreground">Share a single link that showcases all your services and staff</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <BarChart className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground mb-1">Analytics to Understand Your Business</h3>
+                    <p className="text-muted-foreground">Track revenue, appointments, and performance metrics</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <Sparkles className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground mb-1">Marketing Tools to Grow</h3>
+                    <p className="text-muted-foreground">Promote your services with built-in marketing features</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <Users className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground mb-1">Multi-Staff Support</h3>
+                    <p className="text-muted-foreground">Add team members and manage schedules effortlessly</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex gap-4 justify-center">
+              <img 
+                src={dashboardMockup} 
+                alt="Business dashboard"
+                className="w-48 md:w-64 h-auto rounded-[2rem] shadow-xl transform rotate-[-6deg] hover:rotate-[-3deg] hover:scale-105 transition-all duration-500"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-16 sm:py-20 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+              Affordable & <span className="text-green-500">Simple Pricing</span>
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Designed for serious business owners ready to grow
+            </p>
           </div>
 
-          <p className="text-xs sm:text-sm text-foreground mt-6 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
-            No commitment required • Risk-free 14-day experience • Cancel anytime
-          </p>
+          <Card className="bg-card border-border hover:shadow-2xl transition-all duration-300 max-w-lg mx-auto">
+            <CardContent className="p-8">
+              <div className="text-center mb-6">
+                <Badge className="mb-4 bg-green-500 hover:bg-green-600">PRO</Badge>
+                <div className="flex items-baseline justify-center gap-2 mb-2">
+                  <span className="text-5xl font-bold text-foreground">{currencySymbol}{monthlyPrice}</span>
+                  <span className="text-xl text-muted-foreground">/mo</span>
+                </div>
+                <p className="text-sm text-muted-foreground">14-day free trial | No card required</p>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <h3 className="font-semibold text-foreground text-center mb-4">What's Included?</h3>
+                
+                <div>
+                  <p className="text-xs font-semibold text-green-500 tracking-wider uppercase mb-2">RUN YOUR BUSINESS LIKE A PRO</p>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">Easy Online Bookings</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">Automated Reminders</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">No-show Protection</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">Multi-Staff Management</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-xs font-semibold text-green-500 tracking-wider uppercase mb-2">GROW YOUR CLIENT BASE</p>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">Professional Booking Page</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">Work Portfolio Gallery</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">QR Code for Easy Sharing</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">Client Communication Tools</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-xs font-semibold text-green-500 tracking-wider uppercase mb-2">MAXIMIZE YOUR INCOME</p>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">Business Analytics & Insights</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">Revenue Tracking</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">Performance Reports</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-card-foreground">Booking Optimization</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Button 
+                onClick={onGetStarted}
+                size="lg"
+                className="w-full bg-green-500 hover:bg-green-600 text-white"
+              >
+                Start Free Trial
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 sm:py-20 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-accent/5 to-green-500/10"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <Card className="bg-gradient-to-br from-card to-accent/20 border-border backdrop-blur-sm shadow-2xl">
+            <CardContent className="p-8 sm:p-12">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-card-foreground mb-4">
+                Ready to Transform Your Business?
+              </h2>
+              <p className="text-base sm:text-lg lg:text-xl text-card-foreground mb-8 max-w-2xl mx-auto">
+                Join hundreds of successful businesses using BizFlow to streamline operations and grow revenue
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  onClick={onGetStarted}
+                  size="lg"
+                  className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-white/90 hover:scale-105 hover:shadow-xl transition-all duration-300 shadow-lg"
+                >
+                  Start Free Trial
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground mt-4">14-day free trial • No credit card required</p>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </div>
