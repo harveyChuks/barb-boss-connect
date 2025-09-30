@@ -817,6 +817,7 @@ export type Database = {
           name: string
           price_monthly: number
           price_yearly: number | null
+          trial_days: number | null
           updated_at: string
         }
         Insert: {
@@ -829,6 +830,7 @@ export type Database = {
           name: string
           price_monthly: number
           price_yearly?: number | null
+          trial_days?: number | null
           updated_at?: string
         }
         Update: {
@@ -841,6 +843,7 @@ export type Database = {
           name?: string
           price_monthly?: number
           price_yearly?: number | null
+          trial_days?: number | null
           updated_at?: string
         }
         Relationships: []

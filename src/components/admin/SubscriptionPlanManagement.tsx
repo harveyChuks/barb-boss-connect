@@ -21,6 +21,7 @@ interface SubscriptionPlan {
   price_yearly: number;
   features: any[];
   max_appointments_per_month: number;
+  trial_days: number;
   is_active: boolean;
   created_at: string;
 }
@@ -37,6 +38,7 @@ const SubscriptionPlanManagement = () => {
     price_monthly: "",
     price_yearly: "",
     max_appointments_per_month: "",
+    trial_days: "",
     features: "",
     is_active: true
   });
@@ -76,6 +78,7 @@ const SubscriptionPlanManagement = () => {
       price_monthly: "",
       price_yearly: "",
       max_appointments_per_month: "",
+      trial_days: "",
       features: "",
       is_active: true
     });
@@ -93,6 +96,7 @@ const SubscriptionPlanManagement = () => {
           price_monthly: parseFloat(formData.price_monthly),
           price_yearly: formData.price_yearly ? parseFloat(formData.price_yearly) : null,
           max_appointments_per_month: formData.max_appointments_per_month ? parseInt(formData.max_appointments_per_month) : null,
+          trial_days: formData.trial_days ? parseInt(formData.trial_days) : 90,
           features,
           is_active: formData.is_active
         });
@@ -130,6 +134,7 @@ const SubscriptionPlanManagement = () => {
           price_monthly: parseFloat(formData.price_monthly),
           price_yearly: formData.price_yearly ? parseFloat(formData.price_yearly) : null,
           max_appointments_per_month: formData.max_appointments_per_month ? parseInt(formData.max_appointments_per_month) : null,
+          trial_days: formData.trial_days ? parseInt(formData.trial_days) : 90,
           features,
           is_active: formData.is_active
         })
@@ -187,6 +192,7 @@ const SubscriptionPlanManagement = () => {
       price_monthly: plan.price_monthly.toString(),
       price_yearly: plan.price_yearly?.toString() || "",
       max_appointments_per_month: plan.max_appointments_per_month?.toString() || "",
+      trial_days: plan.trial_days?.toString() || "90",
       features: Array.isArray(plan.features) ? plan.features.join(', ') : '',
       is_active: plan.is_active
     });
@@ -230,7 +236,7 @@ const SubscriptionPlanManagement = () => {
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="name">Plan Name</Label>
                       <Input
@@ -248,6 +254,16 @@ const SubscriptionPlanManagement = () => {
                         placeholder="100"
                         value={formData.max_appointments_per_month}
                         onChange={(e) => setFormData({ ...formData, max_appointments_per_month: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="trial_days">Trial Days</Label>
+                      <Input
+                        id="trial_days"
+                        type="number"
+                        placeholder="90"
+                        value={formData.trial_days}
+                        onChange={(e) => setFormData({ ...formData, trial_days: e.target.value })}
                       />
                     </div>
                   </div>
@@ -325,6 +341,7 @@ const SubscriptionPlanManagement = () => {
                 <TableHead>Plan Name</TableHead>
                 <TableHead>Monthly Price</TableHead>
                 <TableHead>Yearly Price</TableHead>
+                <TableHead>Trial Days</TableHead>
                 <TableHead>Max Appointments</TableHead>
                 <TableHead>Features</TableHead>
                 <TableHead>Status</TableHead>
@@ -337,6 +354,9 @@ const SubscriptionPlanManagement = () => {
                   <TableCell className="font-medium">{plan.name}</TableCell>
                   <TableCell>{currencySymbol}{plan.price_monthly}</TableCell>
                   <TableCell>{plan.price_yearly ? `${currencySymbol}${plan.price_yearly}` : '-'}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{plan.trial_days || 90} days</Badge>
+                  </TableCell>
                   <TableCell>
                     {plan.max_appointments_per_month ? (
                       <Badge variant="outline" className="gap-1">
@@ -400,7 +420,7 @@ const SubscriptionPlanManagement = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="edit_name">Plan Name</Label>
                 <Input
@@ -416,6 +436,15 @@ const SubscriptionPlanManagement = () => {
                   type="number"
                   value={formData.max_appointments_per_month}
                   onChange={(e) => setFormData({ ...formData, max_appointments_per_month: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit_trial_days">Trial Days</Label>
+                <Input
+                  id="edit_trial_days"
+                  type="number"
+                  value={formData.trial_days}
+                  onChange={(e) => setFormData({ ...formData, trial_days: e.target.value })}
                 />
               </div>
             </div>
