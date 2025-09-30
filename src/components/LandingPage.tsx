@@ -100,24 +100,24 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       <section className="relative py-12 sm:py-16 lg:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Location Selector */}
-          <div className="flex justify-center mb-6">
-            <div className="inline-flex bg-card border border-border rounded-lg p-1">
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex bg-card border-2 border-primary/20 rounded-lg p-1 shadow-lg">
               <button
                 onClick={() => setLocation('NG')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-6 py-3 rounded-md text-base font-semibold transition-all ${
                   location === 'NG' 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'bg-green-500 text-white shadow-md' 
+                    : 'text-foreground hover:text-green-500 hover:bg-accent'
                 }`}
               >
                 🇳🇬 Nigeria
               </button>
               <button
                 onClick={() => setLocation('UK')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-6 py-3 rounded-md text-base font-semibold transition-all ${
                   location === 'UK' 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'bg-green-500 text-white shadow-md' 
+                    : 'text-foreground hover:text-green-500 hover:bg-accent'
                 }`}
               >
                 🇬🇧 United Kingdom
@@ -593,8 +593,11 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
               Affordable & <span className="text-green-500">Simple Pricing</span>
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-muted-foreground mb-4">
               Designed for serious business owners ready to grow
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Showing pricing for: <span className="font-semibold text-green-500">{location === 'UK' ? '🇬🇧 United Kingdom' : '🇳🇬 Nigeria'}</span>
             </p>
           </div>
 
