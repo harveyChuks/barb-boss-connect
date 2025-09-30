@@ -226,7 +226,7 @@ const ServicesManagement = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
-        <Button onClick={openNewServiceModal} className="bg-primary hover:bg-primary/90 text-primary-foreground">(uses default button styling)
+        <Button onClick={openNewServiceModal} className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <Plus className="w-4 h-4 mr-2" />
           Add Service
         </Button>
