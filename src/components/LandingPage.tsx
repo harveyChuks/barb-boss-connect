@@ -91,7 +91,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
 
       {/* Hero Section */}
       <section className="relative py-12 sm:py-16 lg:py-20 px-4">
@@ -106,17 +106,17 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
           
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             {/* Left Column - Content */}
-            <div className="space-y-6 sm:space-y-8 order-2 lg:order-1">
+            <div className="space-y-6 sm:space-y-8 order-2 lg:order-1 animate-fade-in">
               <div>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-foreground leading-tight">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-foreground leading-tight hover:scale-105 transition-transform duration-300">
                   We will Transform your Business even Better
                 </h1>
                 <div className="mt-3 sm:mt-4 h-10 sm:h-12 md:h-14 lg:h-16 overflow-hidden">
-                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold transition-all duration-500 ease-in-out text-green-500">
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold transition-all duration-500 ease-in-out text-green-500 animate-pulse">
                     {animatedText}
                   </h2>
                 </div>
-                <p className="text-base sm:text-lg lg:text-xl text-foreground mt-4 sm:mt-6 max-w-lg">
+                <p className="text-base sm:text-lg lg:text-xl text-foreground mt-4 sm:mt-6 max-w-lg animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
                   BizFlow empowers service businesses to automate scheduling, enhance client relationships, 
                   and accelerate growth — all from one comprehensive platform.
                 </p>
@@ -153,10 +153,10 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <Button 
                 onClick={onGetStarted}
                 size="lg"
-                className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-white/90 w-full sm:w-auto"
+                className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-white/90 hover:scale-105 hover:shadow-2xl transition-all duration-300 w-full sm:w-auto animate-scale-in shadow-lg"
               >
                 Start Your Success Journey
-                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
+                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
 
               {/* Customer Avatars and Rating */}
@@ -187,23 +187,23 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             </div>
             
             {/* Right Column - Phone Mockups */}
-            <div className="relative flex justify-center lg:justify-end order-1 lg:order-2 mb-8 lg:mb-0">
+            <div className="relative flex justify-center lg:justify-end order-1 lg:order-2 mb-8 lg:mb-0 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
               <div className="relative max-w-sm sm:max-w-md lg:max-w-none">
                 {/* Main Phone - Dashboard */}
-                <div className="relative z-10 transform rotate-[-8deg] hover:rotate-[-5deg] transition-transform duration-300">
+                <div className="relative z-10 transform rotate-[-8deg] hover:rotate-[-5deg] hover:scale-110 transition-all duration-500">
                   <img 
                     src={dashboardMockup} 
                     alt="BizFlow Dashboard on iPhone showing appointments, stats, and quick actions"
-                    className="w-40 sm:w-48 md:w-60 lg:w-72 h-auto rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[3rem] shadow-2xl"
+                    className="w-40 sm:w-48 md:w-60 lg:w-72 h-auto rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[3rem] shadow-2xl hover:shadow-green-500/20"
                   />
                 </div>
                 
                 {/* Secondary Phone - Analytics positioned behind */}
-                <div className="absolute -right-3 sm:-right-4 md:-right-6 lg:-right-8 top-8 sm:top-10 md:top-12 lg:top-16 z-0 transform rotate-[12deg] hover:rotate-[8deg] transition-transform duration-300">
+                <div className="absolute -right-3 sm:-right-4 md:-right-6 lg:-right-8 top-8 sm:top-10 md:top-12 lg:top-16 z-0 transform rotate-[12deg] hover:rotate-[8deg] hover:scale-105 transition-all duration-500">
                   <img 
                     src={analyticsMockup} 
                     alt="BizFlow Analytics showing business reports and revenue"
-                    className="w-32 sm:w-36 md:w-44 lg:w-56 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl opacity-80"
+                    className="w-32 sm:w-36 md:w-44 lg:w-56 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl opacity-80 hover:opacity-100"
                   />
                 </div>
               </div>
@@ -213,13 +213,14 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
       
       {/* Revenue Stats Section */}
-      <section className="py-12 sm:py-16 px-4 bg-accent/5">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-4">
-            <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-green-500" />
-            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">₦15,750,000</div>
+      <section className="py-12 sm:py-16 px-4 bg-gradient-to-r from-green-500/10 via-accent/5 to-green-500/10 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1),transparent_50%)]"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-4 animate-scale-in">
+            <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 animate-pulse" />
+            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground hover:scale-110 transition-transform duration-300">₦15,750,000</div>
           </div>
-          <p className="text-sm sm:text-base lg:text-lg text-foreground font-medium tracking-wider uppercase">
+          <p className="text-sm sm:text-base lg:text-lg text-foreground font-medium tracking-wider uppercase animate-fade-in">
             REVENUE GENERATED BY OUR PLATFORM USERS
           </p>
         </div>
@@ -239,12 +240,16 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="bg-card border-border hover:shadow-lg transition-shadow">
+              <Card 
+                key={index} 
+                className="bg-card border-border hover:shadow-2xl hover:shadow-green-500/20 hover:-translate-y-2 transition-all duration-300 animate-fade-in group"
+                style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'both' }}
+              >
                 <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-card-foreground/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="w-6 h-6 sm:w-8 sm:h-8" style={{ color: 'hsl(var(--vivid-green))' }} />
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-green-500/20 to-card-foreground/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                    <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 group-hover:scale-110 transition-transform" style={{ color: 'hsl(var(--vivid-green))' }} />
                   </div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-card-foreground mb-3">{feature.title}</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold text-card-foreground mb-3 group-hover:text-green-500 transition-colors">{feature.title}</h3>
                   <p className="text-sm sm:text-base text-card-foreground">{feature.description}</p>
                 </CardContent>
               </Card>
@@ -287,12 +292,12 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <img 
                 src={reportsMockup} 
                 alt="Business reports showing revenue analytics"
-                className="w-32 sm:w-36 md:w-48 lg:w-64 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[-6deg] hover:rotate-[-3deg] transition-transform duration-300"
+                className="w-32 sm:w-36 md:w-48 lg:w-64 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[-6deg] hover:rotate-[-3deg] hover:scale-105 hover:shadow-2xl transition-all duration-500"
               />
               <img 
                 src={performanceMockup} 
                 alt="Service performance analytics with charts"
-                className="w-32 sm:w-36 md:w-48 lg:w-64 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[8deg] hover:rotate-[5deg] transition-transform duration-300"
+                className="w-32 sm:w-36 md:w-48 lg:w-64 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[8deg] hover:rotate-[5deg] hover:scale-105 hover:shadow-2xl transition-all duration-500"
               />
             </div>
           </div>
@@ -307,12 +312,12 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <img 
                 src={profileMockup} 
                 alt="Business profile with QR code for easy booking"
-                className="w-32 sm:w-36 md:w-48 lg:w-64 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[5deg] hover:rotate-[2deg] transition-transform duration-300"
+                className="w-32 sm:w-36 md:w-48 lg:w-64 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[5deg] hover:rotate-[2deg] hover:scale-105 hover:shadow-2xl transition-all duration-500"
               />
               <img 
                 src={servicesMockup} 
                 alt="Services management with pricing and duration"
-                className="w-32 sm:w-36 md:w-48 lg:w-64 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[-10deg] hover:rotate-[-7deg] transition-transform duration-300"
+                className="w-32 sm:w-36 md:w-48 lg:w-64 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[-10deg] hover:rotate-[-7deg] hover:scale-105 hover:shadow-2xl transition-all duration-500"
               />
             </div>
             <div className="space-y-4 sm:space-y-6 lg:order-2">
@@ -379,7 +384,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <img 
                 src={bookingsMockup} 
                 alt="Bookings management showing appointment list and filtering"
-                className="w-40 sm:w-48 md:w-60 lg:w-72 h-auto rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[-4deg] hover:rotate-[-1deg] transition-transform duration-300"
+                className="w-40 sm:w-48 md:w-60 lg:w-72 h-auto rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl transform rotate-[-4deg] hover:rotate-[-1deg] hover:scale-110 hover:shadow-2xl transition-all duration-500"
               />
             </div>
           </div>
@@ -423,14 +428,18 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-card border-border">
+              <Card 
+                key={index} 
+                className="bg-card border-border hover:shadow-2xl hover:-translate-y-2 hover:border-green-500/50 transition-all duration-300 animate-fade-in group"
+                style={{ animationDelay: `${index * 0.15}s`, animationFillMode: 'both' }}
+              >
                 <CardContent className="p-6">
                   <div className="flex mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400 group-hover:scale-125 transition-transform" style={{ transitionDelay: `${i * 0.05}s` }} />
                     ))}
                   </div>
-                  <p className="text-card-foreground mb-4 italic">"{testimonial.text}"</p>
+                  <p className="text-card-foreground mb-4 italic group-hover:text-green-500 transition-colors">"{testimonial.text}"</p>
                   <div>
                     <p className="font-semibold text-card-foreground">{testimonial.name}</p>
                     <p className="text-sm text-card-foreground/80">{testimonial.business}</p>
@@ -443,34 +452,36 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 sm:py-20 px-4 bg-primary/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
+      <section className="py-16 sm:py-20 px-4 bg-gradient-to-br from-green-500/10 via-primary/10 to-green-500/10 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(34,197,94,0.15),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(34,197,94,0.15),transparent_50%)]"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 animate-fade-in hover:scale-105 transition-transform duration-300">
             Ready to Revolutionize Your Business?
           </h2>
-          <p className="text-base sm:text-lg lg:text-xl text-foreground mb-8">
+          <p className="text-base sm:text-lg lg:text-xl text-foreground mb-8 animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
             Join the thousands of successful businesses leveraging BizFlow to optimize operations and accelerate growth.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-2xl mx-auto">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-2xl mx-auto animate-scale-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
             <Button 
               onClick={onGetStarted}
               size="lg"
-              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-white/90 flex-1 sm:flex-none"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-white/90 hover:scale-110 hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-300 flex-1 sm:flex-none group shadow-lg"
             >
               Launch Your Business Transformation
-              <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
+              <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
               variant="outline" 
               size="lg"
-              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 flex-1 sm:flex-none"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 flex-1 sm:flex-none hover:scale-105 hover:shadow-xl transition-all duration-300 hover:bg-accent"
             >
               Request a Personalized Demo
             </Button>
           </div>
 
-          <p className="text-xs sm:text-sm text-foreground mt-6">
+          <p className="text-xs sm:text-sm text-foreground mt-6 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
             No commitment required • Risk-free 14-day experience • Cancel anytime
           </p>
         </div>
