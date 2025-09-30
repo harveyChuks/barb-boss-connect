@@ -109,6 +109,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   ];
 
   useEffect(() => {
+    console.log('🔍 PublicBooking mounted with businessLink:', businessLink);
     fetchBusinessData();
   }, [businessLink]);
 
@@ -156,10 +157,12 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         .order('created_at', { ascending: false });
 
       if (workPicturesError) {
-        console.error('Error fetching work pictures:', workPicturesError);
+        console.error('❌ Error fetching work pictures:', workPicturesError);
       } else {
         console.log('✅ Work pictures fetched:', workPicturesData?.length || 0, 'images');
+        console.log('📸 Work pictures data:', workPicturesData);
         setWorkPictures(workPicturesData || []);
+        console.log('🖼️ Work pictures state updated, will render:', workPicturesData?.length || 0, 'images');
       }
     } catch (error) {
       console.error('Error fetching business data:', error);
