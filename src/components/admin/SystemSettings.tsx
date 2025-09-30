@@ -31,7 +31,7 @@ export const SystemSettings = () => {
     maintenance_mode: false,
     registration_enabled: true,
     max_businesses_per_user: 5,
-    default_trial_days: 30,
+    default_trial_days: 90,
     support_email: 'support@bizflow.com',
     platform_name: 'BizFlow',
     platform_description: 'Business appointment booking platform',
