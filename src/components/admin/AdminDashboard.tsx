@@ -28,7 +28,8 @@ const AdminDashboard = () => {
     activeSubscriptions: 0,
     trialSubscriptions: 0,
     expiredSubscriptions: 0,
-    monthlyRevenue: 0
+    monthlyRevenueNGN: 0,
+    monthlyRevenueGBP: 0
   });
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -76,19 +77,28 @@ const AdminDashboard = () => {
       const trialCount = subscriptionData?.filter(s => s.status === 'trial').length || 0;
       const expiredCount = subscriptionData?.filter(s => s.status === 'expired').length || 0;
       
-      const monthlyRevenue = subscriptionData?.reduce((total, sub) => {
-        if (sub.status === 'active' && sub.subscription_plans?.price_monthly) {
-          return total + parseFloat(sub.subscription_plans.price_monthly.toString());
+      // Calculate revenue by currency
+      const revenueByLocation = subscriptionData?.reduce((acc, sub) => {
+        if (sub.status === 'active' && sub.subscription_plans) {
+          const business = businessData?.find(b => b.id === sub.business_id);
+          const currency = business?.currency || 'NGN';
+          
+          if (currency === 'GBP') {
+            acc.GBP += 15; // UK pricing
+          } else {
+            acc.NGN += 1000; // Nigeria pricing
+          }
         }
-        return total;
-      }, 0) || 0;
+        return acc;
+      }, { NGN: 0, GBP: 0 }) || { NGN: 0, GBP: 0 };
 
       setStats({
         totalBusinesses: businessData?.length || 0,
         activeSubscriptions: activeCount,
         trialSubscriptions: trialCount,
         expiredSubscriptions: expiredCount,
-        monthlyRevenue
+        monthlyRevenueNGN: revenueByLocation.NGN,
+        monthlyRevenueGBP: revenueByLocation.GBP
       });
 
     } catch (error: any) {
@@ -228,7 +238,7 @@ const AdminDashboard = () => {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Trial Users</CardTitle>
+              <CardTitle className="text-sm font-medium">Trial Users (3 Months)</CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -242,7 +252,10 @@ const AdminDashboard = () => {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">₦{stats.monthlyRevenue.toFixed(2)}</div>
+              <div className="space-y-1">
+                <div className="text-2xl font-bold text-green-600">₦{stats.monthlyRevenueNGN.toLocaleString()}</div>
+                <div className="text-lg font-semibold text-green-600">£{stats.monthlyRevenueGBP.toLocaleString()}</div>
+              </div>
             </CardContent>
           </Card>
         </div>

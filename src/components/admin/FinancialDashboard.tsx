@@ -10,8 +10,10 @@ import { DollarSign, TrendingUp, Users, Calendar, Download, Filter } from 'lucid
 import { toast } from '@/hooks/use-toast';
 
 interface RevenueData {
-  total_revenue: number;
-  monthly_revenue: number;
+  total_revenue_ngn: number;
+  total_revenue_gbp: number;
+  monthly_revenue_ngn: number;
+  monthly_revenue_gbp: number;
   active_subscriptions: number;
   trial_subscriptions: number;
   conversion_rate: number;
@@ -41,7 +43,7 @@ export const FinancialDashboard = () => {
     try {
       setLoading(true);
 
-      // Fetch revenue overview
+      // Fetch revenue overview with business data for currency
       const { data: subscriptions } = await supabase
         .from('business_subscriptions')
         .select(`
@@ -50,25 +52,36 @@ export const FinancialDashboard = () => {
             price_monthly,
             price_yearly,
             name
+          ),
+          businesses (
+            currency
           )
         `);
 
-      // Calculate revenue metrics
+      // Calculate revenue metrics by currency
       const activeSubscriptions = subscriptions?.filter(s => s.status === 'active') || [];
       const trialSubscriptions = subscriptions?.filter(s => s.status === 'trial') || [];
       
-      const totalRevenue = activeSubscriptions.reduce((sum, sub) => {
-        const plan = sub.subscription_plans;
-        return sum + (plan?.price_monthly || 0);
-      }, 0);
+      const revenueByLocation = activeSubscriptions.reduce((acc, sub) => {
+        const currency = sub.businesses?.currency || 'NGN';
+        
+        if (currency === 'GBP') {
+          acc.GBP += 15; // UK pricing
+        } else {
+          acc.NGN += 1000; // Nigeria pricing
+        }
+        return acc;
+      }, { NGN: 0, GBP: 0 });
 
       const conversionRate = subscriptions && subscriptions.length > 0 
         ? (activeSubscriptions.length / subscriptions.length) * 100 
         : 0;
 
       setRevenueData({
-        total_revenue: totalRevenue,
-        monthly_revenue: totalRevenue,
+        total_revenue_ngn: revenueByLocation.NGN,
+        total_revenue_gbp: revenueByLocation.GBP,
+        monthly_revenue_ngn: revenueByLocation.NGN,
+        monthly_revenue_gbp: revenueByLocation.GBP,
         active_subscriptions: activeSubscriptions.length,
         trial_subscriptions: trialSubscriptions.length,
         conversion_rate: conversionRate
@@ -155,26 +168,26 @@ export const FinancialDashboard = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Revenue (NGN)</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${revenueData?.total_revenue.toFixed(2) || '0.00'}</div>
+            <div className="text-2xl font-bold">₦{revenueData?.total_revenue_ngn.toLocaleString() || '0'}</div>
             <p className="text-xs text-muted-foreground">
-              Monthly revenue
+              Nigerian Naira
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Monthly Recurring Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Revenue (GBP)</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${revenueData?.monthly_revenue.toFixed(2) || '0.00'}</div>
+            <div className="text-2xl font-bold">£{revenueData?.total_revenue_gbp.toLocaleString() || '0'}</div>
             <p className="text-xs text-muted-foreground">
-              Current MRR
+              British Pounds
             </p>
           </CardContent>
         </Card>
@@ -187,7 +200,7 @@ export const FinancialDashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">{revenueData?.active_subscriptions || 0}</div>
             <p className="text-xs text-muted-foreground">
-              {revenueData?.trial_subscriptions || 0} trial users
+              {revenueData?.trial_subscriptions || 0} on 3-month trial
             </p>
           </CardContent>
         </Card>
