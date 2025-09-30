@@ -153,7 +153,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               <Button 
                 onClick={onGetStarted}
                 size="lg"
-                className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-foreground text-background hover:bg-foreground/90 w-full sm:w-auto"
+                className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-white/90 w-full sm:w-auto"
               >
                 Start Your Success Journey
                 <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
@@ -456,7 +456,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <Button 
               onClick={onGetStarted}
               size="lg"
-              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-foreground text-background hover:bg-foreground/90 flex-1 sm:flex-none"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-white/90 flex-1 sm:flex-none"
             >
               Launch Your Business Transformation
               <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
