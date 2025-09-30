@@ -176,7 +176,7 @@ const CalendarView = () => {
                 size="sm"
                 onClick={() => setViewMode(mode as any)}
                 className={`flex-1 sm:flex-none ${viewMode === mode 
-                  ? "bg-[#39FF14] hover:bg-[#32E512] text-black" 
+                  ? "bg-[#39FF14] hover:bg-[#32E512] text-black [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90" 
                   : "text-foreground hover:bg-muted"
                 }`}
               >
@@ -186,7 +186,7 @@ const CalendarView = () => {
           </div>
           <Button 
             onClick={() => setShowNewAppointmentModal(true)}
-            className="bg-[#39FF14] hover:bg-[#32E512] text-black text-sm sm:text-base"
+            className="bg-[#39FF14] hover:bg-[#32E512] text-black text-sm sm:text-base [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
           >
             <Plus className="w-4 h-4 mr-2" />
             New Appointment
@@ -282,11 +282,11 @@ const CalendarView = () => {
                         const isToday = format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
                         
                         return (
-                          <div key={day.toISOString()} className={`border-l-4 pl-3 sm:pl-4 py-2 ${isToday ? 'border-[#39FF14] bg-[#39FF14]/5' : 'border-slate-600'}`}>
+                          <div key={day.toISOString()} className={`border-l-4 pl-3 sm:pl-4 py-2 ${isToday ? 'border-[#39FF14] bg-[#39FF14]/5 [.light_&]:border-green-500 [.light_&]:bg-green-500/5' : 'border-slate-600'}`}>
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                              <h3 className={`font-semibold text-sm sm:text-base ${isToday ? 'text-[#39FF14]' : 'text-foreground'}`}>
+                              <h3 className={`font-semibold text-sm sm:text-base ${isToday ? 'text-[#39FF14] [.light_&]:text-green-500' : 'text-foreground'}`}>
                                 {format(day, 'EEEE, MMM d')}
-                                {isToday && <Badge className="ml-2 bg-[#39FF14] text-black text-xs">Today</Badge>}
+                                {isToday && <Badge className="ml-2 bg-[#39FF14] text-black text-xs [.light_&]:bg-black [.light_&]:text-white">Today</Badge>}
                               </h3>
                               <span className="text-muted-foreground text-xs sm:text-sm">
                                 {dayAppointments.length} appointment{dayAppointments.length !== 1 ? 's' : ''}

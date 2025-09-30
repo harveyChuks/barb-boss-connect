@@ -408,8 +408,7 @@ const Index = () => {
                   <li>
                     <button 
                       onClick={() => setShowAppointmentModal(true)}
-                      className="w-full flex items-center px-3 py-3 rounded-lg transition-colors"
-                      style={{ backgroundColor: '#39FF14', color: 'black' }}
+                      className="w-full flex items-center px-3 py-3 rounded-lg transition-colors bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
                     >
                       <Plus className="w-4 h-4 mr-3" />
                       New Appointment
@@ -433,8 +432,7 @@ const Index = () => {
               <li>
                 <button 
                   onClick={() => setShowBusinessModal(true)}
-                  className="w-full flex items-center px-3 py-3 rounded-lg transition-colors"
-                  style={{ backgroundColor: '#39FF14', color: 'black' }}
+                  className="w-full flex items-center px-3 py-3 rounded-lg transition-colors bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
                 >
                   <Building className="w-4 h-4 mr-3" />
                   Register Business
@@ -446,8 +444,7 @@ const Index = () => {
               <li>
                 <button 
                   onClick={() => setShowAuthModal(true)}
-                  className="w-full flex items-center px-3 py-3 rounded-lg transition-colors"
-                  style={{ backgroundColor: '#39FF14', color: 'black' }}
+                  className="w-full flex items-center px-3 py-3 rounded-lg transition-colors bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
                 >
                   Sign In / Sign Up
                 </button>
@@ -503,7 +500,7 @@ const Index = () => {
             <button
               onClick={() => setActiveSection('home')}
               className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
-                activeSection === 'home' ? 'text-primary' : 'text-muted-foreground'
+                activeSection === 'home' ? 'text-primary [.light_&]:text-green-500' : 'text-muted-foreground'
               }`}
             >
               <Home className="w-4 h-4 mb-1" />
@@ -512,7 +509,7 @@ const Index = () => {
             <button
               onClick={() => setActiveSection('reports')}
               className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
-                activeSection === 'reports' ? 'text-primary' : 'text-muted-foreground'
+                activeSection === 'reports' ? 'text-primary [.light_&]:text-green-500' : 'text-muted-foreground'
               }`}
             >
               <BarChart3 className="w-4 h-4 mb-1" />
@@ -521,7 +518,7 @@ const Index = () => {
             <button
               onClick={() => setActiveSection('services')}
               className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
-                activeSection === 'services' ? 'text-primary' : 'text-muted-foreground'
+                activeSection === 'services' ? 'text-primary [.light_&]:text-green-500' : 'text-muted-foreground'
               }`}
             >
               <Briefcase className="w-4 h-4 mb-1" />
@@ -530,7 +527,7 @@ const Index = () => {
             <button
               onClick={() => setActiveSection('bookings')}
               className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
-                activeSection === 'bookings' ? 'text-primary' : 'text-muted-foreground'
+                activeSection === 'bookings' ? 'text-primary [.light_&]:text-green-500' : 'text-muted-foreground'
               }`}
             >
               <Calendar className="w-4 h-4 mb-1" />
@@ -539,7 +536,7 @@ const Index = () => {
             <button
               onClick={() => setActiveSection('profile')}
               className={`flex flex-col items-center py-2 px-1 rounded-lg text-xs ${
-                activeSection === 'profile' ? 'text-primary' : 'text-muted-foreground'
+                activeSection === 'profile' ? 'text-primary [.light_&]:text-green-500' : 'text-muted-foreground'
               }`}
             >
               <User className="w-4 h-4 mb-1" />
@@ -628,13 +625,7 @@ const Index = () => {
                 ) : (
                   <Button 
                     onClick={() => setShowBusinessModal(true)}
-                    style={{ backgroundColor: '#39FF14', color: 'black' }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#32e612';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#39FF14';
-                    }}
+                    className="bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
                   >
                     <Building className="w-4 h-4 mr-2" />
                     Register Business
@@ -659,21 +650,14 @@ const Index = () => {
           <LandingPage onGetStarted={() => setShowAuthModal(true)} />
         ) : !userBusiness ? (
           <div className="text-center py-12">
-            <Building className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6" style={{ color: '#39FF14' }} />
+            <Building className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 text-[#39FF14] [.light_&]:text-green-500" />
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Set Up Your Business</h2>
             <p className="text-slate-400 mb-8 max-w-2xl mx-auto px-4">
               Complete your business registration with our step-by-step process to start accepting bookings.
             </p>
             <Button 
               onClick={() => setShowBusinessModal(true)}
-              className="text-lg px-8 py-3"
-              style={{ backgroundColor: '#39FF14', color: 'black' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#32e612';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#39FF14';
-              }}
+              className="text-lg px-8 py-3 bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
             >
               <Building className="w-5 h-5 mr-2" />
               Complete Registration
@@ -749,14 +733,7 @@ const Index = () => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <Button 
                           onClick={() => setShowAppointmentModal(true)}
-                          className="h-12 sm:h-16 text-sm sm:text-lg"
-                          style={{ backgroundColor: '#39FF14', color: 'black' }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#32e612';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = '#39FF14';
-                          }}
+                          className="h-12 sm:h-16 text-sm sm:text-lg bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
                         >
                           <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                           Book Appointment
@@ -779,7 +756,7 @@ const Index = () => {
                   <Card className="bg-card border-border">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-foreground flex items-center text-lg sm:text-xl">
-                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
+                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[#39FF14] [.light_&]:text-green-500" />
                         Today's Appointments
                       </CardTitle>
                       <CardDescription className="text-muted-foreground text-sm">
@@ -798,7 +775,7 @@ const Index = () => {
                                 <p className="font-medium text-foreground text-sm sm:text-base truncate">{appointment.customer_name}</p>
                                 <p className="text-xs sm:text-sm text-muted-foreground truncate">{appointment.services?.name || 'Service'}</p>
                               </div>
-                              <Badge variant="outline" className="text-xs sm:text-sm ml-2 flex-shrink-0" style={{ borderColor: '#39FF14', color: '#39FF14' }}>
+                              <Badge variant="outline" className="text-xs sm:text-sm ml-2 flex-shrink-0 border-[#39FF14] text-[#39FF14] [.light_&]:border-green-500 [.light_&]:text-green-500">
                                 {appointment.start_time}
                               </Badge>
                             </div>
@@ -819,14 +796,7 @@ const Index = () => {
                           <p className="text-muted-foreground text-sm sm:text-base">No appointments for today</p>
                           <Button
                             onClick={() => setShowAppointmentModal(true)}
-                            className="mt-4 text-sm sm:text-base"
-                            style={{ backgroundColor: '#39FF14', color: 'black' }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = '#32e612';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor = '#39FF14';
-                            }}
+                            className="mt-4 text-sm sm:text-base bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
                           >
                             Schedule First Appointment
                           </Button>
@@ -839,7 +809,7 @@ const Index = () => {
                   <Card className="bg-card border-border">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-foreground flex items-center text-lg sm:text-xl">
-                        <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2" style={{ color: '#39FF14' }} />
+                        <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[#39FF14] [.light_&]:text-green-500" />
                         Recent Clients
                       </CardTitle>
                       <CardDescription className="text-muted-foreground text-sm">
@@ -883,14 +853,7 @@ const Index = () => {
                             {!searchTerm && (
                               <Button
                                 onClick={() => setShowClientModal(true)}
-                                className="mt-4 text-sm sm:text-base"
-                                style={{ backgroundColor: '#39FF14', color: 'black' }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.backgroundColor = '#32e612';
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.backgroundColor = '#39FF14';
-                                }}
+                                className="mt-4 text-sm sm:text-base bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
                               >
                                 Add First Client
                               </Button>

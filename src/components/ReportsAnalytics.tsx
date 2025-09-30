@@ -345,7 +345,7 @@ const ReportsAnalytics = () => {
                   </span>
                 </div>
               </div>
-              <DollarSign className="w-8 h-8 text-[#39FF14]" />
+              <DollarSign className="w-8 h-8 text-[#39FF14] [.light_&]:text-green-500" />
             </div>
           </CardContent>
         </Card>
@@ -413,19 +413,19 @@ const ReportsAnalytics = () => {
           <TabsList className="bg-card border-border inline-flex w-max">
             <TabsTrigger 
               value="revenue" 
-              className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2 flex-shrink-0"
+              className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2 flex-shrink-0 [.light_&]:data-[state=active]:bg-black [.light_&]:data-[state=active]:text-white"
             >
               Revenue Trends
             </TabsTrigger>
             <TabsTrigger 
               value="services" 
-              className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2 flex-shrink-0"
+              className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2 flex-shrink-0 [.light_&]:data-[state=active]:bg-black [.light_&]:data-[state=active]:text-white"
             >
               Service Performance
             </TabsTrigger>
             <TabsTrigger 
               value="staff" 
-              className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2 flex-shrink-0"
+              className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2 flex-shrink-0 [.light_&]:data-[state=active]:bg-black [.light_&]:data-[state=active]:text-white"
             >
               Staff Performance
             </TabsTrigger>
@@ -525,7 +525,7 @@ const ReportsAnalytics = () => {
                               return (
                                 <div className="bg-slate-800 border border-slate-600 rounded p-2">
                                   <p className="text-white font-medium">{data.name}</p>
-                                  <p className="text-[#39FF14]">Revenue: {formatCurrency(data.revenue)}</p>
+                                  <p className="text-[#39FF14] [.light_&]:text-green-500">Revenue: {formatCurrency(data.revenue)}</p>
                                   <p className="text-blue-400">Bookings: {data.count}</p>
                                 </div>
                               );
@@ -607,7 +607,7 @@ const ReportsAnalytics = () => {
                           return (
                             <div className="bg-slate-800 border border-slate-600 rounded p-2">
                               <p className="text-white font-medium">{label}</p>
-                              <p className="text-[#39FF14]">Revenue: {formatCurrency(payload[0].value as number)}</p>
+                              <p className="text-[#39FF14] [.light_&]:text-green-500">Revenue: {formatCurrency(payload[0].value as number)}</p>
                               <p className="text-blue-400">Bookings: {payload[0].payload.bookings}</p>
                             </div>
                           );

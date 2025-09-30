@@ -289,7 +289,7 @@ const BookingsManagement = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="text-primary font-semibold">
+                    <div className="text-primary font-semibold [.light_&]:text-green-500">
                       {appointment.services.name} - ${appointment.services.price}
                     </div>
                     {appointment.customer_email && (
