@@ -134,7 +134,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
   if (showResetPassword) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="bg-card border-border text-foreground">
+      <DialogContent className="bg-card border-border text-foreground light:bg-white">
           <DialogHeader>
             <DialogTitle>Reset Password</DialogTitle>
             <DialogDescription className="text-muted-foreground">
@@ -160,8 +160,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-green-500 hover:bg-green-600 text-black"
-                style={{ backgroundColor: '#39FF14' }}
+                className="flex-1 bg-green-500 hover:bg-green-600 text-black light:bg-black light:text-white light:hover:bg-black/90"
               >
                 {loading ? "Sending..." : "Send Reset Link"}
               </Button>
@@ -182,7 +181,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border text-foreground">
+      <DialogContent className="bg-card border-border text-foreground light:bg-white">
         <DialogHeader>
           <DialogTitle>Welcome to BizFlow</DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -246,8 +245,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-green-500 hover:bg-green-600 text-black"
-                style={{ backgroundColor: '#39FF14' }}
+                className="w-full bg-green-500 hover:bg-green-600 text-black light:bg-black light:text-white light:hover:bg-black/90"
               >
                 {loading ? "Signing in..." : "Sign In"}
               </Button>
@@ -337,8 +335,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-green-500 hover:bg-green-600 text-black"
-                style={{ backgroundColor: '#39FF14' }}
+                className="w-full bg-green-500 hover:bg-green-600 text-black light:bg-black light:text-white light:hover:bg-black/90"
               >
                 {loading ? "Creating account..." : "Create Account"}
               </Button>
