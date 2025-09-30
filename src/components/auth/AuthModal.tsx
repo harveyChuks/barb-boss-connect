@@ -134,7 +134,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
   if (showResetPassword) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border text-foreground light:bg-white">
+      <DialogContent className="bg-card border-border text-foreground [.light_&]:!bg-white">
           <DialogHeader>
             <DialogTitle>Reset Password</DialogTitle>
             <DialogDescription className="text-muted-foreground">
@@ -181,7 +181,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border text-foreground light:bg-white">
+      <DialogContent className="bg-card border-border text-foreground [.light_&]:!bg-white">
         <DialogHeader>
           <DialogTitle>Welcome to BizFlow</DialogTitle>
           <DialogDescription className="text-muted-foreground">
