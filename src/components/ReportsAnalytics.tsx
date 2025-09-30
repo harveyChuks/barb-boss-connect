@@ -410,7 +410,7 @@ const ReportsAnalytics = () => {
       {/* Charts */}
       <Tabs defaultValue="revenue" className="space-y-6">
         <div className="overflow-x-auto scrollbar-hide">
-          <TabsList className="bg-card border-border inline-flex w-max">
+          <TabsList className="bg-card border border-border inline-flex w-max">
             <TabsTrigger 
               value="revenue" 
               className="text-foreground data-[state=active]:bg-[#39FF14] data-[state=active]:text-black whitespace-nowrap px-6 py-2 flex-shrink-0 [.light_&]:data-[state=active]:bg-black [.light_&]:data-[state=active]:text-white"
