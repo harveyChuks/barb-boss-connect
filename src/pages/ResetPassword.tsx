@@ -20,7 +20,8 @@ const ResetPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    const checkSession = async () => {
+    // Give Supabase time to process the hash and establish session
+    const timer = setTimeout(async () => {
       const { data: { session }, error } = await supabase.auth.getSession();
       
       if (error || !session) {
@@ -30,10 +31,13 @@ const ResetPassword = () => {
           variant: "destructive",
         });
         setTimeout(() => navigate('/'), 2000);
+      } else {
+        // Clear the hash from URL once session is established
+        window.history.replaceState(null, '', window.location.pathname);
       }
-    };
+    }, 1000);
     
-    checkSession();
+    return () => clearTimeout(timer);
   }, [navigate, toast]);
 
   const handleResetPassword = async (e: React.FormEvent) => {

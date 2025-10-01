@@ -13,10 +13,9 @@ export const usePasswordRecovery = () => {
     const accessToken = hashParams.get('access_token');
     
     // If we have a recovery type and access token, redirect to reset password page
+    // Keep the hash so ResetPassword page can access the tokens
     if (type === 'recovery' && accessToken) {
-      // Clear the hash from URL and redirect to reset password page
-      window.history.replaceState(null, '', window.location.pathname);
-      navigate('/reset-password', { replace: true });
+      navigate('/reset-password' + window.location.hash, { replace: true });
     }
   }, [navigate, location]);
 };
