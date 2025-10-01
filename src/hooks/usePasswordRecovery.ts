@@ -1,19 +1,22 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const usePasswordRecovery = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Check if URL contains password recovery hash
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const hash = window.location.hash.substring(1);
+    const hashParams = new URLSearchParams(hash);
     const type = hashParams.get('type');
+    const accessToken = hashParams.get('access_token');
     
-    if (type === 'recovery') {
-      // Supabase automatically handles the token exchange
-      // Just redirect to the reset password page
+    // If we have a recovery type and access token, redirect to reset password page
+    if (type === 'recovery' && accessToken) {
+      // Clear the hash from URL and redirect to reset password page
+      window.history.replaceState(null, '', window.location.pathname);
       navigate('/reset-password', { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, location]);
 };

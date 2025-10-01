@@ -20,8 +20,7 @@ const ResetPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    // Give Supabase a moment to process the hash tokens
-    const timer = setTimeout(async () => {
+    const checkSession = async () => {
       const { data: { session }, error } = await supabase.auth.getSession();
       
       if (error || !session) {
@@ -32,9 +31,9 @@ const ResetPassword = () => {
         });
         setTimeout(() => navigate('/'), 2000);
       }
-    }, 500);
+    };
     
-    return () => clearTimeout(timer);
+    checkSession();
   }, [navigate, toast]);
 
   const handleResetPassword = async (e: React.FormEvent) => {
