@@ -101,6 +101,16 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.email || !formData.email.includes('@')) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -111,15 +121,16 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
       if (error) throw error;
 
       toast({
-        title: "Password reset email sent!",
-        description: "Check your email for instructions to reset your password.",
+        title: "Check your email!",
+        description: "We've sent you a password reset link. Please check your inbox and spam folder.",
       });
       
       setShowResetPassword(false);
+      setFormData({ email: "", password: "", confirmPassword: "" });
     } catch (error: any) {
       toast({
-        title: "Error",
-        description: error.message,
+        title: "Error sending reset email",
+        description: error.message || "Please try again later",
         variant: "destructive",
       });
     } finally {

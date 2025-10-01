@@ -20,18 +20,32 @@ const ResetPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    // Check if we have the necessary parameters from the email link
-    const accessToken = searchParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token');
+    // Supabase automatically handles the recovery token from the URL
+    // We just need to verify the user has a valid session
+    const checkSession = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error) {
+        console.error('Session error:', error);
+        toast({
+          title: "Invalid or expired link",
+          description: "Please request a new password reset link.",
+          variant: "destructive",
+        });
+      }
+      
+      if (!session) {
+        toast({
+          title: "Session expired",
+          description: "Please request a new password reset link.",
+          variant: "destructive",
+        });
+        setTimeout(() => navigate('/'), 3000);
+      }
+    };
     
-    if (accessToken && refreshToken) {
-      // Set the session from the URL parameters
-      supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      });
-    }
-  }, [searchParams]);
+    checkSession();
+  }, [searchParams, navigate, toast]);
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
