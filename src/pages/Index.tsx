@@ -14,6 +14,7 @@ import LandingPage from "@/components/LandingPage";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useTimeBasedTheme } from "@/hooks/useTimeBasedTheme";
+import { usePasswordRecovery } from "@/hooks/usePasswordRecovery";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -51,6 +52,9 @@ const Index = () => {
   
   // Apply time-based theme switching only for landing page visitors (non-authenticated users)
   const themeInfo = useTimeBasedTheme(!isAuthenticated);
+  
+  // Handle password recovery redirects
+  usePasswordRecovery();
   
   const { toast } = useToast();
   const navigate = useNavigate();
