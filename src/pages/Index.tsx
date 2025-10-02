@@ -17,7 +17,7 @@ import { useTimeBasedTheme } from "@/hooks/useTimeBasedTheme";
 import { usePasswordRecovery } from "@/hooks/usePasswordRecovery";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import StatisticsOverview from "@/components/StatisticsOverview";
 import ProfileManagement from "@/components/ProfileManagement";
 import ServicesManagement from "@/components/ServicesManagement";
@@ -583,11 +583,13 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <img 
-                src="/lovable-uploads/bce9e11a-cca6-47fb-9dc5-04383b2359db.png" 
-                alt="BizFlow Logo" 
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
-              />
+              <Link to="/" className="cursor-pointer hover:opacity-80 transition-opacity">
+                <img 
+                  src="/lovable-uploads/bce9e11a-cca6-47fb-9dc5-04383b2359db.png" 
+                  alt="BizFlow Logo" 
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
+                />
+              </Link>
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-white">
                   {userBusiness?.name || "BizFlow"}

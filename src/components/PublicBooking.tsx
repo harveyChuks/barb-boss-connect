@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -414,11 +415,13 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <img 
-                src="/lovable-uploads/bce9e11a-cca6-47fb-9dc5-04383b2359db.png" 
-                alt="BizFlow Logo" 
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
-              />
+              <Link to="/" className="cursor-pointer hover:opacity-80 transition-opacity">
+                <img 
+                  src="/lovable-uploads/bce9e11a-cca6-47fb-9dc5-04383b2359db.png" 
+                  alt="BizFlow Logo" 
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
+                />
+              </Link>
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-white">
                   {business?.name || "BizFlow"}
