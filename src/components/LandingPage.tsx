@@ -161,7 +161,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                   We will Transform your Business even Better
                 </h1>
                 <div className="mt-3 sm:mt-4 h-10 sm:h-12 md:h-14 lg:h-16 overflow-hidden">
-                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold transition-all duration-500 ease-in-out text-green-500 animate-pulse">
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-green-500 animate-pulse">
                     {animatedText}
                   </h2>
                 </div>
