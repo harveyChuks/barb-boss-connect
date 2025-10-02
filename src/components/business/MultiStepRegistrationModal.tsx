@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -19,6 +20,7 @@ interface MultiStepRegistrationModalProps {
 
 const MultiStepRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: MultiStepRegistrationModalProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   
   const {
@@ -159,10 +161,10 @@ const MultiStepRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: M
           <Button
             type="button"
             variant="outline"
-            onClick={currentStep === 1 ? () => onOpenChange(false) : handlePrevious}
+            onClick={currentStep === 1 ? () => { onOpenChange(false); navigate('/'); } : handlePrevious}
             className="border-slate-600 text-white hover:bg-slate-700"
           >
-            {currentStep === 1 ? 'Cancel' : 'Previous'}
+            {currentStep === 1 ? 'Back to Landing Page' : 'Previous'}
           </Button>
           
           {currentStep < 4 ? (
