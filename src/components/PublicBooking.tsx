@@ -446,29 +446,29 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   {business.name.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex-1">
-                <h1 className="text-3xl font-bold text-white mb-2">{business.name}</h1>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-3xl font-bold text-white mb-2 break-words">{business.name}</h1>
                 <Badge className="mb-3 capitalize">{business.business_type.replace('_', ' ')}</Badge>
                 {business.description && (
-                  <p className="text-slate-300 mb-4">{business.description}</p>
+                  <p className="text-slate-300 mb-4 break-words">{business.description}</p>
                 )}
                 <div className="flex flex-wrap gap-4 text-slate-400">
                   {business.phone && (
-                    <div className="flex items-center">
-                      <Phone className="w-4 h-4 mr-2" />
-                      {business.phone}
+                    <div className="flex items-center min-w-0">
+                      <Phone className="w-4 h-4 mr-2 flex-shrink-0" />
+                      <span className="break-all">{business.phone}</span>
                     </div>
                   )}
                   {business.email && (
-                    <div className="flex items-center">
-                      <Mail className="w-4 h-4 mr-2" />
-                      {business.email}
+                    <div className="flex items-center min-w-0">
+                      <Mail className="w-4 h-4 mr-2 flex-shrink-0" />
+                      <span className="break-all">{business.email}</span>
                     </div>
                   )}
                   {business.address && (
-                    <div className="flex items-center">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      {business.address}
+                    <div className="flex items-center min-w-0">
+                      <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
+                      <span className="break-words">{business.address}</span>
                     </div>
                   )}
                 </div>
