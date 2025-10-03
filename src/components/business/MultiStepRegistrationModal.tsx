@@ -63,7 +63,8 @@ const MultiStepRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: M
           city: businessInfo.city,
           state: businessInfo.state,
           country: businessInfo.country,
-          postal_code: businessInfo.zipCode
+          postal_code: businessInfo.zipCode,
+          currency: businessInfo.currency
         })
         .select()
         .single();
