@@ -29,7 +29,7 @@ const SettingsSection = () => {
         .from('businesses')
         .select('*')
         .eq('owner_id', user.id)
-        .single();
+        .maybeSingle();
         
       setUserBusiness(data);
     };

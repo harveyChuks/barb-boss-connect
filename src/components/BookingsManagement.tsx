@@ -56,7 +56,7 @@ const BookingsManagement = () => {
         .from('businesses')
         .select('id')
         .eq('owner_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (!business) return;
 

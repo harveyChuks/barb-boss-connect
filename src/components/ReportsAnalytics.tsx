@@ -68,7 +68,7 @@ const ReportsAnalytics = () => {
         .from('businesses')
         .select('id, currency')
         .eq('owner_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (!business) {
         toast({

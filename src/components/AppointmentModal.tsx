@@ -54,7 +54,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
         .from('businesses')
         .select('*')
         .eq('owner_id', user?.id)
-        .single();
+        .maybeSingle();
       
       setUserBusiness(business);
 

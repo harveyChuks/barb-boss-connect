@@ -60,7 +60,7 @@ const OfflineCapabilities = () => {
         .from("businesses")
         .select("id, offline_settings")
         .eq("owner_id", user.id)
-        .single();
+        .maybeSingle();
 
       if (business) {
         setBusinessId(business.id);

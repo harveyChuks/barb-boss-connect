@@ -55,7 +55,7 @@ const BusinessHoursManagement = () => {
         .from('businesses')
         .select('*')
         .eq('owner_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (businessError) throw businessError;
       setBusiness(businessData);

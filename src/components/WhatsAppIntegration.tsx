@@ -43,7 +43,7 @@ const WhatsAppIntegration = () => {
         .from("businesses")
         .select("id, whatsapp_enabled, whatsapp_number, whatsapp_settings")
         .eq("owner_id", user.id)
-        .single();
+        .maybeSingle();
 
       if (business) {
         setBusinessId(business.id);

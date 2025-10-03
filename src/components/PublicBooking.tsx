@@ -795,10 +795,10 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   />
                 </div>
 
-                {/* Deposit Payment Section */}
+                {/* Price Summary Section */}
                 {formData.selected_services.length > 0 && (
                   <div className="space-y-3 p-4 bg-slate-700/30 rounded-lg border border-slate-600">
-                    <h3 className="text-white font-semibold text-sm">Payment Information</h3>
+                    <h3 className="text-white font-semibold text-sm">Price Summary</h3>
                     <div className="space-y-2">
                       {formData.selected_services.map(serviceId => {
                         const service = services.find(s => s.id === serviceId);
@@ -812,13 +812,12 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                       })}
                       {(() => {
                         const selectedServices = services.filter(s => formData.selected_services.includes(s.id));
-                        const totalPrice = selectedServices.reduce((sum, service) => sum + (service.price || 0), 0);
-                        const totalDuration = selectedServices.reduce((sum, service) => sum + service.duration_minutes, 0);
+                        const totalPrice = selectedServices.reduce((sum, s) => sum + (s.price || 0), 0);
+                        const totalDuration = selectedServices.reduce((sum, s) => sum + s.duration_minutes, 0);
                         
                         if (totalPrice > 0) {
                           return (
                             <>
-                              <hr className="border-slate-600" />
                               <div className="flex items-center justify-between text-sm">
                                 <span className="text-slate-300">Total Price:</span>
                                 <span className="text-white font-medium">${totalPrice}</span>
@@ -827,10 +826,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                                 <span className="text-slate-300">Total Duration:</span>
                                 <span className="text-white font-medium">{totalDuration} minutes</span>
                               </div>
-                              <div className="flex items-center justify-between text-sm">
-                                <span className="text-slate-300">Required Deposit (50%):</span>
-                                <span className="text-primary font-semibold">${(totalPrice * 0.5).toFixed(2)}</span>
-                              </div>
                             </>
                           );
                         }
@@ -838,7 +833,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                       })()}
                     </div>
                     <div className="text-xs text-slate-400">
-                      A 50% deposit is required to secure your appointment. You can pay the remaining balance during your visit.
+                      Payment will be collected during your visit. We'll contact you to confirm your appointment.
                     </div>
                   </div>
                 )}
@@ -855,14 +850,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   }
                   className="w-full bg-primary hover:bg-primary/90 text-black font-semibold"
                 >
-                  {submitting 
-                    ? "Booking..." 
-                    : (() => {
-                        const selectedServices = services.filter(s => formData.selected_services.includes(s.id));
-                        const hasPrice = selectedServices.some(s => s.price);
-                        return hasPrice ? "Book Appointment & Pay Deposit" : "Book Appointment";
-                      })()
-                  }
+                  {submitting ? "Booking..." : "Book Appointment"}
                 </Button>
               </CardContent>
             </Card>

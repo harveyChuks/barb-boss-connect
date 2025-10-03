@@ -67,7 +67,7 @@ const ServicesManagement = () => {
         .from('businesses')
         .select('*')
         .eq('owner_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (business) {
         setUserBusiness(business);
