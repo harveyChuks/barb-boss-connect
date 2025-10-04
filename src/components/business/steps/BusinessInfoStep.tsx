@@ -29,7 +29,8 @@ const BusinessInfoStep = ({ businessInfo, setBusinessInfo }: BusinessInfoStepPro
     { value: "makeup_artist" as BusinessType, label: "Makeup Artist" },
     { value: "nail_salon" as BusinessType, label: "Nail Salon" },
     { value: "spa" as BusinessType, label: "Spa" },
-    { value: "beauty_clinic" as BusinessType, label: "Beauty Clinic" }
+    { value: "beauty_clinic" as BusinessType, label: "Beauty Clinic" },
+    { value: "fashion_designer" as BusinessType, label: "Fashion Designer" }
   ];
 
   const countries = [
