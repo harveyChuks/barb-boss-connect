@@ -146,7 +146,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
   if (showResetPassword) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="bg-card border-border text-foreground [.light_&]:!bg-white max-h-[85vh] p-4 sm:p-6 top-[15%] sm:top-[50%] translate-y-0 sm:translate-y-[-50%]">
+        <DialogContent className="bg-card border-border text-foreground [.light_&]:!bg-white max-h-[85vh] p-4 sm:p-6 top-[8%] sm:top-[50%] translate-y-0 sm:translate-y-[-50%]">
           <ScrollArea className="max-h-[75vh] pr-4">
             <DialogHeader>
               <DialogTitle>Reset Password</DialogTitle>
@@ -195,7 +195,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border text-foreground [.light_&]:!bg-white max-h-[85vh] p-4 sm:p-6 top-[15%] sm:top-[50%] translate-y-0 sm:translate-y-[-50%]">
+      <DialogContent className="bg-card border-border text-foreground [.light_&]:!bg-white max-h-[85vh] p-4 sm:p-6 top-[8%] sm:top-[50%] translate-y-0 sm:translate-y-[-50%]">
         <ScrollArea className="max-h-[75vh] pr-4">
           <DialogHeader>
             <DialogTitle>Welcome to BizFlow</DialogTitle>
