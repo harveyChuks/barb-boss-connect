@@ -94,6 +94,13 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
     }
   ];
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Free Trial Banner */}
@@ -117,8 +124,43 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         </div>
       </section>
 
-      {/* Hero Section */}
-      <section className="relative py-12 sm:py-16 lg:py-20 px-4">
+      {/* Navigation Bar */}
+      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="text-lg font-bold text-foreground">BizFlow</div>
+            <div className="flex gap-6">
+              <button
+                onClick={() => scrollToSection('about')}
+                className="text-sm font-medium text-foreground hover:text-green-500 transition-colors"
+              >
+                About
+              </button>
+              <button
+                onClick={() => scrollToSection('features')}
+                className="text-sm font-medium text-foreground hover:text-green-500 transition-colors"
+              >
+                Features
+              </button>
+              <button
+                onClick={() => scrollToSection('pricing')}
+                className="text-sm font-medium text-foreground hover:text-green-500 transition-colors"
+              >
+                Pricing
+              </button>
+              <button
+                onClick={() => scrollToSection('faq')}
+                className="text-sm font-medium text-foreground hover:text-green-500 transition-colors"
+              >
+                FAQ
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section (About) */}
+      <section id="about" className="relative py-12 sm:py-16 lg:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Location Selector */}
           <div className="flex justify-center mb-8">
@@ -281,7 +323,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 sm:py-20 px-4 bg-accent/5">
+      <section id="features" className="py-16 sm:py-20 px-4 bg-accent/5">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
@@ -610,7 +652,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-16 sm:py-20 px-4 bg-accent/5">
+      <section id="pricing" className="py-16 sm:py-20 px-4 bg-accent/5">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
@@ -719,7 +761,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 sm:py-20 px-4 bg-accent/5">
+      <section id="faq" className="py-16 sm:py-20 px-4 bg-accent/5">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
