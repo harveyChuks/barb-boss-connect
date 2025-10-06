@@ -16,7 +16,6 @@ import servicesMockup from "@/assets/mockup-services.png";
 import chartsMockup from "@/assets/mockup-charts.png";
 import reportsMockup from "@/assets/mockup-reports.png";
 import performanceMockup from "@/assets/mockup-performance.png";
-import bizflowLogo from "@/assets/bizflow-logo.png";
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -95,67 +94,31 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
     }
   ];
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      {/* Header with Navigation */}
-      <header className="sticky top-0 z-50 bg-gradient-to-r from-green-500 to-green-600 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between gap-4">
-            {/* Logo */}
-            <div className="flex items-center gap-2">
-              <img src={bizflowLogo} alt="BizFlow Logo" className="h-8 w-auto" />
-              <span className="text-white font-bold text-xl hidden sm:inline">BizFlow</span>
-            </div>
-
-            {/* Navigation Links */}
-            <nav className="hidden md:flex items-center gap-6">
-              <button
-                onClick={() => scrollToSection('about')}
-                className="text-white hover:text-white/80 transition-colors text-sm font-medium"
-              >
-                About
-              </button>
-              <button
-                onClick={() => scrollToSection('features')}
-                className="text-white hover:text-white/80 transition-colors text-sm font-medium"
-              >
-                Features
-              </button>
-              <button
-                onClick={() => scrollToSection('pricing')}
-                className="text-white hover:text-white/80 transition-colors text-sm font-medium"
-              >
-                Pricing
-              </button>
-              <button
-                onClick={() => scrollToSection('faq')}
-                className="text-white hover:text-white/80 transition-colors text-sm font-medium"
-              >
-                FAQ
-              </button>
-            </nav>
-
-            {/* CTA Button */}
+      {/* Free Trial Banner */}
+      <section className="bg-gradient-to-r from-green-500 to-green-600 py-3 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-center">
+            <span className="text-white font-semibold text-sm sm:text-base">
+              🎉 Limited Time Offer:
+            </span>
+            <span className="text-white text-sm sm:text-base">
+              Get <span className="font-bold underline">3 Months FREE</span> when you start today
+            </span>
             <Button 
               onClick={onGetStarted}
               size="sm"
               className="bg-white text-green-600 hover:bg-gray-100 font-semibold shadow-md hover:shadow-lg transition-all"
             >
-              Get Started
+              Claim Free Trial →
             </Button>
           </div>
         </div>
-      </header>
+      </section>
 
-      {/* Hero Section (About) */}
-      <section id="about" className="relative py-12 sm:py-16 lg:py-20 px-4">
+      {/* Hero Section */}
+      <section className="relative py-12 sm:py-16 lg:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Location Selector */}
           <div className="flex justify-center mb-8">
@@ -318,7 +281,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-16 sm:py-20 px-4 bg-accent/5">
+      <section className="py-16 sm:py-20 px-4 bg-accent/5">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
@@ -647,7 +610,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-16 sm:py-20 px-4 bg-accent/5">
+      <section className="py-16 sm:py-20 px-4 bg-accent/5">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
@@ -756,7 +719,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-16 sm:py-20 px-4 bg-accent/5">
+      <section className="py-16 sm:py-20 px-4 bg-accent/5">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
