@@ -1,6 +1,7 @@
 import { ArrowRight, Calendar, Users, BarChart3, Clock, CheckCircle, Star, TrendingUp, DollarSign, QrCode, Scissors, TrendingDown, Sun, Moon, Edit, Share2, Zap, BarChart, Sparkles, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { usePageVisitTracker } from "@/hooks/usePageVisitTracker";
 import { useTimeBasedTheme } from "@/hooks/useTimeBasedTheme";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -714,6 +715,101 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               </Button>
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 sm:py-20 px-4 bg-accent/5">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground">
+              Everything you need to know about BizFlow
+            </p>
+          </div>
+
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            <AccordionItem value="item-1" className="bg-card border border-border rounded-lg px-6">
+              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold text-card-foreground hover:text-green-500">
+                How does the free trial work?
+              </AccordionTrigger>
+              <AccordionContent className="text-sm sm:text-base text-muted-foreground">
+                You get 3 months completely free when you sign up today. No credit card required. After the trial, 
+                you can choose to continue with our affordable monthly plan at {currencySymbol}{monthlyPrice} or cancel anytime.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-2" className="bg-card border border-border rounded-lg px-6">
+              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold text-card-foreground hover:text-green-500">
+                What types of businesses can use BizFlow?
+              </AccordionTrigger>
+              <AccordionContent className="text-sm sm:text-base text-muted-foreground">
+                BizFlow is perfect for any service-based business including barbershops, hair salons, spas, beauty parlors, 
+                fitness studios, consulting services, and more. Any business that takes appointments can benefit from our platform.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-3" className="bg-card border border-border rounded-lg px-6">
+              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold text-card-foreground hover:text-green-500">
+                Can I customize my booking page?
+              </AccordionTrigger>
+              <AccordionContent className="text-sm sm:text-base text-muted-foreground">
+                Yes! You get a personalized booking link with your business name, custom services, your branding, 
+                business hours, and more. Your clients will have a professional booking experience that reflects your brand.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-4" className="bg-card border border-border rounded-lg px-6">
+              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold text-card-foreground hover:text-green-500">
+                How do automated reminders work?
+              </AccordionTrigger>
+              <AccordionContent className="text-sm sm:text-base text-muted-foreground">
+                BizFlow automatically sends appointment reminders to your clients via email and SMS, significantly 
+                reducing no-shows. You can customize when reminders are sent and what they say.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-5" className="bg-card border border-border rounded-lg px-6">
+              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold text-card-foreground hover:text-green-500">
+                Is my data secure?
+              </AccordionTrigger>
+              <AccordionContent className="text-sm sm:text-base text-muted-foreground">
+                Absolutely. We use enterprise-grade security with encrypted data storage and secure backups. 
+                Your business and client information is protected with industry-standard security protocols.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-6" className="bg-card border border-border rounded-lg px-6">
+              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold text-card-foreground hover:text-green-500">
+                Can I manage multiple staff members?
+              </AccordionTrigger>
+              <AccordionContent className="text-sm sm:text-base text-muted-foreground">
+                Yes! BizFlow includes comprehensive staff management features. You can add team members, 
+                assign services to specific staff, and track individual performance and bookings.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-7" className="bg-card border border-border rounded-lg px-6">
+              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold text-card-foreground hover:text-green-500">
+                What reports and analytics do I get?
+              </AccordionTrigger>
+              <AccordionContent className="text-sm sm:text-base text-muted-foreground">
+                You get comprehensive analytics including revenue tracking, booking trends, service performance, 
+                client retention rates, peak business hours, and detailed financial reports to help you make informed decisions.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-8" className="bg-card border border-border rounded-lg px-6">
+              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold text-card-foreground hover:text-green-500">
+                Can I cancel my subscription anytime?
+              </AccordionTrigger>
+              <AccordionContent className="text-sm sm:text-base text-muted-foreground">
+                Yes, there are no long-term contracts. You can cancel your subscription at any time with no penalties or cancellation fees.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </section>
 
