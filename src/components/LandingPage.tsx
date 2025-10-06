@@ -16,6 +16,7 @@ import servicesMockup from "@/assets/mockup-services.png";
 import chartsMockup from "@/assets/mockup-charts.png";
 import reportsMockup from "@/assets/mockup-reports.png";
 import performanceMockup from "@/assets/mockup-performance.png";
+import bizflowLogo from "@/assets/bizflow-logo.png";
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -103,61 +104,55 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      {/* Free Trial Banner */}
-      <section className="bg-gradient-to-r from-green-500 to-green-600 py-3 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-center">
-            <span className="text-white font-semibold text-sm sm:text-base">
-              🎉 Limited Time Offer:
-            </span>
-            <span className="text-white text-sm sm:text-base">
-              Get <span className="font-bold underline">3 Months FREE</span> when you start today
-            </span>
-            <Button 
-              onClick={onGetStarted}
-              size="sm"
-              className="bg-white text-green-600 hover:bg-gray-100 font-semibold shadow-md hover:shadow-lg transition-all"
-            >
-              Claim Free Trial →
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Header with Navigation */}
+      <header className="sticky top-0 z-50 bg-gradient-to-r from-green-500 to-green-600 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between gap-4">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <img src={bizflowLogo} alt="BizFlow Logo" className="h-8 w-auto" />
+              <span className="text-white font-bold text-xl hidden sm:inline">BizFlow</span>
+            </div>
 
-      {/* Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-lg font-bold text-foreground">BizFlow</div>
-            <div className="flex gap-6">
+            {/* Navigation Links */}
+            <nav className="hidden md:flex items-center gap-6">
               <button
                 onClick={() => scrollToSection('about')}
-                className="text-sm font-medium text-foreground hover:text-green-500 transition-colors"
+                className="text-white hover:text-white/80 transition-colors text-sm font-medium"
               >
                 About
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-sm font-medium text-foreground hover:text-green-500 transition-colors"
+                className="text-white hover:text-white/80 transition-colors text-sm font-medium"
               >
                 Features
               </button>
               <button
                 onClick={() => scrollToSection('pricing')}
-                className="text-sm font-medium text-foreground hover:text-green-500 transition-colors"
+                className="text-white hover:text-white/80 transition-colors text-sm font-medium"
               >
                 Pricing
               </button>
               <button
                 onClick={() => scrollToSection('faq')}
-                className="text-sm font-medium text-foreground hover:text-green-500 transition-colors"
+                className="text-white hover:text-white/80 transition-colors text-sm font-medium"
               >
                 FAQ
               </button>
-            </div>
+            </nav>
+
+            {/* CTA Button */}
+            <Button 
+              onClick={onGetStarted}
+              size="sm"
+              className="bg-white text-green-600 hover:bg-gray-100 font-semibold shadow-md hover:shadow-lg transition-all"
+            >
+              Get Started
+            </Button>
           </div>
         </div>
-      </nav>
+      </header>
 
       {/* Hero Section (About) */}
       <section id="about" className="relative py-12 sm:py-16 lg:py-20 px-4">
