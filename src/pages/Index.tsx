@@ -29,6 +29,7 @@ import WorkPicturesManagement from "@/components/WorkPicturesManagement";
 import ReportsAnalytics from "@/components/ReportsAnalytics";
 import WhatsAppIntegration from "@/components/WhatsAppIntegration";
 import LocalPaymentsIntegration from "@/components/LocalPaymentsIntegration";
+import { useBookingNotifications } from "@/hooks/useBookingNotifications";
 
 // Currency formatting function
 const formatCurrency = (amount: number, currency: string = 'NGN') => {
@@ -53,6 +54,12 @@ const Index = () => {
   // Apply time-based theme switching only for landing page visitors (non-authenticated users)
   const themeInfo = useTimeBasedTheme(!isAuthenticated);
   
+  // State for business
+  const [userBusiness, setUserBusiness] = useState(null);
+  
+  // Enable booking notifications for business owner
+  useBookingNotifications(userBusiness?.id || null);
+  
   // Handle password recovery redirects
   usePasswordRecovery();
   
@@ -64,7 +71,6 @@ const Index = () => {
   const [showBusinessModal, setShowBusinessModal] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('home');
   const [searchTerm, setSearchTerm] = useState("");
-  const [userBusiness, setUserBusiness] = useState(null);
   const [todayAppointments, setTodayAppointments] = useState([]);
   const [recentClients, setRecentClients] = useState([]);
   const [stats, setStats] = useState({
