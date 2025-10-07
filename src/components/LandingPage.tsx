@@ -104,55 +104,6 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-50 bg-black border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo and App Name */}
-            <div className="flex items-center gap-3">
-              <img src={bizflowLogo} alt="BizFlow Logo" className="h-8 w-8" />
-              <span className="text-white font-bold text-xl">BizFlow</span>
-            </div>
-
-            {/* Navigation Links */}
-            <nav className="hidden md:flex items-center gap-8">
-              <button
-                onClick={() => scrollToSection('about')}
-                className="text-white/80 hover:text-white transition-colors font-medium"
-              >
-                About
-              </button>
-              <button
-                onClick={() => scrollToSection('features')}
-                className="text-white/80 hover:text-white transition-colors font-medium"
-              >
-                Features
-              </button>
-              <button
-                onClick={() => scrollToSection('pricing')}
-                className="text-white/80 hover:text-white transition-colors font-medium"
-              >
-                Pricing
-              </button>
-              <button
-                onClick={() => scrollToSection('faq')}
-                className="text-white/80 hover:text-white transition-colors font-medium"
-              >
-                FAQ
-              </button>
-            </nav>
-
-            {/* Get Started Button */}
-            <Button
-              onClick={onGetStarted}
-              className="bg-white text-black hover:bg-white/90 font-semibold"
-            >
-              Get Started
-            </Button>
-          </div>
-        </div>
-      </header>
-
       {/* Free Trial Banner */}
       <section className="bg-gradient-to-r from-green-500 to-green-600 py-3 px-4">
         <div className="max-w-7xl mx-auto">
