@@ -285,7 +285,7 @@ const Index = () => {
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="bg-slate-900 border-slate-700">
+      <SheetContent side="right" className="bg-primary/10 backdrop-blur-xl border-primary/20">
         <div className="flex flex-col pt-8 h-full overflow-y-auto pb-6">
           {isAuthenticated && userBusiness ? (
             <>
