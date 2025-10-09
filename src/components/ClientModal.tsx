@@ -147,19 +147,19 @@ const ClientModal = ({ open, onOpenChange, onClientAdded }: ClientModalProps) =>
             />
           </div>
           
-          <DialogFooter>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-border text-foreground hover:bg-muted"
+              className="border-border text-foreground hover:bg-muted w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={loading}
-              className="bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
+              className="bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90 w-full sm:w-auto"
             >
               {loading ? "Adding..." : "Add Client"}
             </Button>

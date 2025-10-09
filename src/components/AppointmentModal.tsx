@@ -286,7 +286,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border text-foreground max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-card border-border text-foreground max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Schedule New Appointment</DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -411,19 +411,19 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
             />
           </div>
           
-          <DialogFooter>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-border text-foreground hover:bg-muted"
+              className="border-border text-foreground hover:bg-muted w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={loading || !formData.date || !formData.time || !formData.serviceId}
-              className="bg-amber-500 hover:bg-amber-600 text-black"
+              className="bg-amber-500 hover:bg-amber-600 text-black w-full sm:w-auto"
             >
               {loading ? "Scheduling..." : "Schedule Appointment"}
             </Button>
