@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.barboss.connect',
-  appName: 'barb-boss-connect',
+  appId: 'com.karenokoh.boji',
+  appName: 'Boji',
   webDir: 'dist',
   plugins: {
     SplashScreen: {
