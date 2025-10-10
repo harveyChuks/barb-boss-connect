@@ -23,7 +23,7 @@ const SubscriptionBlocker = ({ subscription, onUpgrade }: SubscriptionBlockerPro
           </CardTitle>
           <CardDescription>
             {isTrialExpired 
-              ? 'Your free trial has ended. Upgrade to continue using BizFlow.'
+              ? 'Your free trial has ended. Upgrade to continue using Boji.'
               : 'Your subscription has expired. Please renew to continue.'
             }
           </CardDescription>

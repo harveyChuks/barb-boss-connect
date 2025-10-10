@@ -295,7 +295,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('home')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <Home className="w-4 h-4 mr-3" />
                     Home
@@ -305,7 +305,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('overview')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <BarChart3 className="w-4 h-4 mr-3" />
                     Overview
@@ -315,7 +315,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('reports')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <TrendingUp className="w-4 h-4 mr-3" />
                     Biz Stats
@@ -325,7 +325,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('profile')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <User className="w-4 h-4 mr-3" />
                     Business Profile
@@ -335,7 +335,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('services')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <Scissors className="w-4 h-4 mr-3" />
                     Services
@@ -345,7 +345,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('portfolio')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <Camera className="w-4 h-4 mr-3" />
                     Portfolio
@@ -355,7 +355,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('staff')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <Users className="w-4 h-4 mr-3" />
                     Staff Management
@@ -365,7 +365,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('bookings')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <Calendar className="w-4 h-4 mr-3" />
                     Bookings
@@ -375,7 +375,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('calendar')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <Calendar className="w-4 h-4 mr-3" />
                     Calendar View
@@ -385,7 +385,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('whatsapp')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <MessageCircle className="w-4 h-4 mr-3" />
                     WhatsApp Integration
@@ -395,7 +395,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('payments')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <CreditCard className="w-4 h-4 mr-3" />
                     Local Payments
@@ -405,7 +405,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => setActiveSection('settings')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <Settings className="w-4 h-4 mr-3" />
                     Settings
@@ -428,7 +428,7 @@ const Index = () => {
                   <li>
                     <button 
                       onClick={() => setShowClientModal(true)}
-                      className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                      className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                     >
                       <Plus className="w-4 h-4 mr-3" />
                       Add Client
@@ -468,7 +468,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={() => navigate('/admin')}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <ShieldCheck className="w-4 h-4 mr-3" />
                     Admin Panel
@@ -479,7 +479,7 @@ const Index = () => {
                 <li>
                   <button 
                     onClick={handleSignOut}
-                    className="w-full flex items-center px-3 py-3 text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="w-full flex items-center px-3 py-3 text-white hover:bg-primary/20 rounded-lg transition-colors"
                   >
                     <LogOut className="w-4 h-4 mr-3" />
                     Sign Out
@@ -591,14 +591,14 @@ const Index = () => {
             <div className="flex items-center space-x-3">
               <Link to="/" className="cursor-pointer hover:opacity-80 transition-opacity">
                 <img 
-                  src="/lovable-uploads/bce9e11a-cca6-47fb-9dc5-04383b2359db.png" 
-                  alt="BizFlow Logo" 
+                  src="/boji-logo.png" 
+                  alt="Boji Logo" 
                   className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
                 />
               </Link>
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-white">
-                  {userBusiness?.name || "BizFlow"}
+                  {userBusiness?.name || "Boji"}
                 </h1>
                 {userBusiness && (
                   <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block">Business Dashboard</p>

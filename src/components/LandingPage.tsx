@@ -16,7 +16,7 @@ import servicesMockup from "@/assets/mockup-services.png";
 import chartsMockup from "@/assets/mockup-charts.png";
 import reportsMockup from "@/assets/mockup-reports.png";
 import performanceMockup from "@/assets/mockup-performance.png";
-import bizflowLogo from "@/assets/bizflow-logo.png";
+import bojiLogo from "@/assets/boji-logo.png";
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -85,7 +85,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
     {
       name: "Sarah Johnson",
       business: "Elegant Hair Studio",
-      text: "BizFlow transformed how I run my salon. Booking management is now effortless!",
+      text: "Boji transformed how I run my salon. Booking management is now effortless!",
       rating: 5
     },
     {
@@ -175,7 +175,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                   </h2>
                 </div>
                 <p className="text-base sm:text-lg lg:text-xl text-foreground mt-4 sm:mt-6 max-w-lg animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
-                  BizFlow empowers service businesses to automate scheduling, enhance client relationships, 
+                  Boji empowers service businesses to automate scheduling, enhance client relationships, 
                   and accelerate growth — all from one comprehensive platform.
                 </p>
               </div>
@@ -251,7 +251,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 <div className="relative z-10 transform rotate-[-8deg] hover:rotate-[-5deg] hover:scale-110 transition-all duration-500">
                   <img 
                     src={dashboardMockup} 
-                    alt="BizFlow Dashboard on iPhone showing appointments, stats, and quick actions"
+                    alt="Boji Dashboard on iPhone showing appointments, stats, and quick actions"
                     className="w-40 sm:w-48 md:w-60 lg:w-72 h-auto rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[3rem] shadow-2xl hover:shadow-green-500/20"
                   />
                 </div>
@@ -260,7 +260,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 <div className="absolute -right-3 sm:-right-4 md:-right-6 lg:-right-8 top-8 sm:top-10 md:top-12 lg:top-16 z-0 transform rotate-[12deg] hover:rotate-[8deg] hover:scale-105 transition-all duration-500">
                   <img 
                     src={analyticsMockup} 
-                    alt="BizFlow Analytics showing business reports and revenue"
+                    alt="Boji Analytics showing business reports and revenue"
                     className="w-32 sm:w-36 md:w-44 lg:w-56 h-auto rounded-[1.25rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] shadow-xl opacity-80 hover:opacity-100"
                   />
                 </div>
@@ -458,7 +458,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Why BizFlow Stands Apart
+              Why Boji Stands Apart
             </h2>
             <p className="text-xl text-foreground">
               Experience the advantages that drive business transformation
@@ -484,7 +484,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               Success Stories from Business Leaders
             </h2>
             <p className="text-xl text-foreground">
-              Discover how BizFlow transforms business operations
+              Discover how Boji transforms business operations
             </p>
           </div>
 
@@ -734,7 +734,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               Frequently Asked Questions
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground">
-              Everything you need to know about BizFlow
+              Everything you need to know about Boji
             </p>
           </div>
 
@@ -751,10 +751,10 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
 
             <AccordionItem value="item-2" className="bg-card border border-border rounded-lg px-6">
               <AccordionTrigger className="text-left text-base sm:text-lg font-semibold text-card-foreground hover:text-green-500">
-                What types of businesses can use BizFlow?
+                What types of businesses can use Boji?
               </AccordionTrigger>
               <AccordionContent className="text-sm sm:text-base text-muted-foreground">
-                BizFlow is perfect for any service-based business including barbershops, hair salons, spas, beauty parlors, 
+                Boji is perfect for any service-based business including barbershops, hair salons, spas, beauty parlors,
                 fitness studios, consulting services, and more. Any business that takes appointments can benefit from our platform.
               </AccordionContent>
             </AccordionItem>
@@ -774,7 +774,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 How do automated reminders work?
               </AccordionTrigger>
               <AccordionContent className="text-sm sm:text-base text-muted-foreground">
-                BizFlow automatically sends appointment reminders to your clients via email and SMS, significantly 
+                Boji automatically sends appointment reminders to your clients via email and SMS, significantly 
                 reducing no-shows. You can customize when reminders are sent and what they say.
               </AccordionContent>
             </AccordionItem>
@@ -794,7 +794,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 Can I manage multiple staff members?
               </AccordionTrigger>
               <AccordionContent className="text-sm sm:text-base text-muted-foreground">
-                Yes! BizFlow includes comprehensive staff management features. You can add team members, 
+                Yes! Boji includes comprehensive staff management features. You can add team members, 
                 assign services to specific staff, and track individual performance and bookings.
               </AccordionContent>
             </AccordionItem>
@@ -831,7 +831,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 Ready to Transform Your Business?
               </h2>
               <p className="text-base sm:text-lg lg:text-xl text-card-foreground mb-8 max-w-2xl mx-auto">
-                Join hundreds of successful businesses using BizFlow to streamline operations and grow revenue
+                Join hundreds of successful businesses using Boji to streamline operations and grow revenue
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 

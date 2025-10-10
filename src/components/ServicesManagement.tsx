@@ -356,19 +356,19 @@ const ServicesManagement = () => {
               </div>
             </div>
             
-            <DialogFooter>
+            <DialogFooter className="flex-col sm:flex-row gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setShowModal(false)}
-                className="border-border text-foreground hover:bg-muted"
+                className="border-border text-foreground hover:bg-muted w-full sm:w-auto"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={loading}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto"
               >
                 {loading ? "Saving..." : editingService ? "Update Service" : "Add Service"}
               </Button>

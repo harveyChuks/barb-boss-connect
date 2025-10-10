@@ -41,7 +41,7 @@ export const useBookingNotifications = (businessId: string | null) => {
 
           // Show browser notification if permission granted
           if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('New Booking - BizFlow', {
+            new Notification('New Booking - Boji', {
               body: `${appointment.customer_name} booked for ${appointment.appointment_date}`,
               icon: '/favicon.ico',
               badge: '/favicon.ico',
@@ -81,7 +81,7 @@ export const useBookingNotifications = (businessId: string | null) => {
 
           // Show browser notification if permission granted
           if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('Booking Update - BizFlow', {
+            new Notification('Booking Update - Boji', {
               body: message,
               icon: '/favicon.ico',
               badge: '/favicon.ico',
@@ -124,7 +124,7 @@ export const useBookingNotifications = (businessId: string | null) => {
 
             // Show browser notification
             if ('Notification' in window && Notification.permission === 'granted') {
-              new Notification('Booking Activity - BizFlow', {
+              new Notification('Booking Activity - Boji', {
                 body: message,
                 icon: '/favicon.ico',
                 badge: '/favicon.ico',

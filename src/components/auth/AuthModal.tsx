@@ -198,7 +198,7 @@ const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps) => {
       <DialogContent className="bg-card border-border text-foreground [.light_&]:!bg-white max-h-[85vh] p-4 sm:p-6 top-[8%] sm:top-[50%] translate-y-0 sm:translate-y-[-50%]">
         <ScrollArea className="max-h-[75vh] pr-4">
           <DialogHeader>
-            <DialogTitle>Welcome to BizFlow</DialogTitle>
+            <DialogTitle>Welcome to Boji</DialogTitle>
             <DialogDescription className="text-muted-foreground">
               Sign in to manage your business or create a new account
             </DialogDescription>

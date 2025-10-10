@@ -26,6 +26,7 @@ interface Business {
   website: string | null;
   instagram: string | null;
   logo_url: string | null;
+  currency: string | null;
 }
 
 interface Service {
@@ -126,7 +127,10 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       }
       
       const business = businessData[0];
-      setBusiness(business);
+      setBusiness({
+        ...business,
+        currency: (business as any).currency || 'USD' // Default to USD if not set
+      });
 
       // Get services
       const { data: servicesData, error: servicesError } = await supabase
@@ -181,6 +185,22 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Currency formatting function
+  const formatCurrency = (amount: number) => {
+    const currency = business?.currency || 'USD';
+    const currencySymbols: { [key: string]: string } = {
+      'NGN': '₦',
+      'GHS': '₵',
+      'KES': 'KSh',
+      'ZAR': 'R',
+      'USD': '$',
+      'GBP': '£',
+      'CAD': 'C$'
+    };
+    const symbol = currencySymbols[currency] || '$';
+    return `${symbol}${amount.toFixed(2)}`;
   };
 
   const handleServiceToggle = (serviceId: string) => {
@@ -411,20 +431,20 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10">
+      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
               <Link to="/" className="cursor-pointer hover:opacity-80 transition-opacity">
                 <img 
-                  src="/lovable-uploads/bce9e11a-cca6-47fb-9dc5-04383b2359db.png" 
-                  alt="BizFlow Logo" 
+                  src="/boji-logo.png" 
+                  alt="Boji Logo" 
                   className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
                 />
               </Link>
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-white">
-                  {business?.name || "BizFlow"}
+                  {business?.name || "Boji"}
                 </h1>
                 <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block">
                   Book your appointment
@@ -559,7 +579,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                       </div>
                       <div className="text-right">
                         {service.price && (
-                          <div className="text-primary font-semibold">${service.price}</div>
+                          <div className="text-primary font-semibold">{formatCurrency(service.price)}</div>
                         )}
                         <div className="text-slate-400 text-sm flex items-center">
                           <Clock className="w-3 h-3 mr-1" />
@@ -806,7 +826,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         return (
                           <div key={serviceId} className="flex items-center justify-between text-sm">
                             <span className="text-slate-300">{service.name}:</span>
-                            <span className="text-white font-medium">${service.price}</span>
+                            <span className="text-white font-medium">{formatCurrency(service.price)}</span>
                           </div>
                         );
                       })}
@@ -820,7 +840,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                             <>
                               <div className="flex items-center justify-between text-sm">
                                 <span className="text-slate-300">Total Price:</span>
-                                <span className="text-white font-medium">${totalPrice}</span>
+                                <span className="text-white font-medium">{formatCurrency(totalPrice)}</span>
                               </div>
                               <div className="flex items-center justify-between text-sm">
                                 <span className="text-slate-300">Total Duration:</span>
