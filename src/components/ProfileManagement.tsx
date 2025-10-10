@@ -55,12 +55,8 @@ const ProfileManagement = () => {
   const generateQRCode = async () => {
     if (!business?.booking_link) return;
     
-    // Use the deployed URL instead of preview URL
-    const deployedDomain = window.location.hostname.includes('lovableproject.com') 
-      ? 'https://barb-boss-connect.lovable.app'
-      : window.location.origin;
+    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
     
-    const bookingUrl = `${deployedDomain}/book/${business.booking_link}`;
     try {
       const qrDataUrl = await QRCode.toDataURL(bookingUrl, {
         width: 256,
@@ -250,12 +246,7 @@ const ProfileManagement = () => {
   const copyBookingLink = async () => {
     if (!business?.booking_link) return;
     
-    // Use the deployed URL instead of preview URL
-    const deployedDomain = window.location.hostname.includes('lovableproject.com') 
-      ? 'https://barb-boss-connect.lovable.app'
-      : window.location.origin;
-    
-    const bookingUrl = `${deployedDomain}/book/${business.booking_link}`;
+    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
     try {
       await navigator.clipboard.writeText(bookingUrl);
       setCopiedLink(true);
@@ -275,10 +266,7 @@ const ProfileManagement = () => {
 
   const openBookingPage = () => {
     if (!business?.booking_link) return;
-    const deployedDomain = window.location.hostname.includes('lovableproject.com') 
-      ? 'https://barb-boss-connect.lovable.app'
-      : window.location.origin;
-    const bookingUrl = `${deployedDomain}/book/${business.booking_link}`;
+    const bookingUrl = `${window.location.origin}/book/${business.booking_link}`;
     window.open(bookingUrl, '_blank');
   };
 
@@ -342,10 +330,7 @@ const ProfileManagement = () => {
     );
   }
 
-  const deployedDomain = window.location.hostname.includes('lovableproject.com') 
-    ? 'https://barb-boss-connect.lovable.app'
-    : window.location.origin;
-  const bookingUrl = business.booking_link ? `${deployedDomain}/book/${business.booking_link}` : '';
+  const bookingUrl = business.booking_link ? `${window.location.origin}/book/${business.booking_link}` : '';
 
   return (
     <div className="space-y-6">
