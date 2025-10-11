@@ -228,107 +228,115 @@ const SubscriptionPlanManagement = () => {
                   Create Plan
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Create New Subscription Plan</DialogTitle>
-                  <DialogDescription>
-                    Define the details for a new subscription plan
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-3 gap-4">
+              <DialogContent className="max-w-2xl h-[90vh] flex flex-col p-0">
+                <div className="flex-shrink-0 p-6 pb-4">
+                  <DialogHeader>
+                    <DialogTitle>Create New Subscription Plan</DialogTitle>
+                    <DialogDescription>
+                      Define the details for a new subscription plan
+                    </DialogDescription>
+                  </DialogHeader>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto px-6">
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="name">Plan Name</Label>
+                        <Input
+                          id="name"
+                          placeholder="e.g. Professional"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="max_appointments">Max Appointments/Month</Label>
+                        <Input
+                          id="max_appointments"
+                          type="number"
+                          placeholder="100"
+                          value={formData.max_appointments_per_month}
+                          onChange={(e) => setFormData({ ...formData, max_appointments_per_month: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="trial_days">Trial Days</Label>
+                        <Input
+                          id="trial_days"
+                          type="number"
+                          placeholder="90"
+                          value={formData.trial_days}
+                          onChange={(e) => setFormData({ ...formData, trial_days: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    
                     <div>
-                      <Label htmlFor="name">Plan Name</Label>
-                      <Input
-                        id="name"
-                        placeholder="e.g. Professional"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      <Label htmlFor="description">Description</Label>
+                      <Textarea
+                        id="description"
+                        placeholder="Plan description..."
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="max_appointments">Max Appointments/Month</Label>
-                      <Input
-                        id="max_appointments"
-                        type="number"
-                        placeholder="100"
-                        value={formData.max_appointments_per_month}
-                        onChange={(e) => setFormData({ ...formData, max_appointments_per_month: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="trial_days">Trial Days</Label>
-                      <Input
-                        id="trial_days"
-                        type="number"
-                        placeholder="90"
-                        value={formData.trial_days}
-                        onChange={(e) => setFormData({ ...formData, trial_days: e.target.value })}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea
-                      id="description"
-                      placeholder="Plan description..."
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    />
-                  </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="price_monthly">Monthly Price ({currencySymbol})</Label>
+                        <Input
+                          id="price_monthly"
+                          type="number"
+                          step="0.01"
+                          placeholder="29.99"
+                          value={formData.price_monthly}
+                          onChange={(e) => setFormData({ ...formData, price_monthly: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="price_yearly">Yearly Price ({currencySymbol})</Label>
+                        <Input
+                          id="price_yearly"
+                          type="number"
+                          step="0.01"
+                          placeholder="299.99"
+                          value={formData.price_yearly}
+                          onChange={(e) => setFormData({ ...formData, price_yearly: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
                     <div>
-                      <Label htmlFor="price_monthly">Monthly Price ({currencySymbol})</Label>
-                      <Input
-                        id="price_monthly"
-                        type="number"
-                        step="0.01"
-                        placeholder="29.99"
-                        value={formData.price_monthly}
-                        onChange={(e) => setFormData({ ...formData, price_monthly: e.target.value })}
+                      <Label htmlFor="features">Features (comma-separated)</Label>
+                      <Textarea
+                        id="features"
+                        placeholder="Unlimited appointments, Priority support, Advanced analytics"
+                        value={formData.features}
+                        onChange={(e) => setFormData({ ...formData, features: e.target.value })}
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="price_yearly">Yearly Price ({currencySymbol})</Label>
-                      <Input
-                        id="price_yearly"
-                        type="number"
-                        step="0.01"
-                        placeholder="299.99"
-                        value={formData.price_yearly}
-                        onChange={(e) => setFormData({ ...formData, price_yearly: e.target.value })}
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="is_active"
+                        checked={formData.is_active}
+                        onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
                       />
+                      <Label htmlFor="is_active">Active Plan</Label>
                     </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="features">Features (comma-separated)</Label>
-                    <Textarea
-                      id="features"
-                      placeholder="Unlimited appointments, Priority support, Advanced analytics"
-                      value={formData.features}
-                      onChange={(e) => setFormData({ ...formData, features: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="is_active"
-                      checked={formData.is_active}
-                      onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-                    />
-                    <Label htmlFor="is_active">Active Plan</Label>
                   </div>
                 </div>
-                <div className="flex justify-end gap-2">
-                  <Button variant="outline" onClick={() => { resetForm(); setIsCreateDialogOpen(false); }}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleCreatePlan} disabled={!formData.name || !formData.price_monthly}>
-                    Create Plan
-                  </Button>
+                
+                <div className="flex-shrink-0 p-6 pt-4 border-t">
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => { resetForm(); setIsCreateDialogOpen(false); }}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleCreatePlan} disabled={!formData.name || !formData.price_monthly}>
+                      Create Plan
+                    </Button>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -412,100 +420,108 @@ const SubscriptionPlanManagement = () => {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Edit Subscription Plan</DialogTitle>
-            <DialogDescription>
-              Update the details for this subscription plan
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-3 gap-4">
+        <DialogContent className="max-w-2xl h-[90vh] flex flex-col p-0">
+          <div className="flex-shrink-0 p-6 pb-4">
+            <DialogHeader>
+              <DialogTitle>Edit Subscription Plan</DialogTitle>
+              <DialogDescription>
+                Update the details for this subscription plan
+              </DialogDescription>
+            </DialogHeader>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto px-6">
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="edit_name">Plan Name</Label>
+                  <Input
+                    id="edit_name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit_max_appointments">Max Appointments/Month</Label>
+                  <Input
+                    id="edit_max_appointments"
+                    type="number"
+                    value={formData.max_appointments_per_month}
+                    onChange={(e) => setFormData({ ...formData, max_appointments_per_month: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit_trial_days">Trial Days</Label>
+                  <Input
+                    id="edit_trial_days"
+                    type="number"
+                    value={formData.trial_days}
+                    onChange={(e) => setFormData({ ...formData, trial_days: e.target.value })}
+                  />
+                </div>
+              </div>
+              
               <div>
-                <Label htmlFor="edit_name">Plan Name</Label>
-                <Input
-                  id="edit_name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                <Label htmlFor="edit_description">Description</Label>
+                <Textarea
+                  id="edit_description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
               </div>
-              <div>
-                <Label htmlFor="edit_max_appointments">Max Appointments/Month</Label>
-                <Input
-                  id="edit_max_appointments"
-                  type="number"
-                  value={formData.max_appointments_per_month}
-                  onChange={(e) => setFormData({ ...formData, max_appointments_per_month: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit_trial_days">Trial Days</Label>
-                <Input
-                  id="edit_trial_days"
-                  type="number"
-                  value={formData.trial_days}
-                  onChange={(e) => setFormData({ ...formData, trial_days: e.target.value })}
-                />
-              </div>
-            </div>
-            
-            <div>
-              <Label htmlFor="edit_description">Description</Label>
-              <Textarea
-                id="edit_description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              />
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="edit_price_monthly">Monthly Price ({currencySymbol})</Label>
+                  <Input
+                    id="edit_price_monthly"
+                    type="number"
+                    step="0.01"
+                    value={formData.price_monthly}
+                    onChange={(e) => setFormData({ ...formData, price_monthly: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit_price_yearly">Yearly Price ({currencySymbol})</Label>
+                  <Input
+                    id="edit_price_yearly"
+                    type="number"
+                    step="0.01"
+                    value={formData.price_yearly}
+                    onChange={(e) => setFormData({ ...formData, price_yearly: e.target.value })}
+                  />
+                </div>
+              </div>
+
               <div>
-                <Label htmlFor="edit_price_monthly">Monthly Price ({currencySymbol})</Label>
-                <Input
-                  id="edit_price_monthly"
-                  type="number"
-                  step="0.01"
-                  value={formData.price_monthly}
-                  onChange={(e) => setFormData({ ...formData, price_monthly: e.target.value })}
+                <Label htmlFor="edit_features">Features (comma-separated)</Label>
+                <Textarea
+                  id="edit_features"
+                  value={formData.features}
+                  onChange={(e) => setFormData({ ...formData, features: e.target.value })}
                 />
               </div>
-              <div>
-                <Label htmlFor="edit_price_yearly">Yearly Price ({currencySymbol})</Label>
-                <Input
-                  id="edit_price_yearly"
-                  type="number"
-                  step="0.01"
-                  value={formData.price_yearly}
-                  onChange={(e) => setFormData({ ...formData, price_yearly: e.target.value })}
+
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="edit_is_active"
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
                 />
+                <Label htmlFor="edit_is_active">Active Plan</Label>
               </div>
-            </div>
-
-            <div>
-              <Label htmlFor="edit_features">Features (comma-separated)</Label>
-              <Textarea
-                id="edit_features"
-                value={formData.features}
-                onChange={(e) => setFormData({ ...formData, features: e.target.value })}
-              />
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="edit_is_active"
-                checked={formData.is_active}
-                onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-              />
-              <Label htmlFor="edit_is_active">Active Plan</Label>
             </div>
           </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => { resetForm(); setIsEditDialogOpen(false); setSelectedPlan(null); }}>
-              Cancel
-            </Button>
-            <Button onClick={handleEditPlan} disabled={!formData.name || !formData.price_monthly}>
-              Update Plan
-            </Button>
+          
+          <div className="flex-shrink-0 p-6 pt-4 border-t">
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => { resetForm(); setIsEditDialogOpen(false); setSelectedPlan(null); }}>
+                Cancel
+              </Button>
+              <Button onClick={handleEditPlan} disabled={!formData.name || !formData.price_monthly}>
+                Update Plan
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

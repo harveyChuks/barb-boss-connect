@@ -194,57 +194,65 @@ const StaffManagement = () => {
               Add Staff
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-card border-border">
-            <DialogHeader>
-              <DialogTitle className="text-foreground">
-                {editingStaff ? "Edit Staff Member" : "Add New Staff Member"}
-              </DialogTitle>
-              <DialogDescription className="text-muted-foreground">
-                Enter the staff member's information below.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-foreground">Name</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange("name", e.target.value)}
-                  className="bg-input border-border text-foreground"
-                  placeholder="Staff member's name"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bio" className="text-foreground">Bio</Label>
-                <Textarea
-                  id="bio"
-                  value={formData.bio}
-                  onChange={(e) => handleInputChange("bio", e.target.value)}
-                  className="bg-input border-border text-foreground"
-                  placeholder="Brief description about the staff member"
-                  rows={3}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="specialties" className="text-foreground">Specialties</Label>
-                <Input
-                  id="specialties"
-                  value={formData.specialties}
-                  onChange={(e) => handleInputChange("specialties", e.target.value)}
-                  className="bg-input border-border text-foreground"
-                  placeholder="Haircuts, Beard trim, Styling (comma separated)"
-                />
+          <DialogContent className="bg-card border-border h-[90vh] flex flex-col p-0">
+            <div className="flex-shrink-0 p-6 pb-4">
+              <DialogHeader>
+                <DialogTitle className="text-foreground">
+                  {editingStaff ? "Edit Staff Member" : "Add New Staff Member"}
+                </DialogTitle>
+                <DialogDescription className="text-muted-foreground">
+                  Enter the staff member's information below.
+                </DialogDescription>
+              </DialogHeader>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto px-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-foreground">Name</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
+                    className="bg-input border-border text-foreground"
+                    placeholder="Staff member's name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bio" className="text-foreground">Bio</Label>
+                  <Textarea
+                    id="bio"
+                    value={formData.bio}
+                    onChange={(e) => handleInputChange("bio", e.target.value)}
+                    className="bg-input border-border text-foreground"
+                    placeholder="Brief description about the staff member"
+                    rows={3}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="specialties" className="text-foreground">Specialties</Label>
+                  <Input
+                    id="specialties"
+                    value={formData.specialties}
+                    onChange={(e) => handleInputChange("specialties", e.target.value)}
+                    className="bg-input border-border text-foreground"
+                    placeholder="Haircuts, Beard trim, Styling (comma separated)"
+                  />
+                </div>
               </div>
             </div>
-            <DialogFooter>
-              <Button
-                onClick={handleSubmit}
-                disabled={loading || !formData.name.trim()}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                {loading ? "Saving..." : editingStaff ? "Update" : "Add Staff"}
-              </Button>
-            </DialogFooter>
+            
+            <div className="flex-shrink-0 p-6 pt-4 border-t border-border">
+              <DialogFooter>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={loading || !formData.name.trim()}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  {loading ? "Saving..." : editingStaff ? "Update" : "Add Staff"}
+                </Button>
+              </DialogFooter>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
