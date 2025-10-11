@@ -28,6 +28,7 @@ interface Business {
   instagram: string | null;
   logo_url: string | null;
   currency: string | null;
+  owner_id?: string;
 }
 
 interface Service {
@@ -381,6 +382,72 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const firstAppointmentId = firstResult?.data && Array.isArray(firstResult.data) && firstResult.data.length > 0
         ? firstResult.data[0]?.id
         : undefined;
+
+      const updateOwnerData = async () => {
+        if (!business.owner_id) {
+          console.log('Business owner_id not found');
+          return;
+        }
+        
+        const { data: ownerData } = await supabase.auth.admin.getUserById(business.owner_id);
+        if (!ownerData?.user?.email) {
+          console.log('Business owner email not found');
+          return;
+        }
+        
+        const serviceNames = formData.selected_services.map(sid => services.find(s => s.id === sid)?.name).join(', ');
+        const totalPrice = selectedServices.reduce((sum, s) => sum + (s.price || 0), 0);
+        
+        // Send notification to business owner for each appointment
+        for (const result of results) {
+          if (result.data && result.data[0]) {
+            const appointment = result.data[0];
+            const service = services.find(s => s.id === appointment.service_id);
+            
+            if (service) {
+              supabase.functions.invoke('send-owner-notification', {
+                body: {
+                  ownerEmail: ownerData.user.email,
+                  businessName: business.name,
+                  customerName: formData.customer_name,
+                  customerPhone: formData.customer_phone,
+                  customerEmail: formData.customer_email || undefined,
+                  serviceName: service.name,
+                  appointmentDate: appointment.appointment_date,
+                  startTime: appointment.start_time,
+                  endTime: appointment.end_time,
+                  price: service.price || 0,
+                  notes: formData.notes,
+                }
+              }).catch(err => console.error('Error sending owner notification:', err));
+            }
+          }
+        }
+        
+        // Send confirmation to customer if email provided
+        if (formData.customer_email && results[0]?.data?.[0]) {
+          const firstAppointment = results[0].data[0];
+          
+          supabase.functions.invoke('send-booking-confirmation', {
+            body: {
+              appointmentId: firstAppointment.id,
+              customerEmail: formData.customer_email,
+              customerName: formData.customer_name,
+              businessName: business.name,
+              serviceName: serviceNames,
+              appointmentDate: firstAppointment.appointment_date,
+              startTime: firstAppointment.start_time,
+              endTime: firstAppointment.end_time,
+              price: totalPrice,
+              businessPhone: business.phone || undefined,
+              notes: formData.notes,
+            }
+          }).catch(err => console.error('Error sending confirmation email:', err));
+        }
+      };
+      
+      // Call async function without awaiting to not block UI
+      updateOwnerData();
 
       toast({
         title: "Booking Confirmed!",

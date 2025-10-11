@@ -244,6 +244,59 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
 
       console.log('Appointment successfully created');
 
+      // Send confirmation email if customer has email
+      if (customerEmail) {
+        const { data: appointmentData } = await supabase
+          .from('appointments')
+          .select('id')
+          .eq('business_id', userBusiness.id)
+          .eq('customer_name', customerName)
+          .eq('appointment_date', formData.date)
+          .eq('start_time', startTime)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+
+        if (appointmentData) {
+          // Send customer confirmation
+          supabase.functions.invoke('send-booking-confirmation', {
+            body: {
+              appointmentId: appointmentData.id,
+              customerEmail,
+              customerName,
+              businessName: userBusiness.name,
+              serviceName: selectedService.name,
+              appointmentDate: formData.date,
+              startTime,
+              endTime,
+              price: selectedService.price,
+              businessPhone: userBusiness.phone,
+              notes: formData.notes,
+            }
+          }).catch(err => console.error('Error sending confirmation email:', err));
+
+          // Send owner notification
+          const { data: ownerData } = await supabase.auth.admin.getUserById(userBusiness.owner_id);
+          if (ownerData?.user?.email) {
+            supabase.functions.invoke('send-owner-notification', {
+              body: {
+                ownerEmail: ownerData.user.email,
+                businessName: userBusiness.name,
+                customerName,
+                customerPhone,
+                customerEmail,
+                serviceName: selectedService.name,
+                appointmentDate: formData.date,
+                startTime,
+                endTime,
+                price: selectedService.price,
+                notes: formData.notes,
+              }
+            }).catch(err => console.error('Error sending owner notification:', err));
+          }
+        }
+      }
+
       toast({
         title: "Appointment Scheduled",
         description: `Appointment for ${customerName} on ${formData.date} at ${formData.time}`,

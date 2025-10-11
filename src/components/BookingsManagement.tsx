@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Database } from "@/integrations/supabase/types";
+import { RescheduleDialog } from "./RescheduleDialog";
 
 type AppointmentStatus = Database["public"]["Enums"]["appointment_status"];
 
@@ -23,9 +24,11 @@ interface Appointment {
   end_time: string;
   status: AppointmentStatus;
   notes: string;
+  business_id: string;
   services: {
     name: string;
     price: number;
+    duration_minutes: number;
   };
 }
 
@@ -38,6 +41,8 @@ const BookingsManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
+  const [showRescheduleDialog, setShowRescheduleDialog] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
 
   useEffect(() => {
     fetchAppointments();
@@ -67,7 +72,8 @@ const BookingsManagement = () => {
           *,
           services (
             name,
-            price
+            price,
+            duration_minutes
           )
         `)
         .eq('business_id', business.id)
@@ -325,14 +331,27 @@ const BookingsManagement = () => {
                   </Select>
                   
                   {(appointment.status === "pending" || appointment.status === "confirmed") && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => updateAppointmentStatus(appointment.id, "cancelled")}
-                      className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
-                    >
-                      Cancel
-                    </Button>
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedAppointment(appointment);
+                          setShowRescheduleDialog(true);
+                        }}
+                        className="text-foreground border-border hover:bg-muted"
+                      >
+                        Reschedule
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => updateAppointmentStatus(appointment.id, "cancelled")}
+                        className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
+                      >
+                        Cancel
+                      </Button>
+                    </>
                   )}
                 </div>
               </div>
@@ -353,6 +372,21 @@ const BookingsManagement = () => {
             </p>
           </CardContent>
         </Card>
+      )}
+
+      {/* Reschedule Dialog */}
+      {selectedAppointment && (
+        <RescheduleDialog
+          open={showRescheduleDialog}
+          onOpenChange={setShowRescheduleDialog}
+          appointmentId={selectedAppointment.id}
+          businessId={selectedAppointment.business_id}
+          currentDate={selectedAppointment.appointment_date}
+          currentStartTime={selectedAppointment.start_time}
+          currentEndTime={selectedAppointment.end_time}
+          durationMinutes={selectedAppointment.services.duration_minutes}
+          onRescheduled={fetchAppointments}
+        />
       )}
     </div>
   );
