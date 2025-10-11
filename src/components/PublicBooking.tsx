@@ -173,9 +173,10 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         console.error('❌ Error fetching work pictures:', workPicturesError);
       } else {
         console.log('✅ Work pictures fetched:', workPicturesData?.length || 0, 'images');
-        console.log('📸 Work pictures data:', workPicturesData);
+        console.log('📸 Work pictures data:', JSON.stringify(workPicturesData, null, 2));
+        console.log('📍 Business ID for work pictures query:', business.id);
         setWorkPictures(workPicturesData || []);
-        console.log('🖼️ Work pictures state updated, will render:', workPicturesData?.length || 0, 'images');
+        console.log('🖼️ Work pictures state after update:', workPicturesData?.length || 0, 'images');
       }
 
       // Get reviews
@@ -554,6 +555,10 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         </Card>
 
         {/* Work Portfolio Section */}
+        {(() => {
+          console.log('🎨 Rendering check - workPictures.length:', workPictures.length, 'Should show portfolio:', workPictures.length > 0);
+          return null;
+        })()}
         {workPictures.length > 0 && (
           <Card className="bg-slate-800/50 border-slate-700 mb-8">
             <CardHeader>
