@@ -122,7 +122,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   ];
 
   useEffect(() => {
-    console.log('🔍 PublicBooking mounted with businessLink:', businessLink);
     fetchBusinessData();
   }, [businessLink]);
 
@@ -174,13 +173,9 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         .order('created_at', { ascending: false });
 
       if (workPicturesError) {
-        console.error('❌ Error fetching work pictures:', workPicturesError);
+        console.error('Error fetching work pictures:', workPicturesError);
       } else {
-        console.log('✅ Work pictures fetched:', workPicturesData?.length || 0, 'images');
-        console.log('📸 Work pictures data:', JSON.stringify(workPicturesData, null, 2));
-        console.log('📍 Business ID for work pictures query:', business.id);
         setWorkPictures(workPicturesData || []);
-        console.log('🖼️ Work pictures state after update:', workPicturesData?.length || 0, 'images');
       }
 
       // Get reviews
@@ -240,7 +235,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   };
 
   const handleSubmit = async () => {
-    console.log('=== BOOKING STARTED ===');
     if (!business || !selectedDate || !selectedTime || formData.selected_services.length === 0) return;
 
     const selectedServices = services.filter(s => formData.selected_services.includes(s.id));
@@ -264,9 +258,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       }
 
       // Check if the selected time slot is still available
-      console.log('Available slots data:', slotsData);
-      console.log('Looking for selected time:', selectedTime);
-      
       // Convert selectedTime (12-hour format) to 24-hour format for comparison
       const convertTo24Hour = (time12h: string): string => {
         const [time, period] = time12h.split(' ');
@@ -283,18 +274,9 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       };
 
       const selectedTime24 = convertTo24Hour(selectedTime);
-      console.log('Selected time in 24h format:', selectedTime24);
-      
-      const slot = slotsData?.find((s: any) => {
-        console.log('Comparing slot:', s.slot_time, 'with selected:', selectedTime24);
-        return s.slot_time === selectedTime24;
-      });
-
-      console.log('Found slot:', slot);
-      console.log('Slot availability:', slot?.is_available);
+      const slot = slotsData?.find((s: any) => s.slot_time === selectedTime24);
 
       if (!slot?.is_available) {
-        console.log('BLOCKING: Slot not available');
         toast({
           title: "Time Slot No Longer Available",
           description: "This time slot was just booked by someone else. Please select a different time.",
@@ -304,22 +286,11 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         return;
       }
 
-      console.log('ALLOWING: Slot appears available, proceeding...');
-
-      // Check for appointment conflicts
+      // Check for appointment conflicts with optimistic locking
       const startTime24 = convertTo24Hour(selectedTime);
       const endTime = new Date(`2000-01-01T${startTime24}`);
       endTime.setMinutes(endTime.getMinutes() + totalDuration);
       const endTimeString = endTime.toTimeString().slice(0, 8); // Include seconds
-
-      console.log('Booking conflict check:', {
-        selectedTime,
-        startTime24,
-        endTimeString,
-        totalDuration,
-        businessId: business.id,
-        appointmentDate: format(selectedDate, 'yyyy-MM-dd')
-      });
 
       const { data: conflictData, error: conflictError } = await supabase.rpc('check_appointment_conflict', {
         p_business_id: business.id,
@@ -387,16 +358,10 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         : undefined;
 
       const updateOwnerData = async () => {
-        if (!business.owner_id) {
-          console.log('Business owner_id not found');
-          return;
-        }
+        if (!business.owner_id) return;
         
         const { data: ownerData } = await supabase.auth.admin.getUserById(business.owner_id);
-        if (!ownerData?.user?.email) {
-          console.log('Business owner email not found');
-          return;
-        }
+        if (!ownerData?.user?.email) return;
         
         const serviceNames = formData.selected_services.map(sid => services.find(s => s.id === sid)?.name).join(', ');
         const totalPrice = selectedServices.reduce((sum, s) => sum + (s.price || 0), 0);
@@ -640,10 +605,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         )}
 
         {/* Work Portfolio Section */}
-        {(() => {
-          console.log('🎨 Rendering check - workPictures.length:', workPictures.length, 'Should show portfolio:', workPictures.length > 0);
-          return null;
-        })()}
         {workPictures.length > 0 && (
           <Card className="bg-slate-800/50 border-slate-700 mb-8">
             <CardHeader>

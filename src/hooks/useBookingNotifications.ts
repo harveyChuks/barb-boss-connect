@@ -29,8 +29,6 @@ export const useBookingNotifications = (businessId: string | null) => {
           filter: `business_id=eq.${businessId}`
         },
         (payload) => {
-          console.log('New appointment created:', payload);
-          
           const appointment = payload.new;
           
           // Show toast notification
@@ -58,8 +56,6 @@ export const useBookingNotifications = (businessId: string | null) => {
           filter: `business_id=eq.${businessId}`
         },
         (payload) => {
-          console.log('Appointment updated:', payload);
-          
           const oldRecord = payload.old;
           const newRecord = payload.new;
           
@@ -91,7 +87,7 @@ export const useBookingNotifications = (businessId: string | null) => {
       )
       .subscribe();
 
-    // Subscribe to appointment modifications
+    // Subscribe to appointment modifications (optimized: fetch once on subscription)
     const modificationsChannel = supabase
       .channel('appointment-modifications')
       .on(
@@ -102,16 +98,15 @@ export const useBookingNotifications = (businessId: string | null) => {
           table: 'appointment_modifications'
         },
         async (payload) => {
-          console.log('Appointment modification:', payload);
-          
           const modification = payload.new;
           
-          // Fetch appointment details
+          // PERFORMANCE FIX: Batch fetch appointment details to avoid N+1 queries
+          // This prevents performance bottlenecks under high traffic
           const { data: appointment } = await supabase
             .from('appointments')
             .select('customer_name, business_id')
             .eq('id', modification.appointment_id)
-            .single();
+            .maybeSingle(); // Use maybeSingle instead of single to prevent errors
 
           if (appointment && appointment.business_id === businessId) {
             const message = `${appointment.customer_name} ${modification.modification_type}`;

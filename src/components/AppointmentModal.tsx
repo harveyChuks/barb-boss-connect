@@ -83,9 +83,9 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
         
         setCustomers(customersData || []);
       }
-    } catch (error) {
-      console.error('Error fetching business data:', error);
-    }
+      } catch (error: any) {
+        console.error('Error fetching data:', error);
+      }
   };
 
   const convertTimeToPostgresFormat = (timeString: string) => {
@@ -187,14 +187,6 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
       const startTime = convertTimeToPostgresFormat(formData.time);
       const endTime = calculateEndTime(startTime, selectedService.duration_minutes);
 
-      console.log('Attempting to book appointment:', {
-        date: formData.date,
-        startTime,
-        endTime,
-        businessId: userBusiness.id,
-        serviceId: formData.serviceId
-      });
-
       // FINAL conflict check before inserting
       const hasConflict = await checkConflict(formData.date, startTime, endTime);
       if (hasConflict) {
@@ -227,7 +219,6 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
         });
 
       if (error) {
-        console.error('Database error:', error);
         // Check if it's a conflict error
         if (error.message.includes('conflict') || error.message.includes('overlapping')) {
           toast({
@@ -242,8 +233,6 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
         throw error;
       }
 
-      console.log('Appointment successfully created');
-
       // Send confirmation email if customer has email
       if (customerEmail) {
         const { data: appointmentData } = await supabase
@@ -255,7 +244,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
           .eq('start_time', startTime)
           .order('created_at', { ascending: false })
           .limit(1)
-          .single();
+          .maybeSingle(); // Use maybeSingle to prevent errors
 
         if (appointmentData) {
           // Send customer confirmation

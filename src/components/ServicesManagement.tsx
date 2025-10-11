@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -91,24 +91,25 @@ const ServicesManagement = () => {
     }
   };
 
-  // Currency formatting function
-  const formatCurrency = (amount: number) => {
-    const currency = (userBusiness as any)?.currency || 'USD';
-    console.log('Formatting currency for amount:', amount, 'using currency:', currency);
-    
-    const currencySymbols: { [key: string]: string } = {
-      'NGN': '₦',
-      'GHS': '₵', 
-      'KES': 'KSh',
-      'ZAR': 'R',
-      'USD': '$',
-      'GBP': '£',
-      'CAD': 'C$'
+  // Currency formatting function (memoized for performance)
+  const formatCurrency = useMemo(() => {
+    return (amount: number) => {
+      const currency = (userBusiness as any)?.currency || 'USD';
+      
+      const currencySymbols: { [key: string]: string } = {
+        'NGN': '₦',
+        'GHS': '₵', 
+        'KES': 'KSh',
+        'ZAR': 'R',
+        'USD': '$',
+        'GBP': '£',
+        'CAD': 'C$'
+      };
+      
+      const symbol = currencySymbols[currency] || '$';
+      return `${symbol}${amount.toFixed(2)}`;
     };
-    
-    const symbol = currencySymbols[currency] || '$';
-    return `${symbol}${amount.toFixed(2)}`;
-  };
+  }, [userBusiness]);
 
   const getCurrencyLabel = () => {
     const currency = (userBusiness as any)?.currency || 'USD';
