@@ -13,6 +13,7 @@ import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Ima
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TimeSlotPicker from "./TimeSlotPicker";
+import { ReviewModal } from "./ReviewModal";
 import { format, addDays, isAfter, isBefore, startOfDay, addMonths, subMonths, startOfMonth, endOfMonth, eachWeekOfInterval, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isSameDay } from "date-fns";
 
 interface Business {
@@ -63,7 +64,14 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   const [services, setServices] = useState<Service[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
   const [workPictures, setWorkPictures] = useState<WorkPicture[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [lastAppointmentData, setLastAppointmentData] = useState<{
+    customerName: string;
+    customerEmail?: string;
+    appointmentId?: string;
+  } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState("");
@@ -358,6 +366,16 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         description: `Your appointment${selectedServices.length > 1 ? 's' : ''} for ${selectedServices.map(s => s.name).join(', ')} have been booked successfully. We'll contact you soon to confirm.`,
       });
 
+      // Store data for review modal and show it
+      const firstResult = results[0]?.data as any;
+      const firstAppointmentId = firstResult?.[0]?.id;
+      setLastAppointmentData({
+        customerName: formData.customer_name,
+        customerEmail: formData.customer_email || undefined,
+        appointmentId: firstAppointmentId
+      });
+      setShowReviewModal(true);
+
       // Reset form
       setFormData({
         customer_name: "",
@@ -428,8 +446,24 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     );
   }
 
+  const averageRating = reviews.length > 0 
+    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+    : 0;
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Review Modal */}
+      {lastAppointmentData && (
+        <ReviewModal
+          open={showReviewModal}
+          onOpenChange={setShowReviewModal}
+          businessId={business.id}
+          customerName={lastAppointmentData.customerName}
+          customerEmail={lastAppointmentData.customerEmail}
+          appointmentId={lastAppointmentData.appointmentId}
+        />
+      )}
+
       {/* Header */}
       <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -534,6 +568,56 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         )}
                       </div>
                     </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Reviews Section */}
+        {reviews.length > 0 && (
+          <Card className="bg-slate-800/50 border-slate-700 mb-8">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-white flex items-center">
+                    <Star className="w-5 h-5 mr-2 fill-yellow-400 text-yellow-400" />
+                    Customer Reviews
+                  </CardTitle>
+                  <CardDescription className="text-slate-400">
+                    {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'} · Average rating: {averageRating} / 5
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {reviews.slice(0, 5).map((review) => (
+                  <div key={review.id} className="p-4 bg-slate-700/30 rounded-lg border border-slate-600">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <p className="text-white font-medium">{review.customer_name}</p>
+                        <p className="text-xs text-slate-400">
+                          {format(new Date(review.created_at), 'MMM d, yyyy')}
+                        </p>
+                      </div>
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-4 h-4 ${
+                              star <= review.rating
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'text-slate-500'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    {review.review_text && (
+                      <p className="text-slate-300 text-sm">{review.review_text}</p>
+                    )}
                   </div>
                 ))}
               </div>

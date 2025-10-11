@@ -710,6 +710,57 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          appointment_id: string | null
+          business_id: string
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          id: string
+          rating: number
+          review_text: string | null
+          updated_at: string
+        }
+        Insert: {
+          appointment_id?: string | null
+          business_id: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          id?: string
+          rating: number
+          review_text?: string | null
+          updated_at?: string
+        }
+        Update: {
+          appointment_id?: string | null
+          business_id?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          id?: string
+          rating?: number
+          review_text?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_points: {
         Row: {
           business_id: string
