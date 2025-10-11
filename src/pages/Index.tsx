@@ -588,15 +588,15 @@ const Index = () => {
       <header className="bg-black border-b border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* App Name - Left/Center */}
-            <div className="flex-1 flex justify-center md:justify-start">
+            {/* App Name - Left */}
+            <div className="flex items-center">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
                 {userBusiness?.name || "Boji"}
               </h1>
             </div>
             
-            {/* Navigation Links - Center on Desktop */}
-            <nav className="hidden md:flex items-center space-x-8">
+            {/* Navigation Links - Center */}
+            <nav className="hidden lg:flex items-center space-x-8 flex-1 justify-center">
               <a href="#about" className="text-slate-300 hover:text-white transition-colors">About</a>
               <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
               <a href="#pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</a>
@@ -604,7 +604,7 @@ const Index = () => {
             </nav>
             
             {/* Right Side Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 ml-4">
               {/* Top Action Buttons - Show when not authenticated */}
               {!isAuthenticated && (
                 <Button 
