@@ -19,6 +19,7 @@ import { SupportCommunication } from "@/components/admin/SupportCommunication";
 import { SecurityAudit } from "@/components/admin/SecurityAudit";
 import { ContentModeration } from "@/components/admin/ContentModeration";
 import { PlatformHealthMonitoring } from "@/components/admin/PlatformHealthMonitoring";
+import FeedbackManagement from "@/components/admin/FeedbackManagement";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -274,6 +275,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="security">Security</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="health">Health</TabsTrigger>
+            <TabsTrigger value="feedback">Feedback</TabsTrigger>
           </TabsList>
 
           <TabsContent value="businesses">
@@ -389,6 +391,10 @@ const AdminDashboard = () => {
 
           <TabsContent value="health">
             <PlatformHealthMonitoring />
+          </TabsContent>
+
+          <TabsContent value="feedback">
+            <FeedbackManagement />
           </TabsContent>
         </Tabs>
       </div>
