@@ -493,10 +493,10 @@ const ReportsAnalytics = () => {
 
         <TabsContent value="services">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="bg-white border-gray-200">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-black">Service Revenue</CardTitle>
-                <CardDescription className="text-gray-600">
+                <CardTitle className="text-foreground">Service Revenue</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Revenue breakdown by service type
                 </CardDescription>
               </CardHeader>
@@ -540,30 +540,30 @@ const ReportsAnalytics = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-gray-200">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-black">Service Statistics</CardTitle>
-                <CardDescription className="text-gray-600">
+                <CardTitle className="text-foreground">Service Statistics</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Detailed breakdown of service performance
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {serviceData.map((service, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                       <div className="flex items-center space-x-3">
                         <div 
                           className="w-4 h-4 rounded-full"
                           style={{ backgroundColor: service.color }}
                         />
                         <div>
-                          <p className="text-black font-medium">{service.name}</p>
-                          <p className="text-gray-600 text-sm">{service.count} bookings</p>
+                          <p className="text-foreground font-medium">{service.name}</p>
+                          <p className="text-muted-foreground text-sm">{service.count} bookings</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-black font-medium">{formatCurrency(service.revenue)}</p>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-foreground font-medium">{formatCurrency(service.revenue)}</p>
+                        <p className="text-muted-foreground text-sm">
                           {formatCurrency(service.revenue / service.count)} avg
                         </p>
                       </div>
