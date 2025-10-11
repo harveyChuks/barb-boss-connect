@@ -437,7 +437,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
             {/* Business Name - Left/Center */}
             <div className="flex-1 flex justify-center md:justify-start">
               <h1 className="text-2xl sm:text-3xl font-bold text-slate-700 dark:text-white">
-                {business?.name || "Boji"}
+                {business?.name || "bójí"}
               </h1>
             </div>
             
