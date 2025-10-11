@@ -177,6 +177,20 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         setWorkPictures(workPicturesData || []);
         console.log('🖼️ Work pictures state updated, will render:', workPicturesData?.length || 0, 'images');
       }
+
+      // Get reviews
+      const { data: reviewsData, error: reviewsError } = await supabase
+        .from('reviews')
+        .select('*')
+        .eq('business_id', business.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (reviewsError) {
+        console.error('Error fetching reviews:', reviewsError);
+      } else {
+        setReviews(reviewsData || []);
+      }
     } catch (error) {
       console.error('Error fetching business data:', error);
       toast({
@@ -221,7 +235,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   };
 
   const handleSubmit = async () => {
-    alert('BOOKING FUNCTION TRIGGERED!');
     console.log('=== BOOKING STARTED ===');
     if (!business || !selectedDate || !selectedTime || formData.selected_services.length === 0) return;
 
@@ -351,30 +364,39 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
           status: 'pending' as const
         };
 
-        return supabase.from('appointments').insert(appointmentData);
+        return supabase.from('appointments').insert(appointmentData).select();
       });
 
       const results = await Promise.all(appointmentPromises);
       const hasError = results.some(result => result.error);
 
       if (hasError) {
-        throw new Error("Failed to book one or more services");
+        const errorDetails = results.filter(r => r.error).map(r => r.error?.message).join(', ');
+        throw new Error(`Failed to book one or more services: ${errorDetails}`);
       }
+
+      // Get the first appointment ID from successful insertions
+      const firstResult = results[0];
+      const firstAppointmentId = firstResult?.data && Array.isArray(firstResult.data) && firstResult.data.length > 0
+        ? firstResult.data[0]?.id
+        : undefined;
 
       toast({
         title: "Booking Confirmed!",
         description: `Your appointment${selectedServices.length > 1 ? 's' : ''} for ${selectedServices.map(s => s.name).join(', ')} have been booked successfully. We'll contact you soon to confirm.`,
       });
 
-      // Store data for review modal and show it
-      const firstResult = results[0]?.data as any;
-      const firstAppointmentId = firstResult?.[0]?.id;
+      // Store data for review modal and show it after a brief delay
       setLastAppointmentData({
         customerName: formData.customer_name,
         customerEmail: formData.customer_email || undefined,
         appointmentId: firstAppointmentId
       });
-      setShowReviewModal(true);
+      
+      // Show review modal after 1 second to let the success toast display first
+      setTimeout(() => {
+        setShowReviewModal(true);
+      }, 1000);
 
       // Reset form
       setFormData({
