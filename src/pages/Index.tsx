@@ -587,8 +587,9 @@ const Index = () => {
       {/* Header */}
       <header className="bg-black border-b border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-between h-16 relative">
+            {/* Logo - Left Side */}
+            <div className="flex items-center">
               <Link to="/" className="cursor-pointer hover:opacity-80 transition-opacity">
                 <img 
                   src="/boji-logo.png" 
@@ -596,19 +597,22 @@ const Index = () => {
                   className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
                 />
               </Link>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white">
-                  {userBusiness?.name || "Boji"}
-                </h1>
-                {userBusiness && (
-                  <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block">Business Dashboard</p>
-                )}
-              </div>
             </div>
             
-            {/* Top Action Buttons - Show when not authenticated */}
-            {!isAuthenticated && (
-              <div className="flex gap-2">
+            {/* App Name - Center */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              <h1 className="text-xl sm:text-2xl font-bold text-white whitespace-nowrap">
+                {userBusiness?.name || "Boji"}
+              </h1>
+              {userBusiness && (
+                <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block text-center">Business Dashboard</p>
+              )}
+            </div>
+            
+            {/* Right Side Actions */}
+            <div className="flex items-center">
+              {/* Top Action Buttons - Show when not authenticated */}
+              {!isAuthenticated && (
                 <Button 
                   onClick={() => setShowAuthModal(true)}
                   size="default"
@@ -617,34 +621,34 @@ const Index = () => {
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              </div>
-            )}
-            
-            {/* Desktop Menu - Show when authenticated */}
-            {isAuthenticated && (
-              <div className="hidden md:flex items-center space-x-4">
-                {isAdmin && (
-                  <Button 
-                    onClick={() => navigate('/admin')}
-                    variant="outline"
-                  >
-                    <ShieldCheck className="w-4 h-4 mr-2" />
-                    Admin Panel
-                  </Button>
-                )}
-                {userBusiness ? (
-                  <MobileMenu />
-                ) : (
-                  <Button 
-                    onClick={() => setShowBusinessModal(true)}
-                    className="bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
-                  >
-                    <Building className="w-4 h-4 mr-2" />
-                    Register Business
-                  </Button>
-                )}
-              </div>
-            )}
+              )}
+              
+              {/* Desktop Menu - Show when authenticated */}
+              {isAuthenticated && (
+                <div className="hidden md:flex items-center space-x-4">
+                  {isAdmin && (
+                    <Button 
+                      onClick={() => navigate('/admin')}
+                      variant="outline"
+                    >
+                      <ShieldCheck className="w-4 h-4 mr-2" />
+                      Admin Panel
+                    </Button>
+                  )}
+                  {userBusiness ? (
+                    <MobileMenu />
+                  ) : (
+                    <Button 
+                      onClick={() => setShowBusinessModal(true)}
+                      className="bg-[#39FF14] text-black hover:bg-[#32e612] [.light_&]:bg-black [.light_&]:text-white [.light_&]:hover:bg-black/90"
+                    >
+                      <Building className="w-4 h-4 mr-2" />
+                      Register Business
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
 
             {/* Mobile Menu Button - Only for authenticated users with business */}
             {isAuthenticated && userBusiness && (
