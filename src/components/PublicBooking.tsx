@@ -140,7 +140,8 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const business = businessData[0];
       setBusiness({
         ...business,
-        currency: (business as any).currency || 'USD' // Default to USD if not set
+        currency: (business as any).currency || 'USD', // Default to USD if not set
+        banner_url: (business as any).banner_url || null
       });
 
       // Get services
