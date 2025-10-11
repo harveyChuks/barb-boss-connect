@@ -234,7 +234,7 @@ const ServicesManagement = () => {
 
   const handleServiceTypeChange = (value: string) => {
     handleInputChange("service_type", value);
-    setShowSuggestions(true);
+    setShowSuggestions(true); // Auto-show suggestions when service type is selected
   };
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -342,21 +342,7 @@ const ServicesManagement = () => {
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="name">Service Name</Label>
-                  {formData.service_type && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowSuggestions(!showSuggestions)}
-                      className="text-xs text-muted-foreground hover:text-foreground"
-                    >
-                      <Lightbulb className="w-3 h-3 mr-1" />
-                      {showSuggestions ? "Hide" : "Show"} Suggestions
-                    </Button>
-                  )}
-                </div>
+                <Label htmlFor="name">Service Name</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -365,14 +351,17 @@ const ServicesManagement = () => {
                   placeholder="Haircut & Style"
                   required
                 />
-                {showSuggestions && formData.service_type && SERVICE_SUGGESTIONS[formData.service_type] && (
-                  <div className="flex flex-wrap gap-2 p-3 bg-muted rounded-md">
-                    <p className="w-full text-xs text-muted-foreground mb-1">Quick suggestions:</p>
+                {formData.service_type && SERVICE_SUGGESTIONS[formData.service_type] && (
+                  <div className="flex flex-wrap gap-2 p-3 bg-muted rounded-lg border border-border">
+                    <div className="w-full flex items-center gap-2 mb-1">
+                      <Lightbulb className="w-3.5 h-3.5 text-primary" />
+                      <p className="text-xs font-medium text-foreground">Quick add popular services:</p>
+                    </div>
                     {SERVICE_SUGGESTIONS[formData.service_type].map((suggestion) => (
                       <Badge
                         key={suggestion}
                         variant="outline"
-                        className="cursor-pointer hover:bg-accent"
+                        className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
                         onClick={() => handleSuggestionClick(suggestion)}
                       >
                         {suggestion}
