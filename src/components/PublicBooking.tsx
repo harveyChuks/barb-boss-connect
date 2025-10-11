@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight } from "lucide-react";
+import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight, MessageCircle, Send, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TimeSlotPicker from "./TimeSlotPicker";
@@ -79,6 +79,14 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState("");
   const [calendarDate, setCalendarDate] = useState(new Date());
+  const [showMessageDialog, setShowMessageDialog] = useState(false);
+  const [messageData, setMessageData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: ""
+  });
+  const [sendingMessage, setSendingMessage] = useState(false);
   const [formData, setFormData] = useState({
     customer_name: "",
     customer_phone: "",
@@ -477,6 +485,65 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     return isBefore(date, startOfDay(new Date())) || isAfter(date, addDays(new Date(), 30));
   };
 
+  const handleSendMessage = async () => {
+    if (!messageData.name || !messageData.message || !business) {
+      toast({
+        title: "Missing Information",
+        description: "Please provide your name and message.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!messageData.email && !messageData.phone) {
+      toast({
+        title: "Contact Information Required",
+        description: "Please provide either an email or phone number so the business can respond.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSendingMessage(true);
+    try {
+      // Send message to business owner via email
+      const { error } = await supabase.functions.invoke('send-owner-notification', {
+        body: {
+          ownerEmail: business.email,
+          businessName: business.name,
+          customerName: messageData.name,
+          customerPhone: messageData.phone || 'Not provided',
+          customerEmail: messageData.email || 'Not provided',
+          serviceName: 'Customer Message',
+          appointmentDate: new Date().toISOString().split('T')[0],
+          startTime: '',
+          endTime: '',
+          price: 0,
+          notes: messageData.message,
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Message Sent!",
+        description: "The business will get back to you soon.",
+      });
+
+      setMessageData({ name: "", email: "", phone: "", message: "" });
+      setShowMessageDialog(false);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast({
+        title: "Failed to Send",
+        description: "Please try contacting the business directly via phone or email.",
+        variant: "destructive",
+      });
+    } finally {
+      setSendingMessage(false);
+    }
+  };
+
   const isDateAvailable = (date: Date) => {
     // Mock availability - you can integrate with real availability data
     const dayOfWeek = date.getDay();
@@ -533,13 +600,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
               </h1>
             </div>
             
-            {/* Navigation Links - Center on Desktop */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#about" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">About</a>
-              <a href="#features" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">Features</a>
-              <a href="#pricing" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">Pricing</a>
-              <a href="#faqs" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">FAQs</a>
-            </nav>
             
             {/* Right Side - Empty but maintains layout */}
             <div className="flex items-center flex-1"></div>
@@ -1073,6 +1133,116 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
           </div>
         </div>
       </div>
+
+      {/* Floating Message Button */}
+      <button
+        onClick={() => setShowMessageDialog(true)}
+        className="fixed bottom-6 right-6 z-50 bg-primary hover:bg-primary/90 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+        aria-label="Send a message"
+      >
+        <MessageCircle className="w-6 h-6" />
+      </button>
+
+      {/* Message Dialog */}
+      {showMessageDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <Card className="w-full max-w-md bg-slate-800 border-slate-700">
+            <CardHeader className="relative">
+              <button
+                onClick={() => setShowMessageDialog(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <CardTitle className="text-white text-xl">Send a Message</CardTitle>
+              <CardDescription className="text-slate-300">
+                Contact {business?.name || 'the business'} directly
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="message_name" className="text-white">Your Name *</Label>
+                <Input
+                  id="message_name"
+                  type="text"
+                  value={messageData.name}
+                  onChange={(e) => setMessageData({...messageData, name: e.target.value})}
+                  className="bg-slate-700 border-slate-600 text-white"
+                  placeholder="John Doe"
+                  disabled={sendingMessage}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="message_email" className="text-white">Email</Label>
+                <Input
+                  id="message_email"
+                  type="email"
+                  value={messageData.email}
+                  onChange={(e) => setMessageData({...messageData, email: e.target.value})}
+                  className="bg-slate-700 border-slate-600 text-white"
+                  placeholder="your.email@example.com"
+                  disabled={sendingMessage}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="message_phone" className="text-white">Phone</Label>
+                <Input
+                  id="message_phone"
+                  type="tel"
+                  value={messageData.phone}
+                  onChange={(e) => setMessageData({...messageData, phone: e.target.value})}
+                  className="bg-slate-700 border-slate-600 text-white"
+                  placeholder="+1234567890"
+                  disabled={sendingMessage}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="message_text" className="text-white">Message *</Label>
+                <Textarea
+                  id="message_text"
+                  value={messageData.message}
+                  onChange={(e) => setMessageData({...messageData, message: e.target.value})}
+                  className="bg-slate-700 border-slate-600 text-white"
+                  placeholder="Your message..."
+                  rows={4}
+                  disabled={sendingMessage}
+                />
+              </div>
+
+              <div className="text-xs text-slate-400">
+                * Required fields. Please provide either email or phone for reply.
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => setShowMessageDialog(false)}
+                  variant="outline"
+                  className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
+                  disabled={sendingMessage}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={sendingMessage || !messageData.name || !messageData.message}
+                  className="flex-1 bg-primary hover:bg-primary/90 text-black font-semibold"
+                >
+                  {sendingMessage ? (
+                    "Sending..."
+                  ) : (
+                    <>
+                      Send <Send className="w-4 h-4 ml-2" />
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
