@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Clock } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Edit, Trash2, Clock, Lightbulb } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { SERVICE_TYPES, SERVICE_SUGGESTIONS } from "@/utils/serviceSuggestions";
 
 interface Service {
   id: string;
@@ -19,6 +21,7 @@ interface Service {
   price: number;
   duration_minutes: number;
   is_active: boolean;
+  service_type: string | null;
 }
 
 const ServicesManagement = () => {
@@ -33,8 +36,10 @@ const ServicesManagement = () => {
     name: "",
     description: "",
     price: "",
-    duration_minutes: ""
+    duration_minutes: "",
+    service_type: ""
   });
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     fetchBusinessAndServices();
@@ -136,7 +141,8 @@ const ServicesManagement = () => {
         description: formData.description,
         price: parseFloat(formData.price),
         duration_minutes: parseInt(formData.duration_minutes),
-        is_active: true
+        is_active: true,
+        service_type: formData.service_type || null
       };
 
       if (editingService) {
@@ -167,9 +173,10 @@ const ServicesManagement = () => {
       }
 
       // Reset form and close modal
-      setFormData({ name: "", description: "", price: "", duration_minutes: "" });
+      setFormData({ name: "", description: "", price: "", duration_minutes: "", service_type: "" });
       setEditingService(null);
       setShowModal(false);
+      setShowSuggestions(false);
       fetchBusinessAndServices();
     } catch (error: any) {
       toast({
@@ -188,7 +195,8 @@ const ServicesManagement = () => {
       name: service.name,
       description: service.description || "",
       price: service.price?.toString() || "",
-      duration_minutes: service.duration_minutes.toString()
+      duration_minutes: service.duration_minutes.toString(),
+      service_type: service.service_type || ""
     });
     setShowModal(true);
   };
@@ -219,8 +227,19 @@ const ServicesManagement = () => {
 
   const openNewServiceModal = () => {
     setEditingService(null);
-    setFormData({ name: "", description: "", price: "", duration_minutes: "" });
+    setFormData({ name: "", description: "", price: "", duration_minutes: "", service_type: "" });
+    setShowSuggestions(false);
     setShowModal(true);
+  };
+
+  const handleServiceTypeChange = (value: string) => {
+    handleInputChange("service_type", value);
+    setShowSuggestions(true);
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    handleInputChange("name", suggestion);
+    setShowSuggestions(false);
   };
 
   return (
@@ -307,7 +326,37 @@ const ServicesManagement = () => {
           <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
             <div className="flex-1 overflow-y-auto px-6 pb-4 space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Service Name</Label>
+                <Label htmlFor="service_type">Service Type</Label>
+                <Select value={formData.service_type} onValueChange={handleServiceTypeChange}>
+                  <SelectTrigger className="bg-input border-border text-foreground">
+                    <SelectValue placeholder="Select service type" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover border-border max-h-[300px] z-50">
+                    {SERVICE_TYPES.map((type) => (
+                      <SelectItem key={type} value={type} className="text-foreground hover:bg-accent">
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="name">Service Name</Label>
+                  {formData.service_type && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowSuggestions(!showSuggestions)}
+                      className="text-xs text-muted-foreground hover:text-foreground"
+                    >
+                      <Lightbulb className="w-3 h-3 mr-1" />
+                      {showSuggestions ? "Hide" : "Show"} Suggestions
+                    </Button>
+                  )}
+                </div>
                 <Input
                   id="name"
                   value={formData.name}
@@ -316,6 +365,21 @@ const ServicesManagement = () => {
                   placeholder="Haircut & Style"
                   required
                 />
+                {showSuggestions && formData.service_type && SERVICE_SUGGESTIONS[formData.service_type] && (
+                  <div className="flex flex-wrap gap-2 p-3 bg-muted rounded-md">
+                    <p className="w-full text-xs text-muted-foreground mb-1">Quick suggestions:</p>
+                    {SERVICE_SUGGESTIONS[formData.service_type].map((suggestion) => (
+                      <Badge
+                        key={suggestion}
+                        variant="outline"
+                        className="cursor-pointer hover:bg-accent"
+                        onClick={() => handleSuggestionClick(suggestion)}
+                      >
+                        {suggestion}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
               
               <div className="space-y-2">

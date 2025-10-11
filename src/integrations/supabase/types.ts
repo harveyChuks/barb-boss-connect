@@ -374,6 +374,7 @@ export type Database = {
       businesses: {
         Row: {
           address: string | null
+          banner_url: string | null
           block_reason: string | null
           blocked_at: string | null
           booking_link: string | null
@@ -408,6 +409,7 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          banner_url?: string | null
           block_reason?: string | null
           blocked_at?: string | null
           booking_link?: string | null
@@ -442,6 +444,7 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          banner_url?: string | null
           block_reason?: string | null
           blocked_at?: string | null
           booking_link?: string | null
@@ -812,6 +815,7 @@ export type Database = {
           is_active: boolean | null
           name: string
           price: number | null
+          service_type: string | null
         }
         Insert: {
           business_id: string
@@ -822,6 +826,7 @@ export type Database = {
           is_active?: boolean | null
           name: string
           price?: number | null
+          service_type?: string | null
         }
         Update: {
           business_id?: string
@@ -832,6 +837,7 @@ export type Database = {
           is_active?: boolean | null
           name?: string
           price?: number | null
+          service_type?: string | null
         }
         Relationships: [
           {

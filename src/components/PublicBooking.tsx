@@ -29,6 +29,7 @@ interface Business {
   logo_url: string | null;
   currency: string | null;
   owner_id?: string;
+  banner_url: string | null;
 }
 
 interface Service {
@@ -68,6 +69,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [portfolioScrollPosition, setPortfolioScrollPosition] = useState(0);
   const [lastAppointmentData, setLastAppointmentData] = useState<{
     customerName: string;
     customerEmail?: string;
@@ -621,6 +623,21 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
           </CardContent>
         </Card>
 
+        {/* Business Banner */}
+        {business.banner_url && (
+          <Card className="bg-slate-800/50 border-slate-700 mb-8 overflow-hidden">
+            <CardContent className="p-0">
+              <div className="w-full aspect-[3/1]">
+                <img
+                  src={business.banner_url}
+                  alt={`${business.name} banner`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Work Portfolio Section */}
         {(() => {
           console.log('🎨 Rendering check - workPictures.length:', workPictures.length, 'Should show portfolio:', workPictures.length > 0);
@@ -638,32 +655,71 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {workPictures.slice(0, 8).map((picture) => (
-                  <div key={picture.id} className="relative group overflow-hidden rounded-lg aspect-square">
-                    <img
-                      src={picture.image_url}
-                      alt={picture.description || "Work sample"}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                      onError={(e) => {
-                        console.error('Image failed to load:', picture.image_url);
-                        e.currentTarget.style.display = 'none';
+              <div className="relative">
+                {/* Scroll buttons */}
+                {workPictures.length > 4 && (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-slate-800/90 border-slate-600 hover:bg-slate-700"
+                      onClick={() => {
+                        const container = document.getElementById('portfolio-scroll');
+                        if (container) {
+                          container.scrollBy({ left: -300, behavior: 'smooth' });
+                        }
                       }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                        {picture.service_type && (
-                          <Badge variant="secondary" className="mb-1 text-xs">
-                            {picture.service_type}
-                          </Badge>
-                        )}
-                        {picture.description && (
-                          <p className="text-sm font-medium line-clamp-2">{picture.description}</p>
-                        )}
+                    >
+                      <ChevronLeft className="w-4 h-4 text-white" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-slate-800/90 border-slate-600 hover:bg-slate-700"
+                      onClick={() => {
+                        const container = document.getElementById('portfolio-scroll');
+                        if (container) {
+                          container.scrollBy({ left: 300, behavior: 'smooth' });
+                        }
+                      }}
+                    >
+                      <ChevronRight className="w-4 h-4 text-white" />
+                    </Button>
+                  </>
+                )}
+
+                {/* Scrollable portfolio */}
+                <div 
+                  id="portfolio-scroll"
+                  className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                  {workPictures.map((picture) => (
+                    <div key={picture.id} className="relative group overflow-hidden rounded-lg flex-none w-64 h-64 snap-start">
+                      <img
+                        src={picture.image_url}
+                        alt={picture.description || "Work sample"}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        onError={(e) => {
+                          console.error('Image failed to load:', picture.image_url);
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                          {picture.service_type && (
+                            <Badge variant="secondary" className="mb-1 text-xs">
+                              {picture.service_type}
+                            </Badge>
+                          )}
+                          {picture.description && (
+                            <p className="text-sm font-medium line-clamp-2">{picture.description}</p>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>
