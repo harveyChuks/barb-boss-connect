@@ -286,132 +286,136 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border text-foreground max-w-3xl max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Schedule New Appointment</DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            Book a new appointment for your client.
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="bg-card border-border text-foreground max-w-3xl h-[90vh] flex flex-col p-0">
+        <div className="flex-shrink-0 p-6 pb-4">
+          <DialogHeader>
+            <DialogTitle>Schedule New Appointment</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Book a new appointment for your client.
+            </DialogDescription>
+          </DialogHeader>
+        </div>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="customer">Customer</Label>
-            <Select value={formData.customerId} onValueChange={(value) => handleInputChange("customerId", value)}>
-              <SelectTrigger className="bg-input border-border text-foreground">
-                <SelectValue placeholder="Select existing customer or enter new below" />
-              </SelectTrigger>
-              <SelectContent className="bg-popover border-border">
-                {customers.map((customer) => (
-                  <SelectItem key={customer.id} value={customer.id} className="text-foreground hover:bg-muted">
-                    {customer.name} - {customer.phone}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+          <div className="flex-1 overflow-y-auto px-6 pb-4 space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="customer">Customer</Label>
+              <Select value={formData.customerId} onValueChange={(value) => handleInputChange("customerId", value)}>
+                <SelectTrigger className="bg-input border-border text-foreground">
+                  <SelectValue placeholder="Select existing customer or enter new below" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border-border">
+                  {customers.map((customer) => (
+                    <SelectItem key={customer.id} value={customer.id} className="text-foreground hover:bg-muted">
+                      {customer.name} - {customer.phone}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          {!formData.customerId && (
-            <>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="customerName">Customer Name</Label>
-                  <Input
-                    id="customerName"
-                    value={formData.customerName}
-                    onChange={(e) => handleInputChange("customerName", e.target.value)}
-                    className="bg-input border-border text-foreground"
-                    placeholder="John Smith"
-                    required={!formData.customerId}
-                  />
+            {!formData.customerId && (
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="customerName">Customer Name</Label>
+                    <Input
+                      id="customerName"
+                      value={formData.customerName}
+                      onChange={(e) => handleInputChange("customerName", e.target.value)}
+                      className="bg-input border-border text-foreground"
+                      placeholder="John Smith"
+                      required={!formData.customerId}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="customerPhone">Phone</Label>
+                    <Input
+                      id="customerPhone"
+                      value={formData.customerPhone}
+                      onChange={(e) => handleInputChange("customerPhone", e.target.value)}
+                      className="bg-input border-border text-foreground"
+                      placeholder="(555) 123-4567"
+                      required={!formData.customerId}
+                    />
+                  </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="customerPhone">Phone</Label>
+                  <Label htmlFor="customerEmail">Customer Email (Optional)</Label>
                   <Input
-                    id="customerPhone"
-                    value={formData.customerPhone}
-                    onChange={(e) => handleInputChange("customerPhone", e.target.value)}
+                    id="customerEmail"
+                    type="email"
+                    value={formData.customerEmail}
+                    onChange={(e) => handleInputChange("customerEmail", e.target.value)}
                     className="bg-input border-border text-foreground"
-                    placeholder="(555) 123-4567"
-                    required={!formData.customerId}
+                    placeholder="john@example.com"
                   />
                 </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="customerEmail">Customer Email (Optional)</Label>
-                <Input
-                  id="customerEmail"
-                  type="email"
-                  value={formData.customerEmail}
-                  onChange={(e) => handleInputChange("customerEmail", e.target.value)}
-                  className="bg-input border-border text-foreground"
-                  placeholder="john@example.com"
-                />
-              </div>
-            </>
-          )}
-          
-          <div className="space-y-2">
-            <Label htmlFor="service">Service</Label>
-            <Select value={formData.serviceId} onValueChange={(value) => handleInputChange("serviceId", value)}>
-              <SelectTrigger className="bg-input border-border text-foreground">
-                <SelectValue placeholder="Select service" />
-              </SelectTrigger>
-              <SelectContent className="bg-popover border-border">
-                {services.map((service) => (
-                  <SelectItem key={service.id} value={service.id} className="text-foreground hover:bg-muted">
-                    <div className="flex justify-between items-center w-full">
-                      <span>{service.name}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {service.duration_minutes}min - ${service.price}
-                      </span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="date">Date</Label>
-            <Input
-              id="date"
-              type="date"
-              value={formData.date}
-              onChange={(e) => handleInputChange("date", e.target.value)}
-              className="bg-input border-border text-foreground"
-              required
-            />
-          </div>
-
-          {/* Time Slot Picker - This now prevents double bookings */}
-          {formData.date && formData.serviceId && userBusiness && (
+              </>
+            )}
+            
             <div className="space-y-2">
-              <Label>Available Time Slots</Label>
-              <TimeSlotPicker
-                businessId={userBusiness.id}
-                date={formData.date}
-                durationMinutes={selectedService?.duration_minutes || 60}
-                selectedTime={formData.time}
-                onTimeSelect={(time) => handleInputChange("time", time)}
+              <Label htmlFor="service">Service</Label>
+              <Select value={formData.serviceId} onValueChange={(value) => handleInputChange("serviceId", value)}>
+                <SelectTrigger className="bg-input border-border text-foreground">
+                  <SelectValue placeholder="Select service" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border-border">
+                  {services.map((service) => (
+                    <SelectItem key={service.id} value={service.id} className="text-foreground hover:bg-muted">
+                      <div className="flex justify-between items-center w-full">
+                        <span>{service.name}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {service.duration_minutes}min - ${service.price}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="date">Date</Label>
+              <Input
+                id="date"
+                type="date"
+                value={formData.date}
+                onChange={(e) => handleInputChange("date", e.target.value)}
+                className="bg-input border-border text-foreground"
+                required
               />
             </div>
-          )}
 
-          <div className="space-y-2">
-            <Label htmlFor="notes">Notes (Optional)</Label>
-            <Input
-              id="notes"
-              value={formData.notes}
-              onChange={(e) => handleInputChange("notes", e.target.value)}
-              className="bg-input border-border text-foreground"
-              placeholder="Special requests or notes"
-            />
+            {/* Time Slot Picker - This now prevents double bookings */}
+            {formData.date && formData.serviceId && userBusiness && (
+              <div className="space-y-2">
+                <Label>Available Time Slots</Label>
+                <TimeSlotPicker
+                  businessId={userBusiness.id}
+                  date={formData.date}
+                  durationMinutes={selectedService?.duration_minutes || 60}
+                  selectedTime={formData.time}
+                  onTimeSelect={(time) => handleInputChange("time", time)}
+                />
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="notes">Notes (Optional)</Label>
+              <Input
+                id="notes"
+                value={formData.notes}
+                onChange={(e) => handleInputChange("notes", e.target.value)}
+                className="bg-input border-border text-foreground"
+                placeholder="Special requests or notes"
+              />
+            </div>
           </div>
           
-          <DialogFooter className="flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex-shrink-0 flex-col sm:flex-row gap-2 p-6 pt-4 border-t border-border">
             <Button
               type="button"
               variant="outline"

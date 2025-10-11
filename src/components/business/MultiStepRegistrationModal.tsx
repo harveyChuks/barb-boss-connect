@@ -144,21 +144,23 @@ const MultiStepRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: M
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Register Your Business</DialogTitle>
-          <DialogDescription className="text-slate-400">
-            Complete your business profile in 4 simple steps
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-2xl h-[90vh] flex flex-col p-0">
+        <div className="flex-shrink-0 p-6 pb-4">
+          <DialogHeader>
+            <DialogTitle>Register Your Business</DialogTitle>
+            <DialogDescription className="text-slate-400">
+              Complete your business profile in 4 simple steps
+            </DialogDescription>
+          </DialogHeader>
+          
+          <StepIndicator currentStep={currentStep} totalSteps={4} />
+        </div>
         
-        <StepIndicator currentStep={currentStep} totalSteps={4} />
-        
-        <div className="min-h-[400px]">
+        <div className="flex-1 overflow-y-auto px-6 pb-4">
           {renderStepContent()}
         </div>
         
-        <div className="flex justify-between pt-4">
+        <div className="flex-shrink-0 flex justify-between gap-3 p-6 pt-4 border-t border-slate-700 bg-slate-800">
           <Button
             type="button"
             variant="outline"

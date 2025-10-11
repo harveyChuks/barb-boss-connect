@@ -292,71 +292,75 @@ const ServicesManagement = () => {
 
       {/* Service Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="bg-card border-border text-foreground">
-          <DialogHeader>
-            <DialogTitle>
-              {editingService ? "Edit Service" : "Add New Service"}
-            </DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              {editingService ? "Update your service details" : "Add a new service to your business"}
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="bg-card border-border text-foreground h-[90vh] flex flex-col p-0">
+          <div className="flex-shrink-0 p-6 pb-4">
+            <DialogHeader>
+              <DialogTitle>
+                {editingService ? "Edit Service" : "Add New Service"}
+              </DialogTitle>
+              <DialogDescription className="text-muted-foreground">
+                {editingService ? "Update your service details" : "Add a new service to your business"}
+              </DialogDescription>
+            </DialogHeader>
+          </div>
           
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Service Name</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                className="bg-input border-border text-foreground"
-                placeholder="Haircut & Style"
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
-                className="bg-input border-border text-foreground"
-                placeholder="Professional haircut and styling service"
-                rows={3}
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+            <div className="flex-1 overflow-y-auto px-6 pb-4 space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="price">{getCurrencyLabel()}</Label>
+                <Label htmlFor="name">Service Name</Label>
                 <Input
-                  id="price"
-                  type="number"
-                  step="0.01"
-                  value={formData.price}
-                  onChange={(e) => handleInputChange("price", e.target.value)}
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
                   className="bg-input border-border text-foreground"
-                  placeholder="25.00"
+                  placeholder="Haircut & Style"
                   required
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="duration">Duration (minutes)</Label>
-                <Input
-                  id="duration"
-                  type="number"
-                  value={formData.duration_minutes}
-                  onChange={(e) => handleInputChange("duration_minutes", e.target.value)}
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => handleInputChange("description", e.target.value)}
                   className="bg-input border-border text-foreground"
-                  placeholder="30"
-                  required
+                  placeholder="Professional haircut and styling service"
+                  rows={3}
                 />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="price">{getCurrencyLabel()}</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) => handleInputChange("price", e.target.value)}
+                    className="bg-input border-border text-foreground"
+                    placeholder="25.00"
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="duration">Duration (minutes)</Label>
+                  <Input
+                    id="duration"
+                    type="number"
+                    value={formData.duration_minutes}
+                    onChange={(e) => handleInputChange("duration_minutes", e.target.value)}
+                    className="bg-input border-border text-foreground"
+                    placeholder="30"
+                    required
+                  />
+                </div>
               </div>
             </div>
             
-            <DialogFooter className="flex-col sm:flex-row gap-2">
+            <DialogFooter className="flex-shrink-0 flex-col sm:flex-row gap-2 p-6 pt-4 border-t border-border">
               <Button
                 type="button"
                 variant="outline"
