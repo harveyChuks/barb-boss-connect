@@ -590,18 +590,30 @@ const Index = () => {
           <div className="flex items-center justify-between h-16">
             {/* App Name - Left */}
             <div className="flex items-center">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white font-arista">
                 {userBusiness?.name || "bójí"}
               </h1>
             </div>
             
-            {/* Navigation Links - Center */}
-            <nav className="hidden lg:flex items-center space-x-8 flex-1 justify-center">
-              <a href="#about" className="text-slate-300 hover:text-white transition-colors">About</a>
-              <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
-              <a href="#pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</a>
-              <a href="#faqs" className="text-slate-300 hover:text-white transition-colors">FAQs</a>
-            </nav>
+            {/* Navigation Links - Center (Only show on landing page) */}
+            {!isAuthenticated && (
+              <nav className="hidden lg:flex items-center space-x-8 flex-1 justify-center">
+                <a href="#about" className="text-slate-300 hover:text-white transition-colors">About</a>
+                <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
+                <a href="#pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</a>
+                <a 
+                  href="#faqs" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const faqsSection = document.getElementById('faqs');
+                    faqsSection?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-slate-300 hover:text-white transition-colors cursor-pointer"
+                >
+                  FAQs
+                </a>
+              </nav>
+            )}
             
             {/* Right Side Actions */}
             <div className="flex items-center gap-2 ml-4">
