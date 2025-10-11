@@ -591,7 +591,7 @@ const Index = () => {
             {/* App Logo - Left */}
             <div className="flex items-center">
               <img 
-                src="/boji-logo-new.png" 
+                src="/boji-logo.png" 
                 alt="bójí" 
                 className="h-14 sm:h-16 md:h-20 w-auto"
               />
