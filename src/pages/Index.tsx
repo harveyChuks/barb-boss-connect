@@ -588,11 +588,13 @@ const Index = () => {
       <header className="bg-black border-b border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* App Name - Left */}
+            {/* App Logo - Left */}
             <div className="flex items-center">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white font-arista">
-                {userBusiness?.name || "bójí"}
-              </h1>
+              <img 
+                src="/boji-logo.png" 
+                alt="bójí" 
+                className="h-10 sm:h-12 md:h-14 w-auto"
+              />
             </div>
             
             {/* Navigation Links - Center (Only show on landing page) */}
