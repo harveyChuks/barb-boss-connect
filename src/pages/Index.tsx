@@ -587,30 +587,24 @@ const Index = () => {
       {/* Header */}
       <header className="bg-black border-b border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 relative">
-            {/* Logo - Left Side */}
-            <div className="flex items-center">
-              <Link to="/" className="cursor-pointer hover:opacity-80 transition-opacity">
-                <img 
-                  src="/boji-logo.png" 
-                  alt="Boji Logo" 
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg"
-                />
-              </Link>
-            </div>
-            
-            {/* App Name - Center */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-              <h1 className="text-xl sm:text-2xl font-bold text-white whitespace-nowrap">
+          <div className="flex items-center justify-between h-16">
+            {/* App Name - Left/Center */}
+            <div className="flex-1 flex justify-center md:justify-start">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
                 {userBusiness?.name || "Boji"}
               </h1>
-              {userBusiness && (
-                <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block text-center">Business Dashboard</p>
-              )}
             </div>
             
+            {/* Navigation Links - Center on Desktop */}
+            <nav className="hidden md:flex items-center space-x-8">
+              <a href="#about" className="text-slate-300 hover:text-white transition-colors">About</a>
+              <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
+              <a href="#pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</a>
+              <a href="#faqs" className="text-slate-300 hover:text-white transition-colors">FAQs</a>
+            </nav>
+            
             {/* Right Side Actions */}
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               {/* Top Action Buttons - Show when not authenticated */}
               {!isAuthenticated && (
                 <Button 
