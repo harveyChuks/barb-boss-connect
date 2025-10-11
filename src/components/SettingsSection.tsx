@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Settings, Shield, Bell, CreditCard, Users, Calendar } from "lucide-react";
+import { Settings, Shield, Bell, CreditCard, Users, Calendar, MessageSquare, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,11 +14,13 @@ import LocalPaymentsIntegration from "./LocalPaymentsIntegration";
 import OfflineCapabilities from "./OfflineCapabilities";
 import SubscriptionManager from "./SubscriptionManager";
 import LanguageSelector from "./LanguageSelector";
+import FeedbackModal from "./FeedbackModal";
 
 const SettingsSection = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const [userBusiness, setUserBusiness] = useState<any>(null);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   
   // Get user business data
   useEffect(() => {
@@ -103,6 +105,37 @@ const SettingsSection = () => {
   return (
     <div className="space-y-6">
 
+      {/* Feedback Section - Active Feature */}
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
+                <MessageSquare className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-foreground text-xl">Share Your Feedback</CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Help us improve Boji - your opinion matters!
+                </CardDescription>
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground mb-4">
+            We're constantly working to make Boji better for you. Share your experience, suggest new features, or report any issues you've encountered.
+          </p>
+          <Button
+            onClick={() => setShowFeedbackModal(true)}
+            className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground"
+          >
+            <Star className="w-4 h-4 mr-2" />
+            Rate & Review Boji
+          </Button>
+        </CardContent>
+      </Card>
+
       {/* Language Settings - Active Feature */}
       <LanguageSelector />
 
@@ -181,6 +214,9 @@ const SettingsSection = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Feedback Modal */}
+      <FeedbackModal open={showFeedbackModal} onOpenChange={setShowFeedbackModal} />
     </div>
   );
 };
