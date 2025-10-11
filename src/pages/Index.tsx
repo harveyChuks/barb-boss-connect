@@ -590,7 +590,7 @@ const Index = () => {
           <div className="flex items-center justify-between h-16">
             {/* App Name - Left */}
             <div className="flex items-center">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white font-arista">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white font-arista">
                 {userBusiness?.name || "bójí"}
               </h1>
             </div>
