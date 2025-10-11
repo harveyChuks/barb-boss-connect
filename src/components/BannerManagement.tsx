@@ -40,7 +40,7 @@ const BannerManagement = () => {
   };
 
   const handleBannerUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files || event.target.files.length === 0 || !business) return;
+    if (!event.target.files || event.target.files.length === 0 || !business || !user) return;
 
     const file = event.target.files[0];
     
@@ -66,8 +66,8 @@ const BannerManagement = () => {
 
     setUploading(true);
     try {
-      // Upload to work-pictures bucket
-      const path = `${business.id}/banner-${Date.now()}`;
+      // Upload to work-pictures bucket with same path pattern as work pictures
+      const path = `${user.id}/${business.id}/banner-${Date.now()}`;
       const publicUrl = await uploadImage(file, 'work-pictures', path);
 
       // Update business record
