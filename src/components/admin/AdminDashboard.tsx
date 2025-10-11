@@ -19,6 +19,7 @@ import { SupportCommunication } from "@/components/admin/SupportCommunication";
 import { SecurityAudit } from "@/components/admin/SecurityAudit";
 import { ContentModeration } from "@/components/admin/ContentModeration";
 import { PlatformHealthMonitoring } from "@/components/admin/PlatformHealthMonitoring";
+import AppFeedbackViewer from "@/components/admin/AppFeedbackViewer";
 import FeedbackManagement from "@/components/admin/FeedbackManagement";
 
 const AdminDashboard = () => {
@@ -268,6 +269,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="plans">Plans</TabsTrigger>
+            <TabsTrigger value="feedback">Feedback</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="financial">Financial</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -275,7 +277,6 @@ const AdminDashboard = () => {
             <TabsTrigger value="security">Security</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="health">Health</TabsTrigger>
-            <TabsTrigger value="feedback">Feedback</TabsTrigger>
           </TabsList>
 
           <TabsContent value="businesses">
@@ -363,6 +364,10 @@ const AdminDashboard = () => {
 
           <TabsContent value="plans">
             <SubscriptionPlanManagement />
+          </TabsContent>
+
+          <TabsContent value="feedback">
+            <AppFeedbackViewer />
           </TabsContent>
 
           <TabsContent value="analytics">
