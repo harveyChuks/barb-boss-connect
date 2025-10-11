@@ -352,21 +352,22 @@ const ServicesManagement = () => {
                   required
                 />
                 {formData.service_type && SERVICE_SUGGESTIONS[formData.service_type] && (
-                  <div className="flex flex-wrap gap-2 p-3 bg-muted rounded-lg border border-border">
-                    <div className="w-full flex items-center gap-2 mb-1">
-                      <Lightbulb className="w-3.5 h-3.5 text-primary" />
-                      <p className="text-xs font-medium text-foreground">Quick add popular services:</p>
-                    </div>
-                    {SERVICE_SUGGESTIONS[formData.service_type].map((suggestion) => (
-                      <Badge
-                        key={suggestion}
-                        variant="outline"
-                        className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-                        onClick={() => handleSuggestionClick(suggestion)}
-                      >
-                        {suggestion}
-                      </Badge>
-                    ))}
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {SERVICE_SUGGESTIONS[formData.service_type]
+                      .filter(suggestion => 
+                        suggestion.toLowerCase().includes(formData.name.toLowerCase())
+                      )
+                      .map((suggestion) => (
+                        <Badge
+                          key={suggestion}
+                          variant="outline"
+                          className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors flex items-center gap-1"
+                          onClick={() => handleSuggestionClick(suggestion)}
+                        >
+                          <Plus className="w-3 h-3" />
+                          {suggestion}
+                        </Badge>
+                      ))}
                   </div>
                 )}
               </div>

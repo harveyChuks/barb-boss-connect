@@ -10,13 +10,7 @@ export const SERVICE_TYPES = [
   'Waxing & Hair Removal',
   'Makeup',
   'Barber Services',
-  'Automotive Services',
-  'Cleaning Services',
-  'Repair Services',
-  'Health & Wellness',
-  'Beauty Services',
-  'Professional Services',
-  'Other'
+  'Beauty Services'
 ] as const;
 
 export type ServiceType = typeof SERVICE_TYPES[number];
@@ -123,44 +117,6 @@ export const SERVICE_SUGGESTIONS: Record<string, string[]> = {
     'Line Up',
     'Hair Design'
   ],
-  'Automotive Services': [
-    'Oil Change',
-    'Tire Rotation',
-    'Brake Service',
-    'Engine Diagnostic',
-    'Transmission Service',
-    'Car Wash',
-    'Full Detail',
-    'Interior Cleaning',
-    'Wax & Polish',
-    'Battery Replacement'
-  ],
-  'Cleaning Services': [
-    'House Cleaning',
-    'Deep Cleaning',
-    'Move In/Out Cleaning',
-    'Office Cleaning',
-    'Carpet Cleaning',
-    'Window Cleaning',
-    'Laundry Service'
-  ],
-  'Repair Services': [
-    'Plumbing',
-    'Electrical Work',
-    'HVAC Service',
-    'Appliance Repair',
-    'Painting',
-    'Carpentry',
-    'Handyman Service'
-  ],
-  'Health & Wellness': [
-    'Personal Training',
-    'Yoga Class',
-    'Physiotherapy',
-    'Nutrition Consultation',
-    'Weight Loss Program',
-    'Fitness Assessment'
-  ],
   'Beauty Services': [
     'Lash Extensions',
     'Lash Lift',
@@ -168,15 +124,5 @@ export const SERVICE_SUGGESTIONS: Record<string, string[]> = {
     'Microblading',
     'Henna Tattoo',
     'Teeth Whitening'
-  ],
-  'Professional Services': [
-    'Consultation',
-    'Photography Session',
-    'Event Planning',
-    'Catering',
-    'Tutoring'
-  ],
-  'Other': [
-    'Custom Service'
   ]
 };
