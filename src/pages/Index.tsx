@@ -26,6 +26,7 @@ import SettingsSection from "@/components/SettingsSection";
 import StaffManagement from "@/components/StaffManagement";
 import CalendarView from "@/components/CalendarView";
 import WorkPicturesManagement from "@/components/WorkPicturesManagement";
+import BannerManagement from "@/components/BannerManagement";
 import ReportsAnalytics from "@/components/ReportsAnalytics";
 import WhatsAppIntegration from "@/components/WhatsAppIntegration";
 import LocalPaymentsIntegration from "@/components/LocalPaymentsIntegration";
@@ -932,7 +933,10 @@ const Index = () => {
                 <div className="mb-6">
                   <h1 className="text-2xl font-bold text-foreground">Portfolio Management</h1>
                 </div>
-                <WorkPicturesManagement />
+                <div className="space-y-6">
+                  <BannerManagement />
+                  <WorkPicturesManagement />
+                </div>
               </div>
             )}
 

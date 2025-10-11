@@ -29,7 +29,7 @@ interface Business {
   logo_url: string | null;
   currency: string | null;
   owner_id?: string;
-  banner_url: string | null;
+  banner_url?: string | null;
 }
 
 interface Service {

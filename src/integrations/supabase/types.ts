@@ -1065,6 +1065,7 @@ export type Database = {
         Args: { business_booking_link: string }
         Returns: {
           address: string
+          banner_url: string
           booking_link: string
           business_type: string
           city: string
