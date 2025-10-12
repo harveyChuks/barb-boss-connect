@@ -401,6 +401,7 @@ export type Database = {
           phone: string | null
           postal_code: string | null
           state: string | null
+          tiktok: string | null
           updated_at: string | null
           website: string | null
           whatsapp_enabled: boolean | null
@@ -436,6 +437,7 @@ export type Database = {
           phone?: string | null
           postal_code?: string | null
           state?: string | null
+          tiktok?: string | null
           updated_at?: string | null
           website?: string | null
           whatsapp_enabled?: boolean | null
@@ -471,6 +473,7 @@ export type Database = {
           phone?: string | null
           postal_code?: string | null
           state?: string | null
+          tiktok?: string | null
           updated_at?: string | null
           website?: string | null
           whatsapp_enabled?: boolean | null
