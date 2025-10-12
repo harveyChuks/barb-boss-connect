@@ -1121,6 +1121,7 @@ export type Database = {
           country: string
           cover_image_url: string
           created_at: string
+          currency: string
           description: string
           email: string
           id: string
