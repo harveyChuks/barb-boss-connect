@@ -35,6 +35,7 @@ const ProfileManagement = () => {
     address: "",
     website: "",
     instagram: "",
+    tiktok: "",
     logo_url: "",
     country: "Nigeria",
     currency: "NGN",
@@ -116,6 +117,7 @@ const ProfileManagement = () => {
           address: data.address || "",
           website: data.website || "",
           instagram: data.instagram || "",
+          tiktok: (data as any).tiktok || "",
           logo_url: data.logo_url || "",
           country: data.country || "Nigeria",
           currency: (data as any).currency || "NGN",
@@ -284,6 +286,7 @@ const ProfileManagement = () => {
         address: formData.address,
         website: formData.website,
         instagram: formData.instagram,
+        tiktok: formData.tiktok,
         logo_url: formData.logo_url,
         country: formData.country,
         currency: formData.currency,
@@ -558,6 +561,23 @@ const ProfileManagement = () => {
                 className="bg-input border-border text-foreground"
                 placeholder="@yourbusiness"
               />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="tiktok">TikTok</Label>
+              <Input
+                id="tiktok"
+                value={formData.tiktok}
+                onChange={(e) => handleInputChange("tiktok", e.target.value)}
+                className="bg-input border-border text-foreground"
+                placeholder="@yourbusiness"
+              />
+            </div>
+
+            <div className="space-y-2">
+              {/* Empty div for grid alignment */}
             </div>
           </div>
 

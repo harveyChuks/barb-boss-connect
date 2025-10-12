@@ -10,6 +10,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight, MessageCircle, Send, X, Instagram, Globe } from "lucide-react";
+import { Music2 } from "lucide-react"; // TikTok icon
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TimeSlotPicker from "./TimeSlotPicker";
@@ -26,6 +27,7 @@ interface Business {
   address: string | null;
   website: string | null;
   instagram: string | null;
+  tiktok: string | null;
   logo_url: string | null;
   currency: string | null;
   owner_id?: string;
@@ -677,12 +679,24 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   <div className="flex items-center gap-3">
                     {business.instagram && (
                       <a
-                        href={business.instagram.startsWith('http') ? business.instagram : `https://instagram.com/${business.instagram}`}
+                        href={business.instagram.startsWith('http') ? business.instagram : `https://instagram.com/${business.instagram.replace('@', '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-slate-400 hover:text-pink-400 transition-colors"
+                        title="Instagram"
+                      >
+                        <Instagram className="w-5 h-5" />
+                      </a>
+                    )}
+                    {business.tiktok && (
+                      <a
+                        href={business.tiktok.startsWith('http') ? business.tiktok : `https://tiktok.com/@${business.tiktok.replace('@', '')}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-slate-400 hover:text-white transition-colors"
+                        title="TikTok"
                       >
-                        <Instagram className="w-5 h-5" />
+                        <Music2 className="w-5 h-5" />
                       </a>
                     )}
                     {business.website && (
@@ -690,7 +704,8 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         href={business.website.startsWith('http') ? business.website : `https://${business.website}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-slate-400 hover:text-white transition-colors"
+                        className="text-slate-400 hover:text-blue-400 transition-colors"
+                        title="Website"
                       >
                         <Globe className="w-5 h-5" />
                       </a>

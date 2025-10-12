@@ -1082,8 +1082,10 @@ export type Database = {
           is_active: boolean
           logo_url: string
           name: string
+          owner_id: string
           phone: string
           state: string
+          tiktok: string
           website: string
         }[]
       }
