@@ -715,7 +715,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto pt-20 md:pt-0 px-6">
+      <div className="max-w-7xl mx-auto pt-24 md:pt-0 px-6">
         {/* Business Header */}
         <div className="mb-8 p-8 bg-white dark:bg-slate-800/50 rounded-xl shadow-lg dark:shadow-none">
           <div className="flex items-center space-x-6">
@@ -918,7 +918,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
             </div>
             <div className="space-y-4">
               {reviews.slice(0, 5).map((review) => (
-                <div key={review.id} className="p-4 bg-slate-700/30 dark:bg-slate-700/30 rounded-lg border border-slate-200 dark:border-slate-600">
+                <div key={review.id} className="p-4 bg-white dark:bg-slate-800/50 rounded-lg shadow-lg dark:shadow-none border-0 dark:border dark:border-slate-600">
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <p className="text-foreground font-medium">{review.customer_name}</p>
