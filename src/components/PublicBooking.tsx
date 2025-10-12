@@ -754,35 +754,47 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   
                   {/* Social Media Links */}
                   <div className="flex items-center gap-3">
-                    {business.instagram && (
+                    {business.instagram && !business.instagram.includes('whatsapp') && !business.instagram.includes('wa.me') && (
                       <a
-                        href={business.instagram.startsWith('http') ? business.instagram : `https://instagram.com/${business.instagram.replace('@', '')}`}
+                        href={
+                          business.instagram.startsWith('http') 
+                            ? business.instagram 
+                            : business.instagram.includes('instagram.com') 
+                            ? `https://${business.instagram}`
+                            : `https://instagram.com/${business.instagram.replace('@', '')}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-slate-400 hover:text-pink-400 transition-colors"
-                        title="Instagram"
+                        title="Follow on Instagram"
                       >
                         <Instagram className="w-5 h-5" />
                       </a>
                     )}
-                    {business.tiktok && (
+                    {business.tiktok && !business.tiktok.includes('whatsapp') && !business.tiktok.includes('wa.me') && (
                       <a
-                        href={business.tiktok.startsWith('http') ? business.tiktok : `https://tiktok.com/@${business.tiktok.replace('@', '')}`}
+                        href={
+                          business.tiktok.startsWith('http') 
+                            ? business.tiktok 
+                            : business.tiktok.includes('tiktok.com') 
+                            ? `https://${business.tiktok}`
+                            : `https://tiktok.com/@${business.tiktok.replace('@', '')}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-slate-400 hover:text-white transition-colors"
-                        title="TikTok"
+                        title="Follow on TikTok"
                       >
                         <Music2 className="w-5 h-5" />
                       </a>
                     )}
-                    {business.website && (
+                    {business.website && !business.website.includes('whatsapp') && !business.website.includes('wa.me') && (
                       <a
                         href={business.website.startsWith('http') ? business.website : `https://${business.website}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-slate-400 hover:text-blue-400 transition-colors"
-                        title="Website"
+                        title="Visit Website"
                       >
                         <Globe className="w-5 h-5" />
                       </a>
