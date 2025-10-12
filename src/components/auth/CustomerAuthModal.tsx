@@ -132,15 +132,15 @@ export const CustomerAuthModal = ({ open, onOpenChange, onAuthSuccess }: Custome
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border sm:max-w-md">
-        <DialogHeader>
+      <DialogContent className="bg-card border-border sm:max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="sticky top-0 bg-card z-10 pb-4">
           <DialogTitle className="text-foreground">Customer Account</DialogTitle>
           <DialogDescription className="text-muted-foreground">
             Sign in or create an account to access exclusive benefits
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="login" className="w-full">
+        <Tabs defaultValue="login" className="w-full pb-4">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
