@@ -610,17 +610,10 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       {/* Header */}
       <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Business Name - Left/Center */}
-            <div className="flex-1 flex justify-center md:justify-start">
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-700 dark:text-white">
-                {business?.name || "bójí"}
-              </h1>
-            </div>
-            
-            
-            {/* Right Side - Empty but maintains layout */}
-            <div className="flex items-center flex-1"></div>
+          <div className="flex items-center justify-center h-16">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+              bójí
+            </h1>
           </div>
         </div>
       </header>
@@ -717,18 +710,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   <p className="text-slate-300 mb-4 break-words">{business.description}</p>
                 )}
                 <div className="flex flex-wrap gap-4 text-slate-400">
-                  {business.phone && (
-                    <div className="flex items-center min-w-0">
-                      <Phone className="w-4 h-4 mr-2 flex-shrink-0" />
-                      <span className="break-all">{business.phone}</span>
-                    </div>
-                  )}
-                  {business.email && (
-                    <div className="flex items-center min-w-0">
-                      <Mail className="w-4 h-4 mr-2 flex-shrink-0" />
-                      <span className="break-all">{business.email}</span>
-                    </div>
-                  )}
                   {business.address && (
                     <div className="flex items-center min-w-0">
                       <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
@@ -1320,6 +1301,82 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
           </Card>
         </div>
       )}
+
+      {/* Footer */}
+      <footer className="bg-card border-t border-border mt-16">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            {/* Brand Section */}
+            <div className="space-y-4">
+              <h3 className="text-2xl font-bold text-foreground">bójí</h3>
+              <p className="text-muted-foreground text-sm">
+                Empowering businesses to thrive through seamless booking experiences.
+              </p>
+            </div>
+
+            {/* Quick Links */}
+            <div className="space-y-4">
+              <h4 className="text-foreground font-semibold">Resources</h4>
+              <div className="space-y-2">
+                <Link to="/faqs" className="block text-muted-foreground hover:text-foreground transition-colors text-sm">
+                  FAQs
+                </Link>
+                <Link to="/privacy-policy" className="block text-muted-foreground hover:text-foreground transition-colors text-sm">
+                  Privacy Policy
+                </Link>
+                <Link to="/terms-of-service" className="block text-muted-foreground hover:text-foreground transition-colors text-sm">
+                  Terms of Service
+                </Link>
+              </div>
+            </div>
+
+            {/* Contact Section */}
+            <div className="space-y-4">
+              <h4 className="text-foreground font-semibold">Get in Touch</h4>
+              <div className="space-y-2">
+                <a
+                  href="https://wa.me/2348000000000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Chat with Boji (WhatsApp)
+                </a>
+                <a
+                  href="https://instagram.com/boji_official"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
+                >
+                  <Instagram className="w-4 h-4" />
+                  Direct Message (Instagram)
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="pt-8 border-t border-border">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-muted-foreground text-sm">
+                © {new Date().getFullYear()} Boji. All rights reserved.
+              </p>
+              <div className="flex items-center gap-4">
+                <a
+                  href="https://instagram.com/boji_official"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
