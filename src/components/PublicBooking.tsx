@@ -506,10 +506,26 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
     setSendingMessage(true);
     try {
+      // Get business owner email
+      if (!business.owner_id) {
+        throw new Error("Cannot send message: business owner not found");
+      }
+
+      const { data: ownerData, error: ownerError } = await supabase.auth.admin.getUserById(business.owner_id);
+      
+      if (ownerError || !ownerData?.user?.email) {
+        // Fallback to business email if available
+        if (!business.email) {
+          throw new Error("Cannot send message: no contact email available");
+        }
+      }
+
+      const ownerEmail = ownerData?.user?.email || business.email;
+
       // Send message to business owner via email
       const { error } = await supabase.functions.invoke('send-owner-notification', {
         body: {
-          ownerEmail: business.email,
+          ownerEmail: ownerEmail,
           businessName: business.name,
           customerName: messageData.name,
           customerPhone: messageData.phone || 'Not provided',
