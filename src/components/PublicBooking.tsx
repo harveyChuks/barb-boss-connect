@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,12 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight, MessageCircle, Send, X, Instagram, Globe } from "lucide-react";
+import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight, MessageCircle, Send, X, Instagram, Globe, User, Gift, Heart } from "lucide-react";
 import { Music2 } from "lucide-react"; // TikTok icon
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TimeSlotPicker from "./TimeSlotPicker";
 import { ReviewModal } from "./ReviewModal";
+import { CustomerAuthModal } from "./auth/CustomerAuthModal";
+import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import { format, addDays, isAfter, isBefore, startOfDay, addMonths, subMonths, startOfMonth, endOfMonth, eachWeekOfInterval, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isSameDay } from "date-fns";
 
 interface Business {
@@ -64,6 +66,8 @@ interface PublicBookingProps {
 
 const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { user, customerProfile, isAuthenticated, followBusiness, hasFollowedBusiness } = useCustomerAuth();
   const [business, setBusiness] = useState<Business | null>(null);
   const [services, setServices] = useState<Service[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
@@ -71,6 +75,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [portfolioScrollPosition, setPortfolioScrollPosition] = useState(0);
   const [lastAppointmentData, setLastAppointmentData] = useState<{
     customerName: string;
@@ -82,6 +87,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   const [selectedTime, setSelectedTime] = useState("");
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [showMessageDialog, setShowMessageDialog] = useState(false);
+  const [discount, setDiscount] = useState<{ percentage: number; reason: string; finalPrice: number } | null>(null);
   const [messageData, setMessageData] = useState({
     name: "",
     email: "",
@@ -244,6 +250,47 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     }));
   };
 
+  // Calculate discount when services are selected and customer is authenticated
+  useEffect(() => {
+    const calculateDiscount = async () => {
+      if (!isAuthenticated || !user || !business || formData.selected_services.length === 0) {
+        setDiscount(null);
+        return;
+      }
+
+      const selectedServices = services.filter(s => formData.selected_services.includes(s.id));
+      const totalPrice = selectedServices.reduce((sum, s) => sum + (s.price || 0), 0);
+
+      if (totalPrice === 0) {
+        setDiscount(null);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.rpc('calculate_customer_discount', {
+          p_customer_id: user.id,
+          p_business_id: business.id,
+          p_base_price: totalPrice
+        });
+
+        if (error) throw error;
+
+        if (data && typeof data === 'object' && data !== null) {
+          const discountData = data as { discount_percentage: number; discount_reason: string; final_price: number };
+          setDiscount({
+            percentage: discountData.discount_percentage,
+            reason: discountData.discount_reason,
+            finalPrice: discountData.final_price
+          });
+        }
+      } catch (error) {
+        console.error('Error calculating discount:', error);
+      }
+    };
+
+    calculateDiscount();
+  }, [formData.selected_services, isAuthenticated, user, business, services]);
+
   const handleSubmit = async () => {
     if (!business || !selectedDate || !selectedTime || formData.selected_services.length === 0) return;
 
@@ -340,6 +387,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
           business_id: business.id,
           service_id: service.id,
           staff_id: formData.staff_id || null,
+          customer_id: user?.id || null,
           customer_name: formData.customer_name,
           customer_phone: formData.customer_phone,
           customer_email: formData.customer_email || null,
@@ -347,7 +395,10 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
           start_time: serviceStartTime.toTimeString().slice(0, 5),
           end_time: serviceEndTime.toTimeString().slice(0, 5),
           notes: formData.notes || null,
-          status: 'pending' as const
+          status: 'pending' as const,
+          discount_percentage: discount?.percentage || 0,
+          discount_reason: discount?.reason || null,
+          final_price: discount?.finalPrice || (service.price || 0)
         };
 
         return supabase.from('appointments').insert(appointmentData).select();
@@ -595,6 +646,18 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Customer Auth Modal */}
+      <CustomerAuthModal 
+        open={showAuthModal}
+        onOpenChange={setShowAuthModal}
+        onAuthSuccess={() => {
+          toast({
+            title: "Success!",
+            description: "You're now logged in and can enjoy loyalty benefits."
+          });
+        }}
+      />
+
       {/* Review Modal */}
       {lastAppointmentData && (
         <ReviewModal
@@ -610,10 +673,31 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       {/* Header */}
       <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center h-16">
+          <div className="flex items-center justify-between h-16">
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
               bójí
             </h1>
+            {isAuthenticated ? (
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => navigate('/customer/dashboard')}
+                className="gap-2"
+              >
+                <User className="w-4 h-4" />
+                My Account
+              </Button>
+            ) : (
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowAuthModal(true)}
+                className="gap-2"
+              >
+                <User className="w-4 h-4" />
+                Log in
+              </Button>
+            )}
           </div>
         </div>
       </header>

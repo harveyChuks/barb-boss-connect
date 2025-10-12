@@ -115,7 +115,10 @@ export type Database = {
           customer_phone: string
           deposit_amount: number | null
           deposit_paid: boolean | null
+          discount_percentage: number | null
+          discount_reason: string | null
           end_time: string
+          final_price: number | null
           id: string
           notes: string | null
           payment_intent_id: string | null
@@ -141,7 +144,10 @@ export type Database = {
           customer_phone: string
           deposit_amount?: number | null
           deposit_paid?: boolean | null
+          discount_percentage?: number | null
+          discount_reason?: string | null
           end_time: string
+          final_price?: number | null
           id?: string
           notes?: string | null
           payment_intent_id?: string | null
@@ -167,7 +173,10 @@ export type Database = {
           customer_phone?: string
           deposit_amount?: number | null
           deposit_paid?: boolean | null
+          discount_percentage?: number | null
+          discount_reason?: string | null
           end_time?: string
+          final_price?: number | null
           id?: string
           notes?: string | null
           payment_intent_id?: string | null
@@ -185,13 +194,6 @@ export type Database = {
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "appointments_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "customers"
             referencedColumns: ["id"]
           },
           {
@@ -479,6 +481,42 @@ export type Database = {
           whatsapp_enabled?: boolean | null
           whatsapp_number?: string | null
           whatsapp_settings?: Json | null
+        }
+        Relationships: []
+      }
+      customer_profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          followed_businesses: Json | null
+          id: string
+          is_loyalty_member: boolean | null
+          name: string
+          phone: string
+          total_bookings: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          followed_businesses?: Json | null
+          id: string
+          is_loyalty_member?: boolean | null
+          name: string
+          phone: string
+          total_bookings?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          followed_businesses?: Json | null
+          id?: string
+          is_loyalty_member?: boolean | null
+          name?: string
+          phone?: string
+          total_bookings?: number | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1004,6 +1042,14 @@ export type Database = {
           p_start_time: string
         }
         Returns: string
+      }
+      calculate_customer_discount: {
+        Args: {
+          p_base_price: number
+          p_business_id: string
+          p_customer_id: string
+        }
+        Returns: Json
       }
       calculate_deposit_amount: {
         Args: { service_price: number }
