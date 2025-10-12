@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight, MessageCircle, Send, X } from "lucide-react";
+import { Clock, Phone, Mail, MapPin, Star, Calendar as CalendarIcon, Camera, Images, ChevronLeft, ChevronRight, MessageCircle, Send, X, Instagram, Globe } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TimeSlotPicker from "./TimeSlotPicker";
@@ -623,7 +623,20 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto pt-16 md:pt-0 p-6">
+      {/* Business Banner - Full Width */}
+      {business.banner_url && (
+        <div className="w-full mb-8">
+          <div className="w-full aspect-[3/1] max-h-[400px]">
+            <img
+              src={business.banner_url}
+              alt={`${business.name} banner`}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto pt-16 md:pt-0 px-6">
         {/* Business Header */}
         <Card className="bg-slate-800/50 border-slate-700 mb-8">
           <CardContent className="p-8">
@@ -637,6 +650,54 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
               <div className="flex-1 min-w-0">
                 <h1 className="text-3xl font-bold text-white mb-2 break-words">{business.name}</h1>
                 <Badge className="mb-3 capitalize">{business.business_type.replace('_', ' ')}</Badge>
+                
+                {/* Rating and Social Media */}
+                <div className="flex items-center gap-4 mb-4 flex-wrap">
+                  {/* Rating */}
+                  {reviews.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-4 h-4 ${
+                              star <= Math.round(Number(averageRating))
+                                ? "fill-yellow-400 text-yellow-400"
+                                : "text-slate-500"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-white font-semibold">{averageRating}</span>
+                      <span className="text-slate-400">({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})</span>
+                    </div>
+                  )}
+                  
+                  {/* Social Media Links */}
+                  <div className="flex items-center gap-3">
+                    {business.instagram && (
+                      <a
+                        href={business.instagram.startsWith('http') ? business.instagram : `https://instagram.com/${business.instagram}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-slate-400 hover:text-white transition-colors"
+                      >
+                        <Instagram className="w-5 h-5" />
+                      </a>
+                    )}
+                    {business.website && (
+                      <a
+                        href={business.website.startsWith('http') ? business.website : `https://${business.website}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-slate-400 hover:text-white transition-colors"
+                      >
+                        <Globe className="w-5 h-5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+
                 {business.description && (
                   <p className="text-slate-300 mb-4 break-words">{business.description}</p>
                 )}
@@ -664,21 +725,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
             </div>
           </CardContent>
         </Card>
-
-        {/* Business Banner */}
-        {business.banner_url && (
-          <Card className="bg-slate-800/50 border-slate-700 mb-8 overflow-hidden">
-            <CardContent className="p-0">
-              <div className="w-full aspect-[3/1]">
-                <img
-                  src={business.banner_url}
-                  alt={`${business.name} banner`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Work Portfolio Section */}
         {workPictures.length > 0 && (
