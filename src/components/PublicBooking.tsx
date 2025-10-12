@@ -717,7 +717,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
       <div className="max-w-7xl mx-auto px-6">
         {/* Business Header */}
-        <div className="mb-8 p-8 bg-white dark:bg-slate-800/50 rounded-xl shadow-lg dark:shadow-none">
+        <div className="mb-8 p-8 bg-white dark:bg-slate-800/50 rounded-xl shadow-lg dark:shadow-none w-[85vw] sm:w-full mx-auto">
           <div className="flex items-center space-x-6">
             <Avatar className="w-24 h-24">
               <AvatarImage src={business.logo_url || ""} alt={business.name} />
