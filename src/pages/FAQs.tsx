@@ -102,7 +102,7 @@ const FAQs = () => {
               <AccordionItem value="item-13">
                 <AccordionTrigger className="text-foreground">How do I contact customer support?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
-                  You can reach us via WhatsApp at +234 XXX XXX XXXX or send us a direct message on Instagram @boji_official. We're here to help with any questions or issues you may have.
+                  You can reach us via WhatsApp at +234 XXX XXX XXXX or send us a direct message on Instagram @yourbojiapp. We're here to help with any questions or issues you may have.
                 </AccordionContent>
               </AccordionItem>
 

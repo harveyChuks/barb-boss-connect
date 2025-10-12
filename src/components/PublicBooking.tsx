@@ -1440,7 +1440,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   Chat with Boji (WhatsApp)
                 </a>
                 <a
-                  href="https://instagram.com/boji_official"
+                  href="https://instagram.com/yourbojiapp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
@@ -1460,7 +1460,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
               </p>
               <div className="flex items-center gap-4">
                 <a
-                  href="https://instagram.com/boji_official"
+                  href="https://instagram.com/yourbojiapp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors"

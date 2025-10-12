@@ -120,7 +120,7 @@ const PrivacyPolicy = () => {
               </p>
               <ul className="list-none text-muted-foreground space-y-1 ml-4">
                 <li><strong>WhatsApp:</strong> +234 XXX XXX XXXX</li>
-                <li><strong>Instagram:</strong> @boji_official</li>
+                <li><strong>Instagram:</strong> @yourbojiapp</li>
               </ul>
             </section>
           </CardContent>
