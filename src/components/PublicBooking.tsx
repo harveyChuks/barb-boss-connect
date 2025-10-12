@@ -715,123 +715,121 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto pt-16 md:pt-0 px-6">
+      <div className="max-w-7xl mx-auto pt-20 md:pt-0 px-6">
         {/* Business Header */}
-        <Card className="bg-slate-800/50 border-slate-700 mb-8">
-          <CardContent className="p-8">
-            <div className="flex items-center space-x-6">
-              <Avatar className="w-24 h-24">
-                <AvatarImage src={business.logo_url || ""} alt={business.name} />
-                <AvatarFallback className="bg-slate-700 text-white text-2xl">
-                  {business.name.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <h1 className="text-3xl font-bold text-white mb-2 break-words">{business.name}</h1>
-                <Badge className="mb-3 capitalize">{business.business_type.replace('_', ' ')}</Badge>
-                
-                {/* Rating and Social Media */}
-                <div className="flex items-center gap-4 mb-4 flex-wrap">
-                  {/* Rating */}
-                  {reviews.length > 0 && (
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`w-4 h-4 ${
-                              star <= Math.round(Number(averageRating))
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-slate-500"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-white font-semibold">{averageRating}</span>
-                      <span className="text-slate-400">({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})</span>
+        <div className="mb-8 p-8 bg-white dark:bg-slate-800/50 rounded-xl shadow-lg dark:shadow-none">
+          <div className="flex items-center space-x-6">
+            <Avatar className="w-24 h-24">
+              <AvatarImage src={business.logo_url || ""} alt={business.name} />
+              <AvatarFallback className="bg-slate-700 text-white text-2xl">
+                {business.name.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-3xl font-bold text-foreground mb-2 break-words">{business.name}</h1>
+              <Badge className="mb-3 capitalize">{business.business_type.replace('_', ' ')}</Badge>
+              
+              {/* Rating and Social Media */}
+              <div className="flex items-center gap-4 mb-4 flex-wrap">
+                {/* Rating */}
+                {reviews.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-4 h-4 ${
+                            star <= Math.round(Number(averageRating))
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-slate-500"
+                          }`}
+                        />
+                      ))}
                     </div>
-                  )}
-                  
-                  {/* Social Media Links */}
-                  <div className="flex items-center gap-3">
-                    {business.instagram && !business.instagram.includes('whatsapp') && !business.instagram.includes('wa.me') && (
-                      <a
-                        href={
-                          business.instagram.startsWith('http') 
-                            ? business.instagram 
-                            : business.instagram.includes('instagram.com') 
-                            ? `https://${business.instagram}`
-                            : `https://www.instagram.com/${business.instagram.replace('@', '')}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const url = e.currentTarget.href;
-                          window.open(url, '_blank', 'noopener,noreferrer');
-                        }}
-                        className="text-slate-400 hover:text-pink-400 transition-colors"
-                        title="Follow on Instagram"
-                      >
-                        <Instagram className="w-5 h-5" />
-                      </a>
-                    )}
-                    {business.tiktok && !business.tiktok.includes('whatsapp') && !business.tiktok.includes('wa.me') && (
-                      <a
-                        href={
-                          business.tiktok.startsWith('http') 
-                            ? business.tiktok 
-                            : business.tiktok.includes('tiktok.com') 
-                            ? `https://${business.tiktok}`
-                            : `https://tiktok.com/@${business.tiktok.replace('@', '')}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-slate-400 hover:text-white transition-colors"
-                        title="Follow on TikTok"
-                      >
-                        <Music2 className="w-5 h-5" />
-                      </a>
-                    )}
-                    {business.website && !business.website.includes('whatsapp') && !business.website.includes('wa.me') && (
-                      <a
-                        href={business.website.startsWith('http') ? business.website : `https://${business.website}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-slate-400 hover:text-blue-400 transition-colors"
-                        title="Visit Website"
-                      >
-                        <Globe className="w-5 h-5" />
-                      </a>
-                    )}
+                    <span className="text-foreground font-semibold">{averageRating}</span>
+                    <span className="text-muted-foreground">({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})</span>
                   </div>
-                </div>
-
-                {business.description && (
-                  <p className="text-slate-300 mb-4 break-words">{business.description}</p>
                 )}
-                <div className="flex flex-wrap gap-4 text-slate-400">
-                  {business.address && (
-                    <div className="flex items-center min-w-0">
-                      <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
-                      <span className="break-words">{business.address}</span>
-                    </div>
+                
+                {/* Social Media Links */}
+                <div className="flex items-center gap-3">
+                  {business.instagram && !business.instagram.includes('whatsapp') && !business.instagram.includes('wa.me') && (
+                    <a
+                      href={
+                        business.instagram.startsWith('http') 
+                          ? business.instagram 
+                          : business.instagram.includes('instagram.com') 
+                          ? `https://${business.instagram}`
+                          : `https://www.instagram.com/${business.instagram.replace('@', '')}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const url = e.currentTarget.href;
+                        window.open(url, '_blank', 'noopener,noreferrer');
+                      }}
+                      className="text-slate-400 hover:text-pink-400 transition-colors"
+                      title="Follow on Instagram"
+                    >
+                      <Instagram className="w-5 h-5" />
+                    </a>
+                  )}
+                  {business.tiktok && !business.tiktok.includes('whatsapp') && !business.tiktok.includes('wa.me') && (
+                    <a
+                      href={
+                        business.tiktok.startsWith('http') 
+                          ? business.tiktok 
+                          : business.tiktok.includes('tiktok.com') 
+                          ? `https://${business.tiktok}`
+                          : `https://tiktok.com/@${business.tiktok.replace('@', '')}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-slate-400 hover:text-white transition-colors"
+                      title="Follow on TikTok"
+                    >
+                      <Music2 className="w-5 h-5" />
+                    </a>
+                  )}
+                  {business.website && !business.website.includes('whatsapp') && !business.website.includes('wa.me') && (
+                    <a
+                      href={business.website.startsWith('http') ? business.website : `https://${business.website}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-slate-400 hover:text-blue-400 transition-colors"
+                      title="Visit Website"
+                    >
+                      <Globe className="w-5 h-5" />
+                    </a>
                   )}
                 </div>
               </div>
+
+              {business.description && (
+                <p className="text-muted-foreground mb-4 break-words">{business.description}</p>
+              )}
+              <div className="flex flex-wrap gap-4 text-muted-foreground">
+                {business.address && (
+                  <div className="flex items-center min-w-0">
+                    <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
+                    <span className="break-words">{business.address}</span>
+                  </div>
+                )}
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Work Portfolio Section */}
         {workPictures.length > 0 && (
-          <Card className="bg-slate-800/50 border-slate-700 mb-8">
+          <Card className="bg-white dark:bg-slate-800/50 border-0 dark:border-slate-700 shadow-lg dark:shadow-none mb-8">
             <CardHeader>
-              <CardTitle className="text-white flex items-center">
+              <CardTitle className="text-foreground flex items-center">
                 <Images className="w-5 h-5 mr-2" />
                 Our Work Portfolio
               </CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardDescription className="text-muted-foreground">
                 See examples of our previous work and craftsmanship
               </CardDescription>
             </CardHeader>
@@ -908,61 +906,55 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
         {/* Reviews Section */}
         {reviews.length > 0 && (
-          <Card className="bg-slate-800/50 border-slate-700 mb-8">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-white flex items-center">
-                    <Star className="w-5 h-5 mr-2 fill-yellow-400 text-yellow-400" />
-                    Customer Reviews
-                  </CardTitle>
-                  <CardDescription className="text-slate-400">
-                    {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'} · Average rating: {averageRating} / 5
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {reviews.slice(0, 5).map((review) => (
-                  <div key={review.id} className="p-4 bg-slate-700/30 rounded-lg border border-slate-600">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <p className="text-white font-medium">{review.customer_name}</p>
-                        <p className="text-xs text-slate-400">
-                          {format(new Date(review.created_at), 'MMM d, yyyy')}
-                        </p>
-                      </div>
-                      <div className="flex gap-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`w-4 h-4 ${
-                              star <= review.rating
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-slate-500'
-                            }`}
-                          />
-                        ))}
-                      </div>
+          <div className="mb-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-foreground flex items-center mb-2">
+                <Star className="w-6 h-6 mr-2 fill-yellow-400 text-yellow-400" />
+                Customer Reviews
+              </h2>
+              <p className="text-muted-foreground">
+                {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'} · Average rating: {averageRating} / 5
+              </p>
+            </div>
+            <div className="space-y-4">
+              {reviews.slice(0, 5).map((review) => (
+                <div key={review.id} className="p-4 bg-slate-700/30 dark:bg-slate-700/30 rounded-lg border border-slate-200 dark:border-slate-600">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <p className="text-foreground font-medium">{review.customer_name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {format(new Date(review.created_at), 'MMM d, yyyy')}
+                      </p>
                     </div>
-                    {review.review_text && (
-                      <p className="text-slate-300 text-sm">{review.review_text}</p>
-                    )}
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-4 h-4 ${
+                            star <= review.rating
+                              ? 'fill-yellow-400 text-yellow-400'
+                              : 'text-slate-500'
+                          }`}
+                        />
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  {review.review_text && (
+                    <p className="text-muted-foreground text-sm">{review.review_text}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Services & Staff */}
           <div className="space-y-6">
-            <Card className="bg-slate-800/50 border-slate-700">
+            <Card className="bg-white dark:bg-slate-800/50 border-0 dark:border-slate-700 shadow-lg dark:shadow-none">
               <CardHeader>
-                <CardTitle className="text-white">Choose Your Services</CardTitle>
-                <CardDescription className="text-slate-400">
+                <CardTitle className="text-foreground">Choose Your Services</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Select one or more services for your appointment
                 </CardDescription>
               </CardHeader>
@@ -973,7 +965,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                     className={`p-4 rounded-lg border cursor-pointer transition-colors ${
                       formData.selected_services.includes(service.id)
                         ? 'border-primary bg-primary/10'
-                        : 'border-slate-600 hover:border-slate-500'
+                        : 'border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500'
                     }`}
                     onClick={() => handleServiceToggle(service.id)}
                   >
@@ -990,20 +982,20 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                             </svg>
                           )}
                         </div>
-                        <h3 className="font-semibold text-white">{service.name}</h3>
+                        <h3 className="font-semibold text-foreground">{service.name}</h3>
                       </div>
                       <div className="text-right">
                         {service.price && (
                           <div className="text-primary font-semibold">{formatCurrency(service.price)}</div>
                         )}
-                        <div className="text-slate-400 text-sm flex items-center">
+                        <div className="text-muted-foreground text-sm flex items-center">
                           <Clock className="w-3 h-3 mr-1" />
                           {service.duration_minutes} min
                         </div>
                       </div>
                     </div>
                     {service.description && (
-                      <p className="text-slate-400 text-sm ml-8">{service.description}</p>
+                      <p className="text-muted-foreground text-sm ml-8">{service.description}</p>
                     )}
                   </div>
                 ))}
@@ -1011,20 +1003,20 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
             </Card>
 
             {staff.length > 0 && (
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-white dark:bg-slate-800/50 border-0 dark:border-slate-700 shadow-lg dark:shadow-none">
                 <CardHeader>
-                  <CardTitle className="text-white">Choose Your Stylist (Optional)</CardTitle>
+                  <CardTitle className="text-foreground">Choose Your Stylist (Optional)</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div
                     className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                       formData.staff_id === ""
                         ? 'border-primary bg-primary/10'
-                        : 'border-slate-600 hover:border-slate-500'
+                        : 'border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500'
                     }`}
                     onClick={() => handleInputChange('staff_id', '')}
                   >
-                    <div className="text-white font-medium">Any Available Stylist</div>
+                    <div className="text-foreground font-medium">Any Available Stylist</div>
                   </div>
                   {staff.map((member) => (
                     <div
@@ -1032,7 +1024,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                       className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                         formData.staff_id === member.id
                           ? 'border-primary bg-primary/10'
-                          : 'border-slate-600 hover:border-slate-500'
+                          : 'border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500'
                       }`}
                       onClick={() => handleInputChange('staff_id', member.id)}
                     >
@@ -1044,9 +1036,9 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="text-white font-medium">{member.name}</div>
+                          <div className="text-foreground font-medium">{member.name}</div>
                           {member.specialties && member.specialties.length > 0 && (
-                            <div className="text-slate-400 text-sm">
+                            <div className="text-muted-foreground text-sm">
                               {member.specialties.slice(0, 2).join(', ')}
                             </div>
                           )}
@@ -1061,9 +1053,9 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
           {/* Booking Form */}
           <div className="space-y-6">
-            <Card className="bg-slate-800/50 border-slate-700">
+            <Card className="bg-white dark:bg-slate-800/50 border-0 dark:border-slate-700 shadow-lg dark:shadow-none">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-foreground flex items-center">
                   <CalendarIcon className="w-5 h-5 mr-2" />
                   Select Date & Time
                 </CardTitle>
@@ -1072,7 +1064,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                 {/* Custom Calendar View */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className="text-lg font-semibold text-foreground">
                       {format(calendarDate, 'MMMM yyyy')}
                     </h3>
                     <div className="flex gap-2">
@@ -1080,7 +1072,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         variant="outline"
                         size="sm"
                         onClick={() => navigateCalendar('prev')}
-                        className="border-slate-600 text-white hover:bg-slate-700"
+                        className="border-slate-300 dark:border-slate-600 text-foreground hover:bg-slate-100 dark:hover:bg-slate-700"
                       >
                         <ChevronLeft className="w-4 h-4" />
                       </Button>
@@ -1088,7 +1080,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         variant="outline"
                         size="sm"
                         onClick={() => setCalendarDate(new Date())}
-                        className="border-slate-600 text-white hover:bg-slate-700"
+                        className="border-slate-300 dark:border-slate-600 text-foreground hover:bg-slate-100 dark:hover:bg-slate-700"
                       >
                         Today
                       </Button>
@@ -1096,7 +1088,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                         variant="outline"
                         size="sm"
                         onClick={() => navigateCalendar('next')}
-                        className="border-slate-600 text-white hover:bg-slate-700"
+                        className="border-slate-300 dark:border-slate-600 text-foreground hover:bg-slate-100 dark:hover:bg-slate-700"
                       >
                         <ChevronRight className="w-4 h-4" />
                       </Button>
@@ -1105,7 +1097,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
                   <div className="grid grid-cols-7 gap-1 text-center">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="text-slate-400 text-sm font-medium p-2">
+                      <div key={day} className="text-muted-foreground text-sm font-medium p-2">
                         {day}
                       </div>
                     ))}
@@ -1124,11 +1116,11 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                           disabled={!isAvailable}
                           className={`
                             aspect-square p-2 text-sm rounded-lg transition-colors relative
-                            ${!isCurrentMonth ? 'text-slate-600' : ''}
+                            ${!isCurrentMonth ? 'text-slate-400 dark:text-slate-600' : ''}
                             ${isSelected ? 'bg-primary text-black font-semibold' : ''}
-                            ${isToday && !isSelected ? 'bg-slate-600 text-white font-semibold' : ''}
-                            ${isAvailable && !isSelected && !isToday ? 'text-white hover:bg-slate-700' : ''}
-                            ${!isAvailable ? 'text-slate-600 cursor-not-allowed' : 'cursor-pointer'}
+                            ${isToday && !isSelected ? 'bg-slate-200 dark:bg-slate-600 text-foreground font-semibold' : ''}
+                            ${isAvailable && !isSelected && !isToday ? 'text-foreground hover:bg-slate-100 dark:hover:bg-slate-700' : ''}
+                            ${!isAvailable ? 'text-slate-400 dark:text-slate-600 cursor-not-allowed' : 'cursor-pointer'}
                           `}
                         >
                           {format(date, 'd')}
@@ -1157,7 +1149,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
                 {selectedDate && business && (
                   <div className="space-y-3">
-                    <Label className="text-white font-medium">
+                    <Label className="text-foreground font-medium">
                       Available Times for {format(selectedDate, 'MMM d, yyyy')}
                     </Label>
                     <TimeSlotPicker
@@ -1177,54 +1169,54 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-800/50 border-slate-700">
+            <Card className="bg-white dark:bg-slate-800/50 border-0 dark:border-slate-700 shadow-lg dark:shadow-none">
               <CardHeader>
-                <CardTitle className="text-white">Your Information</CardTitle>
+                <CardTitle className="text-foreground">Your Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="customer_name" className="text-white">Full Name *</Label>
+                  <Label htmlFor="customer_name" className="text-foreground">Full Name *</Label>
                   <Input
                     id="customer_name"
                     value={formData.customer_name}
                     onChange={(e) => handleInputChange("customer_name", e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-background border-border text-foreground"
                     placeholder="Your full name"
                     required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="customer_phone" className="text-white">Phone Number *</Label>
+                  <Label htmlFor="customer_phone" className="text-foreground">Phone Number *</Label>
                   <Input
                     id="customer_phone"
                     value={formData.customer_phone}
                     onChange={(e) => handleInputChange("customer_phone", e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-background border-border text-foreground"
                     placeholder="Your phone number"
                     required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="customer_email" className="text-white">Email (Optional)</Label>
+                  <Label htmlFor="customer_email" className="text-foreground">Email (Optional)</Label>
                   <Input
                     id="customer_email"
                     type="email"
                     value={formData.customer_email}
                     onChange={(e) => handleInputChange("customer_email", e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-background border-border text-foreground"
                     placeholder="your.email@example.com"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="notes" className="text-white">Special Requests (Optional)</Label>
+                  <Label htmlFor="notes" className="text-foreground">Special Requests (Optional)</Label>
                   <Textarea
                     id="notes"
                     value={formData.notes}
                     onChange={(e) => handleInputChange("notes", e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-background border-border text-foreground"
                     placeholder="Any special requests or notes..."
                     rows={3}
                   />
