@@ -764,7 +764,12 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                             : `https://www.instagram.com/${business.instagram.replace('@', '')}`
                         }
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="noopener noreferrer nofollow"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const url = e.currentTarget.href;
+                          window.open(url, '_blank', 'noopener,noreferrer');
+                        }}
                         className="text-slate-400 hover:text-pink-400 transition-colors"
                         title="Follow on Instagram"
                       >
@@ -1442,7 +1447,11 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                 <a
                   href="https://www.instagram.com/yourbojiapp"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open('https://www.instagram.com/yourbojiapp', '_blank', 'noopener,noreferrer');
+                  }}
                   className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
                 >
                   <Instagram className="w-4 h-4" />
@@ -1462,7 +1471,11 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                 <a
                   href="https://www.instagram.com/yourbojiapp"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open('https://www.instagram.com/yourbojiapp', '_blank', 'noopener,noreferrer');
+                  }}
                   className="text-muted-foreground hover:text-foreground transition-colors"
                   aria-label="Instagram"
                 >
