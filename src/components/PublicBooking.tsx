@@ -823,85 +823,74 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
         {/* Work Portfolio Section */}
         {workPictures.length > 0 && (
-          <Card className="bg-white dark:bg-slate-800/50 border-0 dark:border-slate-700 shadow-lg dark:shadow-none mb-8">
-            <CardHeader>
-              <CardTitle className="text-foreground flex items-center">
-                <Images className="w-5 h-5 mr-2" />
-                Our Work Portfolio
-              </CardTitle>
-              <CardDescription className="text-muted-foreground">
-                See examples of our previous work and craftsmanship
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="relative">
-                {/* Scroll buttons */}
-                {workPictures.length > 4 && (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-slate-800/90 border-slate-600 hover:bg-slate-700"
-                      onClick={() => {
-                        const container = document.getElementById('portfolio-scroll');
-                        if (container) {
-                          container.scrollBy({ left: -300, behavior: 'smooth' });
-                        }
-                      }}
-                    >
-                      <ChevronLeft className="w-4 h-4 text-white" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-slate-800/90 border-slate-600 hover:bg-slate-700"
-                      onClick={() => {
-                        const container = document.getElementById('portfolio-scroll');
-                        if (container) {
-                          container.scrollBy({ left: 300, behavior: 'smooth' });
-                        }
-                      }}
-                    >
-                      <ChevronRight className="w-4 h-4 text-white" />
-                    </Button>
-                  </>
-                )}
+          <div className="mb-8">
+            <div className="relative">
+              {/* Scroll buttons */}
+              {workPictures.length > 4 && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-slate-800/90 border-slate-600 hover:bg-slate-700"
+                    onClick={() => {
+                      const container = document.getElementById('portfolio-scroll');
+                      if (container) {
+                        container.scrollBy({ left: -300, behavior: 'smooth' });
+                      }
+                    }}
+                  >
+                    <ChevronLeft className="w-4 h-4 text-white" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-slate-800/90 border-slate-600 hover:bg-slate-700"
+                    onClick={() => {
+                      const container = document.getElementById('portfolio-scroll');
+                      if (container) {
+                        container.scrollBy({ left: 300, behavior: 'smooth' });
+                      }
+                    }}
+                  >
+                    <ChevronRight className="w-4 h-4 text-white" />
+                  </Button>
+                </>
+              )}
 
-                {/* Scrollable portfolio */}
-                <div 
-                  id="portfolio-scroll"
-                  className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory"
-                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                >
-                  {workPictures.map((picture) => (
-                    <div key={picture.id} className="relative group overflow-hidden rounded-lg flex-none w-64 h-64 snap-start">
-                      <img
-                        src={picture.image_url}
-                        alt={picture.description || "Work sample"}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                        onError={(e) => {
-                          console.error('Image failed to load:', picture.image_url);
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                          {picture.service_type && (
-                            <Badge variant="secondary" className="mb-1 text-xs">
-                              {picture.service_type}
-                            </Badge>
-                          )}
-                          {picture.description && (
-                            <p className="text-sm font-medium line-clamp-2">{picture.description}</p>
-                          )}
-                        </div>
+              {/* Scrollable portfolio */}
+              <div 
+                id="portfolio-scroll"
+                className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {workPictures.map((picture) => (
+                  <div key={picture.id} className="relative group overflow-hidden rounded-lg flex-none w-64 h-64 snap-start">
+                    <img
+                      src={picture.image_url}
+                      alt={picture.description || "Work sample"}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      onError={(e) => {
+                        console.error('Image failed to load:', picture.image_url);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                        {picture.service_type && (
+                          <Badge variant="secondary" className="mb-1 text-xs">
+                            {picture.service_type}
+                          </Badge>
+                        )}
+                        {picture.description && (
+                          <p className="text-sm font-medium line-clamp-2">{picture.description}</p>
+                        )}
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
 
         {/* Reviews Section */}
