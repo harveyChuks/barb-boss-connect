@@ -32,7 +32,7 @@ const FAQs = () => {
               <AccordionItem value="item-3">
                 <AccordionTrigger className="text-foreground">Do I need an account to book?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
-                  No, you don't need to create an account to book appointments. Simply provide your name, phone number, and optionally your email address when making a booking.
+                  No, you don't need an account to book - you can book as a guest with just your name and phone number. However, creating a free customer account gives you access to booking history, automatic discounts, and other benefits.
                 </AccordionContent>
               </AccordionItem>
 
@@ -116,7 +116,21 @@ const FAQs = () => {
               <AccordionItem value="item-15">
                 <AccordionTrigger className="text-foreground">Can I view my booking history?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
-                  While customers don't need an account to book, you can always reference your confirmation emails or contact the business directly to view your booking history.
+                  Yes! Create a free customer account to access your personalized dashboard where you can view all your past and upcoming bookings, including appointment details, locations, and any discounts applied.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-16">
+                <AccordionTrigger className="text-foreground">What is the loyalty program?</AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  When you create a customer account, you automatically become a loyalty member and receive a 3% discount on all bookings. Follow your favorite businesses on social media (Instagram or TikTok) to unlock an additional 2% discount, for a total of 5% off!
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-17">
+                <AccordionTrigger className="text-foreground">How do I claim my loyalty discount?</AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  Simply create a free customer account and log in when booking. The 3% loyalty discount is automatically applied. To get the additional 2% social media discount, make sure to follow the business on Instagram or TikTok before booking - the system will recognize this and apply the extra discount.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
