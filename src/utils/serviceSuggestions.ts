@@ -10,7 +10,8 @@ export const SERVICE_TYPES = [
   'Waxing & Hair Removal',
   'Makeup',
   'Barber Services',
-  'Beauty Services'
+  'Beauty Services',
+  'Cleaning Services'
 ] as const;
 
 export type ServiceType = typeof SERVICE_TYPES[number];
@@ -124,5 +125,19 @@ export const SERVICE_SUGGESTIONS: Record<string, string[]> = {
     'Microblading',
     'Henna Tattoo',
     'Teeth Whitening'
+  ],
+  'Cleaning Services': [
+    'Standard Cleaning',
+    'Deep Cleaning',
+    'Move-Out Cleaning',
+    'Move-In Cleaning',
+    'Office Cleaning',
+    'Carpet Cleaning',
+    'Window Cleaning',
+    'Oven Cleaning',
+    'Post-Construction Cleaning',
+    'Spring Cleaning',
+    'Upholstery Cleaning',
+    'Pressure Washing'
   ]
 };
