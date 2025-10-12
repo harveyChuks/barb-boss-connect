@@ -864,7 +864,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
                 {workPictures.map((picture) => (
-                  <div key={picture.id} className="relative group overflow-hidden rounded-lg flex-none w-[85vw] sm:w-64 h-64 snap-start">
+                  <div key={picture.id} className="relative group overflow-hidden rounded-lg flex-none w-64 h-64 snap-start">
                     <img
                       src={picture.image_url}
                       alt={picture.description || "Work sample"}
