@@ -671,10 +671,10 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       )}
 
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <header className="bg-black border-b border-slate-700 fixed top-0 left-0 right-0 z-50 md:relative md:z-10" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">
               bójí
             </h1>
             {isAuthenticated ? (
@@ -682,7 +682,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                 variant="ghost" 
                 size="sm"
                 onClick={() => navigate('/customer/dashboard')}
-                className="gap-2"
+                className="gap-2 text-white hover:text-white hover:bg-white/10"
               >
                 <User className="w-4 h-4" />
                 My Account
@@ -692,7 +692,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                 variant="ghost" 
                 size="sm"
                 onClick={() => setShowAuthModal(true)}
-                className="gap-2"
+                className="gap-2 text-white hover:text-white hover:bg-white/10"
               >
                 <User className="w-4 h-4" />
                 Log in
@@ -704,7 +704,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
       {/* Business Banner - Full Width */}
       {business.banner_url && (
-        <div className="w-full mb-8">
+        <div className="w-full mb-8 mt-16 md:mt-0">
           <div className="w-full aspect-[3/1] max-h-[400px]">
             <img
               src={business.banner_url}
@@ -715,7 +715,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto pt-24 md:pt-0 px-6">
+      <div className="max-w-7xl mx-auto px-6">
         {/* Business Header */}
         <div className="mb-8 p-8 bg-white dark:bg-slate-800/50 rounded-xl shadow-lg dark:shadow-none">
           <div className="flex items-center space-x-6">

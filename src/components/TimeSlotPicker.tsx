@@ -164,7 +164,7 @@ const TimeSlotPicker = ({
               className={`relative h-12 transition-all duration-200 ${
                 isSelected
                   ? "bg-amber-500 hover:bg-amber-600 text-black border-amber-600 shadow-lg scale-105"
-                  : "border-green-500/30 bg-green-500/10 text-white hover:bg-green-500/20 hover:border-green-500/50 hover:scale-102"
+                  : "border-green-500 bg-white dark:bg-green-500/10 text-foreground dark:text-white hover:bg-green-50 dark:hover:bg-green-500/20 hover:border-green-600 dark:hover:border-green-500/50 shadow-md dark:shadow-none"
               }`}
             >
               <div className="flex flex-col items-center">
