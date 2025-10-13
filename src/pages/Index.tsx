@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react";
+import { Capacitor } from "@capacitor/core";
 import { Calendar, Users, Scissors, Clock, Plus, Search, LogOut, Building, BarChart3, Menu, ShieldCheck, User, Camera, TrendingUp, MessageCircle, CreditCard, Settings, Home, Briefcase, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,6 +71,14 @@ const Index = () => {
   const [showAppointmentModal, setShowAppointmentModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showBusinessModal, setShowBusinessModal] = useState(false);
+  const isNativeMobile = Capacitor.isNativePlatform();
+
+  // On mobile, auto-show auth modal when not authenticated
+  useEffect(() => {
+    if (isNativeMobile && !authLoading && !isAuthenticated) {
+      setShowAuthModal(true);
+    }
+  }, [isNativeMobile, authLoading, isAuthenticated]);
   const [activeSection, setActiveSection] = useState<string>('home');
   const [searchTerm, setSearchTerm] = useState("");
   const [todayAppointments, setTodayAppointments] = useState([]);
@@ -672,7 +681,13 @@ const Index = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-4 py-4 sm:py-8 relative z-10">
         {!isAuthenticated ? (
-          <LandingPage onGetStarted={() => setShowAuthModal(true)} />
+          isNativeMobile ? (
+            <div className="text-center py-12">
+              <div className="text-white text-xl">Please sign in to continue</div>
+            </div>
+          ) : (
+            <LandingPage onGetStarted={() => setShowAuthModal(true)} />
+          )
         ) : !userBusiness ? (
           <div className="text-center py-12">
             <Building className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 text-[#39FF14] [.light_&]:text-green-500" />
