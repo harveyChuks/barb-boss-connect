@@ -153,11 +153,15 @@ const BusinessHoursManagement = () => {
 
       if (error) throw error;
 
+      // Refetch to confirm the save
+      await fetchBusinessAndHours();
+
       toast({
         title: "Business Hours Updated",
         description: "Your operating hours have been saved successfully.",
       });
     } catch (error: any) {
+      console.error('Error saving business hours:', error);
       toast({
         title: "Error",
         description: error.message,

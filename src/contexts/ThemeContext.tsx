@@ -41,25 +41,39 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   useEffect(() => {
     try {
       const root = window.document.documentElement;
-      // Prevent rapid theme switching by debouncing
-      const timer = setTimeout(() => {
-        root.classList.remove('light', 'dark');
-        root.classList.add(theme);
+      root.classList.remove('light', 'dark');
+      root.classList.add(theme);
+      
+      // Save to localStorage immediately
+      try {
         localStorage.setItem('theme', theme);
-      }, 10);
-
-      return () => clearTimeout(timer);
+      } catch (storageError) {
+        console.error('Error saving theme to localStorage:', storageError);
+      }
     } catch (error) {
       console.error('Error applying theme:', error);
     }
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
+    try {
+      setThemeState(newTheme);
+      localStorage.setItem('theme', newTheme);
+    } catch (error) {
+      console.error('Error setting theme:', error);
+    }
   };
 
   const toggleTheme = () => {
-    setThemeState(prev => prev === 'dark' ? 'light' : 'dark');
+    setThemeState(prev => {
+      const newTheme = prev === 'dark' ? 'light' : 'dark';
+      try {
+        localStorage.setItem('theme', newTheme);
+      } catch (error) {
+        console.error('Error toggling theme:', error);
+      }
+      return newTheme;
+    });
   };
 
   return (
