@@ -139,22 +139,29 @@ const BusinessHoursManagement = () => {
       const updates = businessHours.map(hour => ({
         business_id: business.id,
         day_of_week: hour.day_of_week,
-        start_time: hour.start_time,
-        end_time: hour.end_time,
+        start_time: hour.start_time || '08:00',
+        end_time: hour.end_time || '21:00',
         is_closed: hour.is_closed
       }));
 
-      const { error } = await supabase
+      console.log('Saving business hours:', updates);
+
+      const { data, error } = await supabase
         .from('business_hours')
         .upsert(updates, { 
           onConflict: 'business_id,day_of_week',
           ignoreDuplicates: false 
-        });
+        })
+        .select();
 
       if (error) throw error;
 
-      // Refetch to confirm the save
-      await fetchBusinessAndHours();
+      console.log('Saved business hours:', data);
+
+      // Update local state with saved data
+      if (data) {
+        setBusinessHours(data);
+      }
 
       toast({
         title: "Business Hours Updated",
@@ -287,13 +294,16 @@ const BusinessHoursManagement = () => {
               size="sm"
               variant="outline"
               className="border-border text-muted-foreground hover:bg-accent"
-              onClick={() => {
-                setBusinessHours(prev => prev.map(hour => ({
+              onClick={async () => {
+                const newHours = businessHours.map(hour => ({
                   ...hour,
                   is_closed: hour.day_of_week === 0, // Close on Sunday
                   start_time: '08:00',
                   end_time: '21:00'
-                })));
+                }));
+                setBusinessHours(newHours);
+                // Auto-save after quick setup
+                await saveBusinessHours();
               }}
             >
               Mon-Sat 8AM-9PM
@@ -303,13 +313,16 @@ const BusinessHoursManagement = () => {
               size="sm"
               variant="outline"
               className="border-border text-muted-foreground hover:bg-accent"
-              onClick={() => {
-                setBusinessHours(prev => prev.map(hour => ({
+              onClick={async () => {
+                const newHours = businessHours.map(hour => ({
                   ...hour,
                   is_closed: false,
                   start_time: '09:00',
                   end_time: '18:00'
-                })));
+                }));
+                setBusinessHours(newHours);
+                // Auto-save after quick setup
+                await saveBusinessHours();
               }}
             >
               All Days 9AM-6PM
@@ -319,13 +332,16 @@ const BusinessHoursManagement = () => {
               size="sm"
               variant="outline"
               className="border-border text-muted-foreground hover:bg-accent"
-              onClick={() => {
-                setBusinessHours(prev => prev.map(hour => ({
+              onClick={async () => {
+                const newHours = businessHours.map(hour => ({
                   ...hour,
                   is_closed: hour.day_of_week === 0 || hour.day_of_week === 1, // Close Sun & Mon
                   start_time: '10:00',
                   end_time: '20:00'
-                })));
+                }));
+                setBusinessHours(newHours);
+                // Auto-save after quick setup
+                await saveBusinessHours();
               }}
             >
               Tue-Sat 10AM-8PM
