@@ -7,7 +7,7 @@ type BusinessType = Database["public"]["Enums"]["business_type"];
 interface Service {
   name: string;
   price: string;
-  duration: number;
+  duration: number | string;
 }
 
 interface PersonalInfo {

@@ -81,7 +81,7 @@ const MultiStepRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: M
               business_id: business.id,
               name: service.name,
               price: parseFloat(service.price),
-              duration_minutes: service.duration
+              duration_minutes: typeof service.duration === 'number' ? service.duration : (parseInt(service.duration) || 30)
             }))
           );
 

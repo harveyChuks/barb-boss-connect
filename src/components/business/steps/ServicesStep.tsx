@@ -8,7 +8,7 @@ import { Trash2, Plus } from "lucide-react";
 interface Service {
   name: string;
   price: string;
-  duration: number;
+  duration: number | string;
 }
 
 interface ServicesStepProps {
@@ -87,10 +87,11 @@ const ServicesStep = ({ services, setServices }: ServicesStepProps) => {
                   <Label>Duration (min)</Label>
                   <Input
                     type="number"
-                    value={service.duration}
-                    onChange={(e) => updateService(index, 'duration', parseInt(e.target.value) || 30)}
+                    value={service.duration || ''}
+                    onChange={(e) => updateService(index, 'duration', e.target.value ? parseInt(e.target.value) : '')}
                     className="bg-slate-600 border-slate-500 text-white"
                     placeholder="30"
+                    min="1"
                   />
                 </div>
               </div>
