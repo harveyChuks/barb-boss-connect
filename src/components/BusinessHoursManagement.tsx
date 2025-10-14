@@ -131,20 +131,32 @@ const BusinessHoursManagement = () => {
     );
   };
 
-  const saveBusinessHours = async () => {
-    if (!business) return;
+  const saveBusinessHours = async (hoursToSave?: BusinessHours[]) => {
+    if (!business) {
+      console.error('No business found');
+      return;
+    }
+
+    const hours = hoursToSave || businessHours;
+    console.log('Business object:', business);
+    console.log('Hours to save:', hours);
 
     setSaving(true);
     try {
-      const updates = businessHours.map(hour => ({
-        business_id: business.id,
-        day_of_week: hour.day_of_week,
-        start_time: hour.start_time || '08:00',
-        end_time: hour.end_time || '21:00',
-        is_closed: hour.is_closed
-      }));
+      // Ensure we have valid data
+      const updates = hours.map(hour => {
+        const update = {
+          business_id: business.id,
+          day_of_week: hour.day_of_week,
+          start_time: hour.start_time || '08:00',
+          end_time: hour.end_time || '21:00',
+          is_closed: hour.is_closed
+        };
+        console.log('Preparing update for day', hour.day_of_week, ':', update);
+        return update;
+      });
 
-      console.log('Saving business hours:', updates);
+      console.log('About to upsert:', updates);
 
       const { data, error } = await supabase
         .from('business_hours')
@@ -154,13 +166,20 @@ const BusinessHoursManagement = () => {
         })
         .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Upsert error:', error);
+        throw error;
+      }
 
-      console.log('Saved business hours:', data);
+      console.log('Upsert successful, returned data:', data);
 
       // Update local state with saved data
-      if (data) {
+      if (data && data.length > 0) {
+        console.log('Updating local state with:', data);
         setBusinessHours(data);
+      } else {
+        console.warn('No data returned from upsert, refetching...');
+        await fetchBusinessAndHours();
       }
 
       toast({
@@ -171,7 +190,7 @@ const BusinessHoursManagement = () => {
       console.error('Error saving business hours:', error);
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || 'Failed to save business hours',
         variant: "destructive",
       });
     } finally {
@@ -270,7 +289,7 @@ const BusinessHoursManagement = () => {
 
         <div className="flex flex-col sm:flex-row gap-4">
           <Button
-            onClick={saveBusinessHours}
+            onClick={() => saveBusinessHours()}
             disabled={saving}
             className="bg-amber-500 hover:bg-amber-600 text-black"
           >
@@ -302,8 +321,8 @@ const BusinessHoursManagement = () => {
                   end_time: '21:00'
                 }));
                 setBusinessHours(newHours);
-                // Auto-save after quick setup
-                await saveBusinessHours();
+                // Pass the new hours directly to avoid async state update issues
+                await saveBusinessHours(newHours);
               }}
             >
               Mon-Sat 8AM-9PM
@@ -321,8 +340,8 @@ const BusinessHoursManagement = () => {
                   end_time: '18:00'
                 }));
                 setBusinessHours(newHours);
-                // Auto-save after quick setup
-                await saveBusinessHours();
+                // Pass the new hours directly to avoid async state update issues
+                await saveBusinessHours(newHours);
               }}
             >
               All Days 9AM-6PM
@@ -340,8 +359,8 @@ const BusinessHoursManagement = () => {
                   end_time: '20:00'
                 }));
                 setBusinessHours(newHours);
-                // Auto-save after quick setup
-                await saveBusinessHours();
+                // Pass the new hours directly to avoid async state update issues
+                await saveBusinessHours(newHours);
               }}
             >
               Tue-Sat 10AM-8PM
