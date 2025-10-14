@@ -11,7 +11,8 @@ export const SERVICE_TYPES = [
   'Makeup',
   'Barber Services',
   'Beauty Services',
-  'Cleaning Services'
+  'Cleaning Services',
+  'Fitness'
 ] as const;
 
 export type ServiceType = typeof SERVICE_TYPES[number];
@@ -139,5 +140,22 @@ export const SERVICE_SUGGESTIONS: Record<string, string[]> = {
     'Spring Cleaning',
     'Upholstery Cleaning',
     'Pressure Washing'
+  ],
+  'Fitness': [
+    'Personal Training',
+    'Group Fitness Class',
+    'Yoga Session',
+    'Pilates Class',
+    'HIIT Training',
+    'Strength Training',
+    'Cardio Session',
+    'CrossFit Class',
+    'Boxing Class',
+    'Spinning Class',
+    'Zumba Class',
+    'Stretching Session',
+    'Nutrition Consultation',
+    'Body Assessment',
+    'Weight Loss Program'
   ]
 };
