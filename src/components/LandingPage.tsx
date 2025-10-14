@@ -848,6 +848,93 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
           </Card>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-card border-t border-border py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            {/* Brand Section */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <img src={bojiLogo} alt="Boji Logo" className="h-8 w-8" />
+                <span className="text-xl font-bold text-foreground">Boji</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Empowering service businesses with intelligent scheduling and management solutions.
+              </p>
+            </div>
+
+            {/* Product */}
+            <div className="space-y-4">
+              <h4 className="text-sm font-semibold text-foreground uppercase tracking-wider">Product</h4>
+              <ul className="space-y-2">
+                <li>
+                  <button onClick={() => scrollToSection('features')} className="text-sm text-muted-foreground hover:text-green-500 transition-colors">
+                    Features
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollToSection('pricing')} className="text-sm text-muted-foreground hover:text-green-500 transition-colors">
+                    Pricing
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollToSection('faq')} className="text-sm text-muted-foreground hover:text-green-500 transition-colors">
+                    FAQ
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div className="space-y-4">
+              <h4 className="text-sm font-semibold text-foreground uppercase tracking-wider">Legal</h4>
+              <ul className="space-y-2">
+                <li>
+                  <a href="/privacy" className="text-sm text-muted-foreground hover:text-green-500 transition-colors">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="/terms" className="text-sm text-muted-foreground hover:text-green-500 transition-colors">
+                    Terms of Service
+                  </a>
+                </li>
+                <li>
+                  <a href="/faqs" className="text-sm text-muted-foreground hover:text-green-500 transition-colors">
+                    FAQs
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Contact */}
+            <div className="space-y-4">
+              <h4 className="text-sm font-semibold text-foreground uppercase tracking-wider">Contact</h4>
+              <ul className="space-y-2">
+                <li className="text-sm text-muted-foreground">
+                  support@boji.app
+                </li>
+                <li className="text-sm text-muted-foreground">
+                  Available in Nigeria & UK
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="pt-8 border-t border-border">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <p className="text-sm text-muted-foreground text-center sm:text-left">
+                © {new Date().getFullYear()} Boji. All rights reserved.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Made with ❤️ for service businesses
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
