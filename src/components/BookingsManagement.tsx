@@ -43,6 +43,7 @@ const BookingsManagement = () => {
   const [dateFilter, setDateFilter] = useState("all");
   const [showRescheduleDialog, setShowRescheduleDialog] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [userBusiness, setUserBusiness] = useState<any>(null);
 
   useEffect(() => {
     fetchAppointments();
@@ -59,11 +60,13 @@ const BookingsManagement = () => {
       // Get user's business
       const { data: business } = await supabase
         .from('businesses')
-        .select('id')
+        .select('*')
         .eq('owner_id', user.id)
         .maybeSingle();
 
       if (!business) return;
+      
+      setUserBusiness(business);
 
       // Get appointments with service details
       const { data: appointmentsData, error } = await supabase
@@ -88,6 +91,21 @@ const BookingsManagement = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatCurrency = (amount: number) => {
+    const currency = userBusiness?.currency || 'USD';
+    const currencySymbols: { [key: string]: string } = {
+      'NGN': '₦',
+      'GHS': '₵',
+      'KES': 'KSh',
+      'ZAR': 'R',
+      'USD': '$',
+      'GBP': '£',
+      'CAD': 'C$'
+    };
+    const symbol = currencySymbols[currency] || '$';
+    return `${symbol}${amount.toFixed(2)}`;
   };
 
   const filterAppointments = () => {
@@ -296,7 +314,7 @@ const BookingsManagement = () => {
 
                   <div className="flex items-center justify-between">
                     <div className="text-primary font-semibold [.light_&]:text-green-500">
-                      {appointment.services.name} - ${appointment.services.price}
+                      {appointment.services.name} - {formatCurrency(appointment.services.price)}
                     </div>
                     {appointment.customer_email && (
                       <div className="flex items-center space-x-2 text-sm text-muted-foreground">

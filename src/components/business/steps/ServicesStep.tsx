@@ -73,7 +73,7 @@ const ServicesStep = ({ services, setServices }: ServicesStepProps) => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>Price ($)</Label>
+                  <Label>Price</Label>
                   <Input
                     type="number"
                     value={service.price}

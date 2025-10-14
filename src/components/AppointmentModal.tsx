@@ -47,6 +47,21 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
     }
   }, [open, user]);
 
+  const formatCurrency = (amount: number) => {
+    const currency = userBusiness?.currency || 'USD';
+    const currencySymbols: { [key: string]: string } = {
+      'NGN': '₦',
+      'GHS': '₵',
+      'KES': 'KSh',
+      'ZAR': 'R',
+      'USD': '$',
+      'GBP': '£',
+      'CAD': 'C$'
+    };
+    const symbol = currencySymbols[currency] || '$';
+    return `${symbol}${amount.toFixed(2)}`;
+  };
+
   const fetchBusinessData = async () => {
     try {
       // Get user's business
@@ -410,7 +425,7 @@ const AppointmentModal = ({ open, onOpenChange, onAppointmentCreated }: Appointm
                       <div className="flex justify-between items-center w-full">
                         <span>{service.name}</span>
                         <span className="text-sm text-muted-foreground">
-                          {service.duration_minutes}min - ${service.price}
+                          {service.duration_minutes}min - {formatCurrency(service.price)}
                         </span>
                       </div>
                     </SelectItem>
