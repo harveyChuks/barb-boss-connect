@@ -755,7 +755,7 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
               </AccordionTrigger>
               <AccordionContent className="text-sm sm:text-base text-muted-foreground">
                 Boji is perfect for any service-based business including barbershops, hair salons, spas, beauty parlors,
-                fitness studios, consulting services, and more. Any business that takes appointments can benefit from our platform.
+                fitness studios, gyms, personal trainers, cleaning services, consulting services, and more. Any business that takes appointments can benefit from our platform.
               </AccordionContent>
             </AccordionItem>
 
