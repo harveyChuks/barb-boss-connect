@@ -915,9 +915,6 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
                 <li className="text-sm text-muted-foreground">
                   support@boji.app
                 </li>
-                <li className="text-sm text-muted-foreground">
-                  Available in Nigeria & UK
-                </li>
               </ul>
             </div>
           </div>
