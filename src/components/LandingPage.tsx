@@ -128,31 +128,6 @@ const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       {/* Hero Section */}
       <section id="about" className="relative py-12 sm:py-16 lg:py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          {/* Location Selector */}
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex bg-card border-2 border-primary/20 rounded-lg p-1 shadow-lg">
-              <button
-                onClick={() => setLocation('NG')}
-                className={`px-6 py-3 rounded-md text-base font-semibold transition-all ${
-                  location === 'NG' 
-                    ? 'bg-green-500 text-white shadow-md' 
-                    : 'text-foreground hover:text-green-500 hover:bg-accent'
-                }`}
-              >
-                🇳🇬 Nigeria
-              </button>
-              <button
-                onClick={() => setLocation('UK')}
-                className={`px-6 py-3 rounded-md text-base font-semibold transition-all ${
-                  location === 'UK' 
-                    ? 'bg-green-500 text-white shadow-md' 
-                    : 'text-foreground hover:text-green-500 hover:bg-accent'
-                }`}
-              >
-                🇬🇧 United Kingdom
-              </button>
-            </div>
-          </div>
           
           {/* Trust Badge */}
           <div className="text-center mb-6 sm:mb-8 lg:mb-12">

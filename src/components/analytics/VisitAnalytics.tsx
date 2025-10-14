@@ -94,8 +94,7 @@ const VisitAnalytics = ({ businessId }: { businessId?: string }) => {
 
       processedStats.top_countries = Object.entries(countryVisits)
         .map(([country, visits]) => ({ country, visits }))
-        .sort((a, b) => b.visits - a.visits)
-        .slice(0, 10);
+        .sort((a, b) => b.visits - a.visits);
 
       // Calculate top cities
       const cityVisits = data.reduce((acc: Record<string, { country: string; visits: number }>, visit) => {
