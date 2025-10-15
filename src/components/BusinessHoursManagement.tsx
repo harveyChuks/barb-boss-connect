@@ -22,8 +22,10 @@ const BusinessHoursManagement = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [business, setBusiness] = useState(null);
+  const [business, setBusiness] = useState<any>(null);
   const [businessHours, setBusinessHours] = useState<BusinessHours[]>([]);
+
+  console.log('BusinessHoursManagement rendered - businessHours:', businessHours);
 
   const dayNames = [
     'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
@@ -132,14 +134,34 @@ const BusinessHoursManagement = () => {
   };
 
   const saveBusinessHours = async (hoursToSave?: BusinessHours[]) => {
-    if (!business) {
-      console.error('No business found');
+    console.log('=== SAVE BUSINESS HOURS CALLED ===');
+    console.log('Business state:', business);
+    console.log('Current businessHours state:', businessHours);
+    console.log('hoursToSave parameter:', hoursToSave);
+    
+    if (!business?.id) {
+      console.error('No business ID found, business:', business);
+      toast({
+        title: "Error",
+        description: "No business found. Please refresh the page.",
+        variant: "destructive",
+      });
       return;
     }
 
     const hours = hoursToSave || businessHours;
-    console.log('Business object:', business);
-    console.log('Hours to save:', hours);
+    console.log('Hours to save (resolved):', hours);
+
+    // Validate hours data
+    if (!hours || hours.length === 0) {
+      console.error('No hours data to save');
+      toast({
+        title: "Error",
+        description: "No hours data to save",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setSaving(true);
     try {
@@ -152,11 +174,11 @@ const BusinessHoursManagement = () => {
           end_time: hour.end_time || '21:00',
           is_closed: hour.is_closed
         };
-        console.log('Preparing update for day', hour.day_of_week, ':', update);
+        console.log(`Day ${hour.day_of_week}: ${update.start_time} - ${update.end_time} (closed: ${update.is_closed})`);
         return update;
       });
 
-      console.log('About to upsert:', updates);
+      console.log('About to upsert these updates:', JSON.stringify(updates, null, 2));
 
       const { data, error } = await supabase
         .from('business_hours')
@@ -167,19 +189,19 @@ const BusinessHoursManagement = () => {
         .select();
 
       if (error) {
-        console.error('Upsert error:', error);
+        console.error('=== UPSERT ERROR ===', error);
         throw error;
       }
 
-      console.log('Upsert successful, returned data:', data);
+      console.log('=== UPSERT SUCCESSFUL ===');
+      console.log('Returned data:', JSON.stringify(data, null, 2));
 
-      // Update local state with saved data
+      // DON'T refetch - use the data that was just saved
       if (data && data.length > 0) {
-        console.log('Updating local state with:', data);
+        console.log('Setting businessHours state to returned data');
         setBusinessHours(data);
       } else {
-        console.warn('No data returned from upsert, refetching...');
-        await fetchBusinessAndHours();
+        console.error('No data returned from upsert - this should not happen');
       }
 
       toast({
@@ -187,7 +209,7 @@ const BusinessHoursManagement = () => {
         description: "Your operating hours have been saved successfully.",
       });
     } catch (error: any) {
-      console.error('Error saving business hours:', error);
+      console.error('=== SAVE ERROR ===', error);
       toast({
         title: "Error",
         description: error.message || 'Failed to save business hours',
@@ -195,6 +217,7 @@ const BusinessHoursManagement = () => {
       });
     } finally {
       setSaving(false);
+      console.log('=== SAVE COMPLETE ===');
     }
   };
 
@@ -289,7 +312,10 @@ const BusinessHoursManagement = () => {
 
         <div className="flex flex-col sm:flex-row gap-4">
           <Button
-            onClick={() => saveBusinessHours()}
+            onClick={() => {
+              console.log('Save button clicked');
+              saveBusinessHours();
+            }}
             disabled={saving}
             className="bg-amber-500 hover:bg-amber-600 text-black"
           >
@@ -314,12 +340,14 @@ const BusinessHoursManagement = () => {
               variant="outline"
               className="border-border text-muted-foreground hover:bg-accent"
               onClick={async () => {
+                console.log('Quick setup button clicked: Mon-Sat 8AM-9PM');
                 const newHours = businessHours.map(hour => ({
                   ...hour,
                   is_closed: hour.day_of_week === 0, // Close on Sunday
                   start_time: '08:00',
                   end_time: '21:00'
                 }));
+                console.log('New hours prepared:', newHours);
                 setBusinessHours(newHours);
                 // Pass the new hours directly to avoid async state update issues
                 await saveBusinessHours(newHours);
@@ -333,12 +361,14 @@ const BusinessHoursManagement = () => {
               variant="outline"
               className="border-border text-muted-foreground hover:bg-accent"
               onClick={async () => {
+                console.log('Quick setup button clicked: All Days 9AM-6PM');
                 const newHours = businessHours.map(hour => ({
                   ...hour,
                   is_closed: false,
                   start_time: '09:00',
                   end_time: '18:00'
                 }));
+                console.log('New hours prepared:', newHours);
                 setBusinessHours(newHours);
                 // Pass the new hours directly to avoid async state update issues
                 await saveBusinessHours(newHours);
@@ -352,12 +382,14 @@ const BusinessHoursManagement = () => {
               variant="outline"
               className="border-border text-muted-foreground hover:bg-accent"
               onClick={async () => {
+                console.log('Quick setup button clicked: Tue-Sat 10AM-8PM');
                 const newHours = businessHours.map(hour => ({
                   ...hour,
                   is_closed: hour.day_of_week === 0 || hour.day_of_week === 1, // Close Sun & Mon
                   start_time: '10:00',
                   end_time: '20:00'
                 }));
+                console.log('New hours prepared:', newHours);
                 setBusinessHours(newHours);
                 // Pass the new hours directly to avoid async state update issues
                 await saveBusinessHours(newHours);
