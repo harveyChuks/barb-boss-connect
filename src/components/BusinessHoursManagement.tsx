@@ -74,7 +74,13 @@ const BusinessHoursManagement = () => {
       }
 
       if (hoursData && hoursData.length > 0) {
-        setBusinessHours(hoursData);
+        // Normalize times by removing seconds for consistency with UI
+        const normalizedHours = hoursData.map(hour => ({
+          ...hour,
+          start_time: hour.start_time.substring(0, 5), // '09:00:00' -> '09:00'
+          end_time: hour.end_time.substring(0, 5)
+        }));
+        setBusinessHours(normalizedHours);
       } else {
         // Initialize default hours
         await initializeDefaultHours(businessData.id);
@@ -116,7 +122,13 @@ const BusinessHoursManagement = () => {
         .order('day_of_week');
 
       if (hoursData) {
-        setBusinessHours(hoursData);
+        // Normalize times by removing seconds
+        const normalizedHours = hoursData.map(hour => ({
+          ...hour,
+          start_time: hour.start_time.substring(0, 5),
+          end_time: hour.end_time.substring(0, 5)
+        }));
+        setBusinessHours(normalizedHours);
       }
     } catch (error: any) {
       console.error('Error initializing default hours:', error);
@@ -199,7 +211,13 @@ const BusinessHoursManagement = () => {
       // DON'T refetch - use the data that was just saved
       if (data && data.length > 0) {
         console.log('Setting businessHours state to returned data');
-        setBusinessHours(data);
+        // Normalize times by removing seconds to match UI format
+        const normalizedHours = data.map(hour => ({
+          ...hour,
+          start_time: hour.start_time.substring(0, 5),
+          end_time: hour.end_time.substring(0, 5)
+        }));
+        setBusinessHours(normalizedHours);
       } else {
         console.error('No data returned from upsert - this should not happen');
       }
