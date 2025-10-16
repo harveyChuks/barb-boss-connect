@@ -11,11 +11,9 @@ import { Camera, Save, Copy, ExternalLink, Check, QrCode, Download } from "lucid
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Database } from "@/integrations/supabase/types";
 import { uploadImage } from "@/utils/imageUpload";
 import QRCode from "qrcode";
-
-type BusinessType = Database["public"]["Enums"]["business_type"];
+import { BUSINESS_TYPES, BusinessType } from "@/utils/businessTypes";
 
 const ProfileManagement = () => {
   const { user } = useAuth();
@@ -482,13 +480,12 @@ const ProfileManagement = () => {
                 <SelectTrigger className="bg-input border-border text-foreground">
                   <SelectValue placeholder="Select business type" />
                 </SelectTrigger>
-                <SelectContent className="bg-popover border-border">
-                  <SelectItem value="barbershop">Barbershop</SelectItem>
-                  <SelectItem value="hair_salon">Hair Salon</SelectItem>
-                  <SelectItem value="makeup_artist">Makeup Artist</SelectItem>
-                  <SelectItem value="nail_salon">Nail Salon</SelectItem>
-                  <SelectItem value="spa">Spa</SelectItem>
-                  <SelectItem value="beauty_clinic">Beauty Clinic</SelectItem>
+                <SelectContent className="bg-popover border-border max-h-60">
+                  {BUSINESS_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value} className="text-foreground hover:bg-accent">
+                      {type.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

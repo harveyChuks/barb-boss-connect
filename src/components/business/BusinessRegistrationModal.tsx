@@ -8,9 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Database } from "@/integrations/supabase/types";
-
-type BusinessType = Database["public"]["Enums"]["business_type"];
+import { BUSINESS_TYPES, BusinessType } from "@/utils/businessTypes";
 
 interface BusinessRegistrationModalProps {
   open: boolean;
@@ -32,14 +30,6 @@ const BusinessRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: Bu
     instagram: ""
   });
 
-  const businessTypes = [
-    { value: "barbershop" as BusinessType, label: "Barbershop" },
-    { value: "hair_salon" as BusinessType, label: "Hair Salon" },
-    { value: "makeup_artist" as BusinessType, label: "Makeup Artist" },
-    { value: "nail_salon" as BusinessType, label: "Nail Salon" },
-    { value: "spa" as BusinessType, label: "Spa" },
-    { value: "beauty_clinic" as BusinessType, label: "Beauty Clinic" }
-  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,8 +122,8 @@ const BusinessRegistrationModal = ({ open, onOpenChange, onBusinessCreated }: Bu
                   <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                     <SelectValue placeholder="Select business type" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-700 border-slate-600">
-                    {businessTypes.map((type) => (
+                  <SelectContent className="bg-slate-700 border-slate-600 max-h-60">
+                    {BUSINESS_TYPES.map((type) => (
                       <SelectItem key={type.value} value={type.value} className="text-white focus:bg-slate-600">
                         {type.label}
                       </SelectItem>
