@@ -12,7 +12,10 @@ export const SERVICE_TYPES = [
   'Barber Services',
   'Beauty Services',
   'Cleaning Services',
-  'Fitness'
+  'Fitness Services',
+  'Massage Services',
+  'Tattoo & Body Art',
+  'Medical Aesthetics'
 ] as const;
 
 export type ServiceType = typeof SERVICE_TYPES[number];
@@ -141,7 +144,7 @@ export const SERVICE_SUGGESTIONS: Record<string, string[]> = {
     'Upholstery Cleaning',
     'Pressure Washing'
   ],
-  'Fitness': [
+  'Fitness Services': [
     'Personal Training',
     'Group Fitness Class',
     'Yoga Session',
@@ -156,6 +159,53 @@ export const SERVICE_SUGGESTIONS: Record<string, string[]> = {
     'Stretching Session',
     'Nutrition Consultation',
     'Body Assessment',
-    'Weight Loss Program'
+    'Weight Loss Program',
+    'Functional Training',
+    'Circuit Training',
+    'Boot Camp Class'
+  ],
+  'Massage Services': [
+    'Swedish Massage',
+    'Deep Tissue Massage',
+    'Hot Stone Massage',
+    'Aromatherapy Massage',
+    'Sports Massage',
+    'Thai Massage',
+    'Prenatal Massage',
+    'Couples Massage',
+    'Chair Massage',
+    'Reflexology',
+    'Trigger Point Therapy',
+    'Lymphatic Drainage',
+    'Shiatsu Massage'
+  ],
+  'Tattoo & Body Art': [
+    'Custom Tattoo',
+    'Tattoo Cover-Up',
+    'Tattoo Touch-Up',
+    'Small Tattoo',
+    'Large Tattoo',
+    'Sleeve Tattoo',
+    'Body Piercing',
+    'Ear Piercing',
+    'Tattoo Consultation',
+    'Tattoo Removal Consultation',
+    'Henna Tattoo',
+    'Temporary Tattoo'
+  ],
+  'Medical Aesthetics': [
+    'Botox Treatment',
+    'Dermal Fillers',
+    'Laser Hair Removal',
+    'Laser Skin Resurfacing',
+    'Chemical Peel',
+    'Microneedling',
+    'PRP Therapy',
+    'Body Contouring',
+    'Skin Tightening',
+    'Vein Treatment',
+    'Scar Treatment',
+    'Stretch Mark Treatment',
+    'Medical Consultation'
   ]
 };
