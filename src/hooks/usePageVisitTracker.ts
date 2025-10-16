@@ -29,6 +29,23 @@ export const usePageVisitTracker = (businessId?: string) => {
 
   const trackVisit = async (data: VisitData) => {
     try {
+      // Get geolocation data from IP
+      let country = null;
+      let city = null;
+      let ipAddress = null;
+      
+      try {
+        const geoResponse = await fetch('https://ipapi.co/json/');
+        if (geoResponse.ok) {
+          const geoData = await geoResponse.json();
+          country = geoData.country_name || null;
+          city = geoData.city || null;
+          ipAddress = geoData.ip || null;
+        }
+      } catch (geoError) {
+        console.log('Geolocation unavailable, continuing without it');
+      }
+
       const visitData = {
         page_path: data.page_path,
         business_id: data.business_id || null,
@@ -36,7 +53,10 @@ export const usePageVisitTracker = (businessId?: string) => {
         referrer: document.referrer || null,
         session_id: sessionId.current,
         device_type: getDeviceType(),
-        is_unique_visit: !trackedPaths.current.has(data.page_path)
+        is_unique_visit: !trackedPaths.current.has(data.page_path),
+        country,
+        city,
+        ip_address: ipAddress
       };
 
       const { error } = await supabase

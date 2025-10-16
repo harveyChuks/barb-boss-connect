@@ -266,6 +266,7 @@ const AdminDashboard = () => {
         <Tabs defaultValue="businesses" className="space-y-6">
           <TabsList>
             <TabsTrigger value="businesses">Businesses</TabsTrigger>
+            <TabsTrigger value="locations">Business Locations</TabsTrigger>
             <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="plans">Plans</TabsTrigger>
@@ -350,6 +351,95 @@ const AdminDashboard = () => {
                     })}
                   </TableBody>
                 </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="locations">
+            <Card>
+              <CardHeader>
+                <CardTitle>Business Locations</CardTitle>
+                <CardDescription>
+                  Geographic distribution of registered businesses
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* By Country */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">By Country</h3>
+                    <div className="space-y-2">
+                      {Object.entries(
+                        businesses.reduce((acc: Record<string, number>, b: any) => {
+                          const country = b.country || 'Unknown';
+                          acc[country] = (acc[country] || 0) + 1;
+                          return acc;
+                        }, {} as Record<string, number>)
+                      )
+                        .sort(([, a], [, b]) => (b as number) - (a as number))
+                        .map(([country, count]) => (
+                          <div key={country} className="flex items-center justify-between p-3 rounded border">
+                            <span className="font-medium">{country}</span>
+                            <Badge>{count as number} businesses</Badge>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* By State */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">By State/Region</h3>
+                    <div className="space-y-2">
+                      {Object.entries(
+                        businesses.reduce((acc: Record<string, { state: string; country: string; count: number }>, b: any) => {
+                          if (b.state) {
+                            const key = `${b.state}, ${b.country || 'Unknown'}`;
+                            if (!acc[key]) {
+                              acc[key] = { state: b.state, country: b.country || 'Unknown', count: 0 };
+                            }
+                            acc[key].count++;
+                          }
+                          return acc;
+                        }, {} as Record<string, { state: string; country: string; count: number }>)
+                      )
+                        .sort(([, a], [, b]) => (b as { state: string; country: string; count: number }).count - (a as { state: string; country: string; count: number }).count)
+                        .slice(0, 20)
+                        .map(([key, data]) => (
+                          <div key={key} className="flex items-center justify-between p-3 rounded border">
+                            <span className="font-medium">{key}</span>
+                            <Badge>{(data as { state: string; country: string; count: number }).count} businesses</Badge>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* By City */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">By City</h3>
+                    <div className="space-y-2">
+                      {Object.entries(
+                        businesses.reduce((acc: Record<string, { city: string; state: string; count: number }>, b: any) => {
+                          if (b.city) {
+                            const key = `${b.city}, ${b.state || 'Unknown'}`;
+                            if (!acc[key]) {
+                              acc[key] = { city: b.city, state: b.state || 'Unknown', count: 0 };
+                            }
+                            acc[key].count++;
+                          }
+                          return acc;
+                        }, {} as Record<string, { city: string; state: string; count: number }>)
+                      )
+                        .sort(([, a], [, b]) => (b as { city: string; state: string; count: number }).count - (a as { city: string; state: string; count: number }).count)
+                        .slice(0, 20)
+                        .map(([key, data]) => (
+                          <div key={key} className="flex items-center justify-between p-3 rounded border">
+                            <span className="font-medium">{key}</span>
+                            <Badge>{(data as { city: string; state: string; count: number }).count} businesses</Badge>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
