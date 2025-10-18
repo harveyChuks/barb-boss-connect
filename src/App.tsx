@@ -16,6 +16,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import FAQs from "./pages/FAQs";
 import CustomerDashboard from "./pages/CustomerDashboard";
+import MyBookings from "./pages/MyBookings";
 
 const queryClient = new QueryClient();
 
@@ -28,18 +29,19 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/book/:businessLink" element={<BookingPage />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/admin" element={<AdminPanel />} />
-                <Route path="/customer/dashboard" element={<CustomerDashboard />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="/terms-of-service" element={<TermsOfService />} />
-                <Route path="/faqs" element={<FAQs />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/book/:businessLink" element={<BookingPage />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/customer/dashboard" element={<CustomerDashboard />} />
+              <Route path="/my-bookings" element={<MyBookings />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/faqs" element={<FAQs />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
             </BrowserRouter>
           </TooltipProvider>
         </ThemeProvider>

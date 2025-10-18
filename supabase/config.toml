@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.handle-booking-action]
 verify_jwt = false
+
+[functions.check-availability]
+verify_jwt = false
+
+[functions.book-appointment]
+verify_jwt = true

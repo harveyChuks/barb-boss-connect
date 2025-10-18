@@ -17,6 +17,7 @@ import TimeSlotPicker from "./TimeSlotPicker";
 import { ReviewModal } from "./ReviewModal";
 import { CustomerAuthModal } from "./auth/CustomerAuthModal";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
+import { useSecureBooking } from "@/hooks/useSecureBooking";
 import { format, addDays, isAfter, isBefore, startOfDay, addMonths, subMonths, startOfMonth, endOfMonth, eachWeekOfInterval, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isSameDay } from "date-fns";
 
 interface Business {
@@ -68,6 +69,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user, customerProfile, isAuthenticated, followBusiness, hasFollowedBusiness } = useCustomerAuth();
+  const { loading: bookingLoading, createBooking } = useSecureBooking();
   const [business, setBusiness] = useState<Business | null>(null);
   const [services, setServices] = useState<Service[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
@@ -294,6 +296,17 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   const handleSubmit = async () => {
     if (!business || !selectedDate || !selectedTime || formData.selected_services.length === 0) return;
 
+    // Require authentication for booking
+    if (!isAuthenticated || !user) {
+      setShowAuthModal(true);
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to book an appointment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const selectedServices = services.filter(s => formData.selected_services.includes(s.id));
     if (selectedServices.length === 0) return;
 
@@ -302,20 +315,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       // Calculate total duration for all selected services
       const totalDuration = selectedServices.reduce((sum, service) => sum + service.duration_minutes, 0);
       
-      // CRITICAL: Verify slot is still available before booking
-      const { data: slotsData, error: slotsError } = await supabase.rpc('get_available_time_slots', {
-        p_business_id: business.id,
-        p_date: format(selectedDate, 'yyyy-MM-dd'),
-        p_duration_minutes: totalDuration,
-        p_staff_id: formData.staff_id || null
-      });
-
-      if (slotsError) {
-        throw new Error("Failed to verify slot availability");
-      }
-
-      // Check if the selected time slot is still available
-      // Convert selectedTime (12-hour format) to 24-hour format for comparison
+      // Convert selectedTime (12-hour format) to 24-hour format
       const convertTo24Hour = (time12h: string): string => {
         const [time, period] = time12h.split(' ');
         const [hours, minutes] = time.split(':');
@@ -330,157 +330,49 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         return `${hour24.toString().padStart(2, '0')}:${minutes}:00`;
       };
 
-      const selectedTime24 = convertTo24Hour(selectedTime);
-      const slot = slotsData?.find((s: any) => s.slot_time === selectedTime24);
-
-      if (!slot?.is_available) {
-        toast({
-          title: "Time Slot No Longer Available",
-          description: "This time slot was just booked by someone else. Please select a different time.",
-          variant: "destructive",
-        });
-        setSubmitting(false);
-        return;
-      }
-
-      // Check for appointment conflicts with optimistic locking
       const startTime24 = convertTo24Hour(selectedTime);
       const endTime = new Date(`2000-01-01T${startTime24}`);
       endTime.setMinutes(endTime.getMinutes() + totalDuration);
-      const endTimeString = endTime.toTimeString().slice(0, 8); // Include seconds
+      const endTimeString = endTime.toTimeString().slice(0, 8);
 
-      const { data: conflictData, error: conflictError } = await supabase.rpc('check_appointment_conflict', {
-        p_business_id: business.id,
-        p_appointment_date: format(selectedDate, 'yyyy-MM-dd'),
-        p_start_time: startTime24,
-        p_end_time: endTimeString,
-        p_staff_id: formData.staff_id || null,
-        p_exclude_appointment_id: null
-      });
-
-      if (conflictError) {
-        throw new Error("Failed to check for appointment conflicts");
-      }
-
-      if (conflictData) {
-        toast({
-          title: "Time Slot Conflict",
-          description: "This time slot conflicts with existing appointments. Please select a different time.",
-          variant: "destructive",
-        });
-        setSubmitting(false);
-        return;
-      }
-
-      // Create separate appointments for each service (this ensures proper tracking and pricing)
+      // Create separate appointments for each service using the secure booking endpoint
       const appointmentPromises = selectedServices.map(async (service, index) => {
-        // Calculate start time for each subsequent service using 24-hour format
-        const baseStartTime = convertTo24Hour(selectedTime);
-        const serviceStartTime = new Date(`2000-01-01T${baseStartTime}`);
+        const serviceStartTime = new Date(`2000-01-01T${startTime24}`);
         const previousDuration = selectedServices.slice(0, index).reduce((sum, s) => sum + s.duration_minutes, 0);
         serviceStartTime.setMinutes(serviceStartTime.getMinutes() + previousDuration);
         
         const serviceEndTime = new Date(serviceStartTime);
         serviceEndTime.setMinutes(serviceEndTime.getMinutes() + service.duration_minutes);
 
-        const appointmentData = {
+        const bookingData = {
           business_id: business.id,
           service_id: service.id,
-          staff_id: formData.staff_id || null,
-          customer_id: user?.id || null,
-          customer_name: formData.customer_name,
-          customer_phone: formData.customer_phone,
-          customer_email: formData.customer_email || null,
+          staff_id: formData.staff_id || undefined,
           appointment_date: format(selectedDate, 'yyyy-MM-dd'),
           start_time: serviceStartTime.toTimeString().slice(0, 5),
           end_time: serviceEndTime.toTimeString().slice(0, 5),
-          notes: formData.notes || null,
-          status: 'pending' as const,
-          discount_percentage: discount?.percentage || 0,
-          discount_reason: discount?.reason || null,
-          final_price: discount?.finalPrice || (service.price || 0)
+          customer_name: formData.customer_name,
+          customer_phone: formData.customer_phone,
+          customer_email: formData.customer_email,
+          notes: formData.notes
         };
 
-        return supabase.from('appointments').insert(appointmentData).select();
+        return createBooking(bookingData);
       });
 
       const results = await Promise.all(appointmentPromises);
-      const hasError = results.some(result => result.error);
+      const hasError = results.some(result => !result);
 
       if (hasError) {
-        const errorDetails = results.filter(r => r.error).map(r => r.error?.message).join(', ');
-        throw new Error(`Failed to book one or more services: ${errorDetails}`);
+        throw new Error('Failed to book one or more services');
       }
 
-      // Get the first appointment ID from successful insertions
       const firstResult = results[0];
-      const firstAppointmentId = firstResult?.data && Array.isArray(firstResult.data) && firstResult.data.length > 0
-        ? firstResult.data[0]?.id
-        : undefined;
-
-      const updateOwnerData = async () => {
-        if (!business.owner_id) return;
-        
-        const { data: ownerData } = await supabase.auth.admin.getUserById(business.owner_id);
-        if (!ownerData?.user?.email) return;
-        
-        const serviceNames = formData.selected_services.map(sid => services.find(s => s.id === sid)?.name).join(', ');
-        const totalPrice = selectedServices.reduce((sum, s) => sum + (s.price || 0), 0);
-        
-        // Send notification to business owner for each appointment
-        for (const result of results) {
-          if (result.data && result.data[0]) {
-            const appointment = result.data[0];
-            const service = services.find(s => s.id === appointment.service_id);
-            
-            if (service) {
-              supabase.functions.invoke('send-owner-notification', {
-                body: {
-                  ownerEmail: ownerData.user.email,
-                  businessName: business.name,
-                  customerName: formData.customer_name,
-                  customerPhone: formData.customer_phone,
-                  customerEmail: formData.customer_email || undefined,
-                  serviceName: service.name,
-                  appointmentDate: appointment.appointment_date,
-                  startTime: appointment.start_time,
-                  endTime: appointment.end_time,
-                  price: service.price || 0,
-                  notes: formData.notes,
-                }
-              }).catch(err => console.error('Error sending owner notification:', err));
-            }
-          }
-        }
-        
-        // Send confirmation to customer if email provided
-        if (formData.customer_email && results[0]?.data?.[0]) {
-          const firstAppointment = results[0].data[0];
-          
-          supabase.functions.invoke('send-booking-confirmation', {
-            body: {
-              appointmentId: firstAppointment.id,
-              customerEmail: formData.customer_email,
-              customerName: formData.customer_name,
-              businessName: business.name,
-              serviceName: serviceNames,
-              appointmentDate: firstAppointment.appointment_date,
-              startTime: firstAppointment.start_time,
-              endTime: firstAppointment.end_time,
-              price: totalPrice,
-              businessPhone: business.phone || undefined,
-              notes: formData.notes,
-            }
-          }).catch(err => console.error('Error sending confirmation email:', err));
-        }
-      };
-      
-      // Call async function without awaiting to not block UI
-      updateOwnerData();
+      const firstAppointmentId = firstResult?.appointment?.id;
 
       toast({
         title: "Booking Confirmed!",
-        description: `Your appointment${selectedServices.length > 1 ? 's' : ''} for ${selectedServices.map(s => s.name).join(', ')} have been booked successfully. We'll contact you soon to confirm.`,
+        description: `Your appointment${selectedServices.length > 1 ? 's' : ''} for ${selectedServices.map(s => s.name).join(', ')} have been booked successfully.`,
       });
 
       // Store data for review modal and show it after a brief delay
@@ -490,7 +382,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         appointmentId: firstAppointmentId
       });
       
-      // Show review modal after 1 second to let the success toast display first
       setTimeout(() => {
         setShowReviewModal(true);
       }, 1000);
@@ -509,7 +400,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     } catch (error: any) {
       toast({
         title: "Booking Failed",
-        description: error.message,
+        description: error.message || "An error occurred while booking",
         variant: "destructive",
       });
     } finally {
