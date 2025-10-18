@@ -98,6 +98,13 @@ export type Database = {
             referencedRelation: "appointments"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "appointment_modifications_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "my_appointments"
+            referencedColumns: ["id"]
+          },
         ]
       }
       appointments: {
@@ -268,6 +275,13 @@ export type Database = {
             columns: ["appointment_id"]
             isOneToOne: false
             referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_modifications_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "my_appointments"
             referencedColumns: ["id"]
           },
         ]
@@ -716,6 +730,13 @@ export type Database = {
             referencedRelation: "appointments"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "payments_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "my_appointments"
+            referencedColumns: ["id"]
+          },
         ]
       }
       platform_statistics: {
@@ -794,6 +815,13 @@ export type Database = {
             columns: ["appointment_id"]
             isOneToOne: false
             referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "my_appointments"
             referencedColumns: ["id"]
           },
           {
@@ -1031,7 +1059,57 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      my_appointments: {
+        Row: {
+          appointment_date: string | null
+          business_id: string | null
+          created_at: string | null
+          customer_id: string | null
+          end_time: string | null
+          id: string | null
+          service_id: string | null
+          start_time: string | null
+          status: Database["public"]["Enums"]["appointment_status"] | null
+        }
+        Insert: {
+          appointment_date?: string | null
+          business_id?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          end_time?: string | null
+          id?: string | null
+          service_id?: string | null
+          start_time?: string | null
+          status?: Database["public"]["Enums"]["appointment_status"] | null
+        }
+        Update: {
+          appointment_date?: string | null
+          business_id?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          end_time?: string | null
+          id?: string | null
+          service_id?: string | null
+          start_time?: string | null
+          status?: Database["public"]["Enums"]["appointment_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       assign_service_point: {
@@ -1150,6 +1228,27 @@ export type Database = {
       initialize_default_service_point: {
         Args: { p_business_id: string }
         Returns: undefined
+      }
+      is_timeslot_conflicting: {
+        Args: {
+          p_appointment_date: string
+          p_business_id: string
+          p_end_time: string
+          p_exclude_appointment_id?: string
+          p_service_id: string
+          p_staff_id?: string
+          p_start_time: string
+        }
+        Returns: boolean
+      }
+      list_booked_slots: {
+        Args: { p_business_id: string; p_date_from: string; p_date_to: string }
+        Returns: {
+          appointment_date: string
+          end_at: string
+          service_id: string
+          start_at: string
+        }[]
       }
     }
     Enums: {
