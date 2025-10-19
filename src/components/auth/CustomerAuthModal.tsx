@@ -104,12 +104,23 @@ export const CustomerAuthModal = ({ open, onOpenChange, onAuthSuccess }: Custome
       if (error) throw error;
 
       if (data.user) {
-        toast({
-          title: "Account Created! 🎉",
-          description: "Welcome to Boji! You now get 3% off all bookings as a loyalty member.",
-        });
-        onOpenChange(false);
-        onAuthSuccess?.();
+        // Check if email confirmation is required
+        if (data.session) {
+          // User is immediately logged in (email confirmation disabled)
+          toast({
+            title: "Account Created! 🎉",
+            description: "Welcome to Boji! You now get 3% off all bookings as a loyalty member.",
+          });
+          onOpenChange(false);
+          onAuthSuccess?.();
+        } else {
+          // Email confirmation required
+          toast({
+            title: "Check Your Email",
+            description: "We've sent you a confirmation email. Please verify your email to sign in.",
+          });
+          onOpenChange(false);
+        }
       }
     } catch (error: any) {
       if (error instanceof z.ZodError) {

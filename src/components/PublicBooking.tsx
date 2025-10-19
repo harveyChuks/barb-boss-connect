@@ -84,7 +84,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     customerEmail?: string;
     appointmentId?: string;
   } | null>(null);
-  const [submitting, setSubmitting] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState("");
   const [calendarDate, setCalendarDate] = useState(new Date());
@@ -101,10 +100,22 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     customer_name: "",
     customer_phone: "",
     customer_email: "",
-    selected_services: [] as string[], // Changed to array for multiple services
+    selected_services: [] as string[],
     staff_id: "",
     notes: ""
   });
+
+  // Auto-fill customer data when authenticated
+  useEffect(() => {
+    if (isAuthenticated && customerProfile) {
+      setFormData(prev => ({
+        ...prev,
+        customer_name: customerProfile.name || "",
+        customer_phone: customerProfile.phone || "",
+        customer_email: customerProfile.email || ""
+      }));
+    }
+  }, [isAuthenticated, customerProfile]);
 
 
   // Mock pictures for demonstration
@@ -294,14 +305,30 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
   }, [formData.selected_services, isAuthenticated, user, business, services]);
 
   const handleSubmit = async () => {
-    if (!business || !selectedDate || !selectedTime || formData.selected_services.length === 0) return;
+    if (!business || !selectedDate || !selectedTime || formData.selected_services.length === 0) {
+      toast({
+        title: "Missing Information",
+        description: "Please select a service, date, and time for your appointment.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     // Require authentication for booking
     if (!isAuthenticated || !user) {
       setShowAuthModal(true);
       toast({
         title: "Authentication Required",
-        description: "Please sign in to book an appointment.",
+        description: "Please sign in or create an account to book an appointment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.customer_name || !formData.customer_phone) {
+      toast({
+        title: "Missing Information",
+        description: "Please provide your name and phone number.",
         variant: "destructive",
       });
       return;
@@ -310,7 +337,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
     const selectedServices = services.filter(s => formData.selected_services.includes(s.id));
     if (selectedServices.length === 0) return;
 
-    setSubmitting(true);
     try {
       // Calculate total duration for all selected services
       const totalDuration = selectedServices.reduce((sum, service) => sum + service.duration_minutes, 0);
@@ -331,9 +357,6 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       };
 
       const startTime24 = convertTo24Hour(selectedTime);
-      const endTime = new Date(`2000-01-01T${startTime24}`);
-      endTime.setMinutes(endTime.getMinutes() + totalDuration);
-      const endTimeString = endTime.toTimeString().slice(0, 8);
 
       // Create separate appointments for each service using the secure booking endpoint
       const appointmentPromises = selectedServices.map(async (service, index) => {
@@ -353,8 +376,8 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
           end_time: serviceEndTime.toTimeString().slice(0, 5),
           customer_name: formData.customer_name,
           customer_phone: formData.customer_phone,
-          customer_email: formData.customer_email,
-          notes: formData.notes
+          customer_email: formData.customer_email || undefined,
+          notes: formData.notes || undefined
         };
 
         return createBooking(bookingData);
@@ -364,7 +387,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
       const hasError = results.some(result => !result);
 
       if (hasError) {
-        throw new Error('Failed to book one or more services');
+        throw new Error('Failed to book one or more appointments');
       }
 
       const firstResult = results[0];
@@ -372,10 +395,10 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
 
       toast({
         title: "Booking Confirmed!",
-        description: `Your appointment${selectedServices.length > 1 ? 's' : ''} for ${selectedServices.map(s => s.name).join(', ')} have been booked successfully.`,
+        description: `Your appointment${selectedServices.length > 1 ? 's' : ''} for ${selectedServices.map(s => s.name).join(', ')} ${selectedServices.length > 1 ? 'have' : 'has'} been booked successfully.`,
       });
 
-      // Store data for review modal and show it after a brief delay
+      // Store data for review modal
       setLastAppointmentData({
         customerName: formData.customer_name,
         customerEmail: formData.customer_email || undefined,
@@ -386,25 +409,22 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
         setShowReviewModal(true);
       }, 1000);
 
-      // Reset form
-      setFormData({
-        customer_name: "",
-        customer_phone: "",
-        customer_email: "",
+      // Reset only booking-specific fields
+      setFormData(prev => ({
+        ...prev,
         selected_services: [],
         staff_id: "",
         notes: ""
-      });
+      }));
       setSelectedDate(undefined);
       setSelectedTime("");
     } catch (error: any) {
+      console.error('Booking error:', error);
       toast({
         title: "Booking Failed",
-        description: error.message || "An error occurred while booking",
+        description: error.message || "An error occurred while booking your appointment. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -1148,7 +1168,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                 <Button
                   onClick={handleSubmit}
                   disabled={
-                    submitting || 
+                    bookingLoading || 
                     !formData.customer_name || 
                     !formData.customer_phone || 
                     formData.selected_services.length === 0 || 
@@ -1157,7 +1177,7 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   }
                   className="w-full bg-primary hover:bg-primary/90 text-black font-semibold"
                 >
-                  {submitting ? "Booking..." : "Book Appointment"}
+                  {bookingLoading ? "Booking..." : "Book Appointment"}
                 </Button>
               </CardContent>
             </Card>
