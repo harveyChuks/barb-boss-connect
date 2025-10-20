@@ -81,7 +81,19 @@ serve(async (req) => {
         customer_id: user.id,
         status: 'pending'
       })
-      .select('id, appointment_date, start_time, end_time, status')
+      .select(`
+        id, 
+        appointment_date, 
+        start_time, 
+        end_time, 
+        status,
+        customer_name,
+        customer_email,
+        customer_phone,
+        notes,
+        business_id,
+        service_id
+      `)
       .single();
 
     if (insertError) {
@@ -90,6 +102,58 @@ serve(async (req) => {
         JSON.stringify({ error: 'Failed to create appointment' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+
+    // Fetch business and service details for email notifications
+    const { data: business } = await supabaseClient
+      .from('businesses')
+      .select('name, phone, email, owner_id')
+      .eq('id', appointment.business_id)
+      .single();
+
+    const { data: service } = await supabaseClient
+      .from('services')
+      .select('name, price')
+      .eq('id', appointment.service_id)
+      .single();
+
+    // Send confirmation email to customer (don't await - fire and forget)
+    if (appointment.customer_email && business && service) {
+      supabaseClient.functions.invoke('send-booking-confirmation', {
+        body: {
+          appointmentId: appointment.id,
+          customerEmail: appointment.customer_email,
+          customerName: appointment.customer_name,
+          businessName: business.name,
+          serviceName: service.name,
+          appointmentDate: appointment.appointment_date,
+          startTime: appointment.start_time,
+          endTime: appointment.end_time,
+          price: service.price,
+          businessPhone: business.phone,
+          notes: appointment.notes
+        }
+      }).catch(err => console.error('Failed to send customer confirmation:', err));
+    }
+
+    // Send notification email to business owner (don't await - fire and forget)
+    if (business?.email && service) {
+      supabaseClient.functions.invoke('send-owner-notification', {
+        body: {
+          appointmentId: appointment.id,
+          ownerEmail: business.email,
+          customerName: appointment.customer_name,
+          customerPhone: appointment.customer_phone,
+          customerEmail: appointment.customer_email,
+          businessName: business.name,
+          serviceName: service.name,
+          appointmentDate: appointment.appointment_date,
+          startTime: appointment.start_time,
+          endTime: appointment.end_time,
+          price: service.price,
+          notes: appointment.notes
+        }
+      }).catch(err => console.error('Failed to send owner notification:', err));
     }
 
     // Return minimal fields only
