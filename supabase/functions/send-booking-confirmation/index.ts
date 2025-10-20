@@ -127,7 +127,7 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     const emailResponse = await resend.emails.send({
-      from: "Boji Bookings <onboarding@resend.dev>",
+      from: "Boji <noreply@bojiapp.me>",
       to: [customerEmail],
       subject: `Booking Confirmed - ${businessName}`,
       html: emailHtml,
