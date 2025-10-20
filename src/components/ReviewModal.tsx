@@ -99,7 +99,7 @@ export const ReviewModal = ({
                     className={`w-10 h-10 ${
                       star <= (hoveredRating || rating)
                         ? "fill-yellow-400 text-yellow-400"
-                        : "text-muted"
+                        : "text-black dark:text-gray-300 stroke-2"
                     }`}
                   />
                 </button>

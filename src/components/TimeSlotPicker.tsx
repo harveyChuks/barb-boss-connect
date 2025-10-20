@@ -124,36 +124,16 @@ const TimeSlotPicker = ({
           <span className="text-slate-300">Available</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-red-500/20 border border-red-500/30"></div>
-          <span className="text-slate-300">Booked</span>
-        </div>
-        <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-amber-500 border border-amber-600"></div>
           <span className="text-slate-300">Selected</span>
         </div>
       </div>
       
-      {/* All Time Slots Grid */}
+      {/* Available Time Slots Grid - Only show available slots */}
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-        {timeSlots.map((slot) => {
+        {availableSlots.map((slot) => {
           const formattedTime = formatTime(slot.slot_time);
-          const isAvailable = slot.is_available;
           const isSelected = selectedTime === formattedTime;
-          
-          if (!isAvailable) {
-            // Booked slots - display as red to match legend
-            return (
-              <div
-                key={slot.slot_time}
-                className="relative h-12 border-2 border-red-500 bg-red-500/30 rounded-md flex items-center justify-center cursor-not-allowed shadow-sm"
-              >
-                <div className="flex flex-col items-center">
-                  <span className="font-semibold text-red-100">{formattedTime}</span>
-                  <span className="text-xs text-red-200 font-medium">Booked</span>
-                </div>
-              </div>
-            );
-          }
           
           return (
             <Button
