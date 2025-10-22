@@ -99,7 +99,34 @@ const TimeSlotPicker = ({
 
   // Safe filtering to prevent crashes
   const availableSlots = timeSlots?.filter(s => s && s.is_available) || [];
-  const unavailableSlots = timeSlots?.filter(s => s && !s.is_available) || [];
+  
+  // Group slots by time of day
+  const getTimeOfDay = (timeString: string) => {
+    const hour = parseInt(timeString.split(':')[0]);
+    if (hour < 12) return 'morning';
+    if (hour < 17) return 'afternoon';
+    return 'evening';
+  };
+
+  const slotsByTimeOfDay = {
+    morning: timeSlots?.filter(s => s && getTimeOfDay(s.slot_time) === 'morning') || [],
+    afternoon: timeSlots?.filter(s => s && getTimeOfDay(s.slot_time) === 'afternoon') || [],
+    evening: timeSlots?.filter(s => s && getTimeOfDay(s.slot_time) === 'evening') || []
+  };
+
+  const getTimeOfDayStatus = (period: 'morning' | 'afternoon' | 'evening') => {
+    const slots = slotsByTimeOfDay[period];
+    const available = slots.filter(s => s.is_available);
+    return {
+      total: slots.length,
+      available: available.length,
+      fullyBooked: slots.length > 0 && available.length === 0
+    };
+  };
+
+  const morningStatus = getTimeOfDayStatus('morning');
+  const afternoonStatus = getTimeOfDayStatus('afternoon');
+  const eveningStatus = getTimeOfDayStatus('evening');
 
   return (
     <div className="space-y-6" key={`timeslots-${refreshKey}`}>
@@ -116,6 +143,27 @@ const TimeSlotPicker = ({
           Refresh
         </Button>
       </div>
+
+      {/* Time of day status messages */}
+      {(morningStatus.fullyBooked || afternoonStatus.fullyBooked || eveningStatus.fullyBooked) && (
+        <div className="space-y-2">
+          {morningStatus.fullyBooked && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+              <p className="text-red-400 text-sm font-medium">☀️ Morning slots (before 12pm) are fully booked</p>
+            </div>
+          )}
+          {afternoonStatus.fullyBooked && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+              <p className="text-red-400 text-sm font-medium">🌤️ Afternoon slots (12pm-5pm) are fully booked</p>
+            </div>
+          )}
+          {eveningStatus.fullyBooked && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+              <p className="text-red-400 text-sm font-medium">🌙 Evening slots (after 5pm) are fully booked</p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Legend */}
       <div className="flex flex-wrap gap-4 text-sm">
@@ -167,20 +215,6 @@ const TimeSlotPicker = ({
           </div>
         </div>
       )}
-
-      {/* Summary */}
-      <div className="bg-slate-700/30 rounded-lg p-4">
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-400">{availableSlots.length}</div>
-            <div className="text-slate-300">Available</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-red-400">{unavailableSlots.length}</div>
-            <div className="text-slate-300">Booked</div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
