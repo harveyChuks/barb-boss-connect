@@ -7,8 +7,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
-import { Calendar, Clock, MapPin, Gift, LogOut, User, Phone, Mail, Star } from "lucide-react";
+import { Calendar, Clock, MapPin, Gift, LogOut, User, Phone, Mail, Star, X, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { RescheduleDialog } from "@/components/RescheduleDialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 interface Appointment {
   id: string;
@@ -37,6 +39,10 @@ const CustomerDashboard = () => {
   const { user, customerProfile, loading, signOut, isAuthenticated } = useCustomerAuth();
   const [appointments, setAppointments] = useState<AppointmentWithDetails[]>([]);
   const [loadingAppointments, setLoadingAppointments] = useState(true);
+  const [selectedAppointment, setSelectedAppointment] = useState<AppointmentWithDetails | null>(null);
+  const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [appointmentToCancel, setAppointmentToCancel] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -91,6 +97,48 @@ const CustomerDashboard = () => {
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
+  };
+
+  const handleCancelAppointment = async () => {
+    if (!appointmentToCancel) return;
+
+    try {
+      const { error } = await supabase.functions.invoke('handle-booking-action', {
+        body: {
+          appointmentId: appointmentToCancel,
+          action: 'cancel'
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Appointment cancelled successfully",
+      });
+
+      fetchAppointments();
+    } catch (error) {
+      console.error('Error cancelling appointment:', error);
+      toast({
+        title: "Error",
+        description: "Failed to cancel appointment",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCancelDialogOpen(false);
+      setAppointmentToCancel(null);
+    }
+  };
+
+  const handleRescheduleClick = (appointment: AppointmentWithDetails) => {
+    setSelectedAppointment(appointment);
+    setIsRescheduleOpen(true);
+  };
+
+  const handleCancelClick = (appointmentId: string) => {
+    setAppointmentToCancel(appointmentId);
+    setIsCancelDialogOpen(true);
   };
 
   const getStatusColor = (status: string) => {
@@ -273,6 +321,30 @@ const CustomerDashboard = () => {
                         Note: {appointment.notes}
                       </p>
                     )}
+
+                    {/* Action Buttons */}
+                    {(appointment.status === 'confirmed' || appointment.status === 'pending') && (
+                      <div className="mt-4 flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRescheduleClick(appointment)}
+                          className="gap-2"
+                        >
+                          <Edit className="w-4 h-4" />
+                          Reschedule
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleCancelClick(appointment.id)}
+                          className="gap-2 text-red-500 hover:text-red-600 border-red-500/20 hover:border-red-500/40"
+                        >
+                          <X className="w-4 h-4" />
+                          Cancel
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -280,6 +352,53 @@ const CustomerDashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Reschedule Dialog */}
+      {selectedAppointment && (
+        <RescheduleDialog
+          open={isRescheduleOpen}
+          onOpenChange={(open) => {
+            setIsRescheduleOpen(open);
+            if (!open) setSelectedAppointment(null);
+          }}
+          appointmentId={selectedAppointment.id}
+          currentDate={selectedAppointment.appointment_date}
+          currentStartTime={selectedAppointment.start_time}
+          currentEndTime={selectedAppointment.end_time}
+          businessId={selectedAppointment.business_id}
+          durationMinutes={(() => {
+            const start = selectedAppointment.start_time.split(':').map(Number);
+            const end = selectedAppointment.end_time.split(':').map(Number);
+            return (end[0] * 60 + end[1]) - (start[0] * 60 + start[1]);
+          })()}
+          onRescheduled={() => {
+            fetchAppointments();
+            setIsRescheduleOpen(false);
+            setSelectedAppointment(null);
+          }}
+        />
+      )}
+
+      {/* Cancel Confirmation Dialog */}
+      <AlertDialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancel Appointment</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to cancel this appointment? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep Appointment</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleCancelAppointment}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              Cancel Appointment
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
