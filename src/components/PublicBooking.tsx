@@ -1035,27 +1035,21 @@ const PublicBooking = ({ businessLink }: PublicBookingProps) => {
                   </div>
                 </div>
                 
-                {/* Enhanced DEBUG logs */}
+                {/* DEBUG: Check why TimeSlotPicker isn't rendering */}
                 {(() => {
                   console.warn('🚨 PUBLICBOOKING DEBUG:', {
                     selectedDate: selectedDate,
                     selectedDateFormatted: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null,
-                    business: business ? { id: business.id, name: business.name, business_type: business.business_type } : null,
+                    business: business ? { id: business.id, name: business.name } : null,
                     shouldRenderTimeSlotPicker: !!(selectedDate && business),
-                    servicesSelected: formData.selected_services.length,
-                    services: services.length,
-                    durationMinutes: formData.selected_services.length > 0 
-                      ? services
-                          .filter(s => formData.selected_services.includes(s.id))
-                          .reduce((sum, service) => sum + service.duration_minutes, 0)
-                      : 60
+                    servicesSelected: formData.selected_services.length
                   });
                   return null;
                 })()}
 
                 {selectedDate && business && (
-                  <div className="space-y-3 mt-6">
-                    <Label className="text-foreground font-medium text-lg">
+                  <div className="space-y-3">
+                    <Label className="text-foreground font-medium">
                       Available Times for {format(selectedDate, 'MMM d, yyyy')}
                     </Label>
                     <TimeSlotPicker

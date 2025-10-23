@@ -51,16 +51,15 @@ const CustomerDashboard = () => {
   }, [loading, isAuthenticated, navigate]);
 
   useEffect(() => {
-    if (user && customerProfile) {
+    if (user) {
       fetchAppointments();
     }
-  }, [user, customerProfile]);
+  }, [user]);
 
   const fetchAppointments = async () => {
-    if (!user || !customerProfile) return;
+    if (!user) return;
 
     try {
-      // Fetch appointments by customer_id OR by email/phone for guest bookings
       const { data: appointmentsData, error } = await supabase
         .from('appointments')
         .select(`
@@ -68,7 +67,7 @@ const CustomerDashboard = () => {
           services!inner(name, price),
           businesses!inner(name, address)
         `)
-        .or(`customer_id.eq.${user.id},customer_email.eq.${customerProfile.email},customer_phone.eq.${customerProfile.phone}`)
+        .eq('customer_id', user.id)
         .order('appointment_date', { ascending: false })
         .order('start_time', { ascending: false });
 
