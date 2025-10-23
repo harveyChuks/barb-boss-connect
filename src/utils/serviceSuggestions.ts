@@ -15,7 +15,8 @@ export const SERVICE_TYPES = [
   'Fitness Services',
   'Massage Services',
   'Tattoo & Body Art',
-  'Medical Aesthetics'
+  'Medical Aesthetics',
+  'Driving Services'
 ] as const;
 
 export type ServiceType = typeof SERVICE_TYPES[number];
@@ -207,5 +208,18 @@ export const SERVICE_SUGGESTIONS: Record<string, string[]> = {
     'Scar Treatment',
     'Stretch Mark Treatment',
     'Medical Consultation'
+  ],
+  'Driving Services': [
+    'Driving Lesson',
+    'Highway Driving',
+    'City Driving',
+    'Parking Practice',
+    'Night Driving',
+    'Defensive Driving',
+    'Test Preparation',
+    'Refresher Course',
+    'Advanced Driving',
+    'Motorway Training',
+    'Mock Driving Test'
   ]
 };
