@@ -18,7 +18,8 @@ export const BUSINESS_TYPES = [
   { value: "fitness_center" as BusinessType, label: "Fitness Center" },
   { value: "massage_therapy" as BusinessType, label: "Massage Therapy" },
   { value: "tattoo_parlor" as BusinessType, label: "Tattoo Parlor" },
-  { value: "medspa" as BusinessType, label: "Medical Spa" }
+  { value: "medspa" as BusinessType, label: "Medical Spa" },
+  { value: "driving_service" as BusinessType, label: "Driving Service" }
 ] as const;
 
 /**
