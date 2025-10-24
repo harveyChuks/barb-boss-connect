@@ -97,8 +97,24 @@ const TimeSlotPicker = ({
     );
   }
 
-  // Safe filtering to prevent crashes
-  const availableSlots = timeSlots?.filter(s => s && s.is_available) || [];
+  // Get current time to filter out past slots
+  const now = new Date();
+  const selectedDate = new Date(date);
+  const isToday = selectedDate.toDateString() === now.toDateString();
+  
+  // Filter for available slots AND exclude past times if today
+  const availableSlots = timeSlots?.filter(s => {
+    if (!s || !s.is_available) return false;
+    
+    // If it's today, filter out past time slots
+    if (isToday) {
+      const slotTime = new Date(`2000-01-01T${s.slot_time}`);
+      const currentTime = new Date(`2000-01-01T${now.getHours()}:${now.getMinutes()}:00`);
+      return slotTime > currentTime;
+    }
+    
+    return true;
+  }) || [];
   
   // Group slots by time of day
   const getTimeOfDay = (timeString: string) => {
