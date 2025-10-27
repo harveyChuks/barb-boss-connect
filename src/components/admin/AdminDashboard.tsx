@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Building2, Users, DollarSign, TrendingUp, Search, Ban, CheckCircle, ArrowLeft, Home } from "lucide-react";
+import { Building2, Users, DollarSign, TrendingUp, Search, Ban, CheckCircle, ArrowLeft, Home, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BUSINESS_TYPES } from "@/utils/businessTypes";
 import VisitAnalytics from "@/components/analytics/VisitAnalytics";
 import UserManagement from "@/components/admin/UserManagement";
 import SubscriptionPlanManagement from "@/components/admin/SubscriptionPlanManagement";
@@ -36,6 +38,7 @@ const AdminDashboard = () => {
   });
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [businessTypeFilter, setBusinessTypeFilter] = useState<string>("all");
   const { toast } = useToast();
 
   const fetchAdminData = async () => {
@@ -144,10 +147,12 @@ const AdminDashboard = () => {
     }
   };
 
-  const filteredBusinesses = businesses.filter((business: any) =>
-    business.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    business.email?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBusinesses = businesses.filter((business: any) => {
+    const matchesSearch = business.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      business.email?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = businessTypeFilter === "all" || business.business_type === businessTypeFilter;
+    return matchesSearch && matchesType;
+  });
 
   const getSubscriptionStatus = (business: any) => {
     const subscription = business.business_subscriptions?.[0];
@@ -287,14 +292,32 @@ const AdminDashboard = () => {
                 <CardDescription>
                   View and manage all registered businesses
                 </CardDescription>
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search businesses..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-8"
-                  />
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="relative">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search businesses..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-8"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-muted-foreground" />
+                    <Select value={businessTypeFilter} onValueChange={setBusinessTypeFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Filter by type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Types</SelectItem>
+                        {BUSINESS_TYPES.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>

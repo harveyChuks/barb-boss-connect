@@ -41,14 +41,94 @@ export const SystemSettings = () => {
     backup_frequency: 'daily'
   });
   
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('system_settings')
+        .select('*');
+
+      if (error) throw error;
+
+      // Merge all settings into one object
+      if (data && data.length > 0) {
+        const mergedSettings = data.reduce((acc, setting) => {
+          return { ...acc, ...(setting.setting_value as object) };
+        }, {} as Partial<SystemSettings>);
+
+        setSettings(prev => ({ ...prev, ...mergedSettings }));
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load settings",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSave = async (section: string) => {
     setSaving(true);
     try {
-      // In a real implementation, you'd save these settings to a system_settings table
-      // For now, we'll just show a success message
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      let settingKey = '';
+      let settingValue = {};
+
+      if (section === 'General') {
+        settingKey = 'general';
+        settingValue = {
+          maintenance_mode: settings.maintenance_mode,
+          registration_enabled: settings.registration_enabled,
+          max_businesses_per_user: settings.max_businesses_per_user,
+          default_trial_days: settings.default_trial_days,
+          support_email: settings.support_email,
+          platform_name: settings.platform_name,
+          platform_description: settings.platform_description
+        };
+      } else if (section === 'Notifications') {
+        settingKey = 'notifications';
+        settingValue = {
+          email_notifications: settings.email_notifications,
+          sms_notifications: settings.sms_notifications
+        };
+      } else if (section === 'Backup') {
+        settingKey = 'backup';
+        settingValue = {
+          backup_enabled: settings.backup_enabled,
+          backup_frequency: settings.backup_frequency
+        };
+      } else {
+        // For security and maintenance, just save to state for now
+        toast({
+          title: "Settings Saved",
+          description: `${section} settings have been updated successfully`
+        });
+        setSaving(false);
+        return;
+      }
+
+      const { error } = await supabase
+        .from('system_settings')
+        .upsert({
+          setting_key: settingKey,
+          setting_value: settingValue,
+          updated_by: user?.id
+        }, {
+          onConflict: 'setting_key'
+        });
+
+      if (error) throw error;
+
       toast({
         title: "Settings Saved",
         description: `${section} settings have been updated successfully`
@@ -71,6 +151,14 @@ export const SystemSettings = () => {
       [field]: value
     }));
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-muted-foreground">Loading settings...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
