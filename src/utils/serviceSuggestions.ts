@@ -16,7 +16,10 @@ export const SERVICE_TYPES = [
   'Massage Services',
   'Tattoo & Body Art',
   'Medical Aesthetics',
-  'Driving Services'
+  'Driving Services',
+  'Painting Services',
+  'Flooring Services',
+  'Plumbing Services'
 ] as const;
 
 export type ServiceType = typeof SERVICE_TYPES[number];
@@ -221,5 +224,53 @@ export const SERVICE_SUGGESTIONS: Record<string, string[]> = {
     'Advanced Driving',
     'Motorway Training',
     'Mock Driving Test'
+  ],
+  'Painting Services': [
+    'Interior Painting',
+    'Exterior Painting',
+    'Wall Painting',
+    'Ceiling Painting',
+    'Trim & Molding',
+    'Cabinet Painting',
+    'Fence Painting',
+    'Door Painting',
+    'Wallpaper Removal',
+    'Drywall Repair',
+    'Pressure Washing',
+    'Deck Staining',
+    'Color Consultation',
+    'Touch-Up Services'
+  ],
+  'Flooring Services': [
+    'Hardwood Installation',
+    'Laminate Installation',
+    'Tile Installation',
+    'Vinyl Installation',
+    'Carpet Installation',
+    'Floor Refinishing',
+    'Floor Repair',
+    'Subfloor Repair',
+    'Floor Sanding',
+    'Floor Polishing',
+    'Grout Cleaning',
+    'Floor Removal',
+    'Flooring Consultation'
+  ],
+  'Plumbing Services': [
+    'Leak Repair',
+    'Pipe Installation',
+    'Drain Cleaning',
+    'Faucet Repair',
+    'Toilet Repair',
+    'Water Heater Service',
+    'Garbage Disposal',
+    'Sump Pump Service',
+    'Emergency Plumbing',
+    'Bathroom Plumbing',
+    'Kitchen Plumbing',
+    'Pipe Replacement',
+    'Sewer Line Service',
+    'Water Filtration',
+    'Fixture Installation'
   ]
 };
