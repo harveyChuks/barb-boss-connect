@@ -62,7 +62,7 @@ export const LocationProvider = ({ children }: LocationProviderProps) => {
 
   const currency = location === 'UK' ? 'GBP' : 'NGN';
   const currencySymbol = location === 'UK' ? '£' : '₦';
-  const monthlyPrice = location === 'UK' ? 15 : 1000;
+  const monthlyPrice = location === 'UK' ? 15 : 1500;
 
   return (
     <LocationContext.Provider value={{ location, setLocation, currency, currencySymbol, monthlyPrice }}>

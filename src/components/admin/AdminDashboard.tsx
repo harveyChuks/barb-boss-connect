@@ -92,7 +92,7 @@ const AdminDashboard = () => {
           if (currency === 'GBP') {
             acc.GBP += 15; // UK pricing
           } else {
-            acc.NGN += 1000; // Nigeria pricing
+            acc.NGN += 1500; // Nigeria pricing
           }
         }
         return acc;
